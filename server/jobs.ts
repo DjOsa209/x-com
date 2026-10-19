@@ -1,4 +1,6 @@
-import { randomUUID } from "node:crypto";
+import { randomUUID, createHash } from "node:crypto";
+import { workspace, inWorkspace } from "./context.ts";
+import { reserveCredits, finalizeCredits } from "./credits.ts";
 import {
   rows,
   execute,
@@ -12,13 +14,14 @@ import {
 import { config } from "./config.ts";
 import { aiJson, falClient, falInput } from "./providers.ts";
 import { fetchMedia, resolveVideo, saveMedia } from "./media.ts";
-import { echoQuery, extractItems } from "./echotik.ts";
+import { echoQuery, extractItems, normalizeItem } from "./echotik.ts";
 import {
   creatorInfo,
   initializePost,
   transferPost,
   postStatus,
 } from "./tiktok.ts";
+import { withJobLock } from "./locks.ts";
 import { AppError } from "./errors.ts";
 
 export const kinds = [
@@ -33,14 +36,17 @@ export const kinds = [
   "prompt",
   "publish",
   "research",
+  "raw",
+  "collect",
+  "opportunity_scan",
 ] as const;
-const falKinds = ["video", "image", "enhance"];
+const falKinds = ["video", "image", "enhance", "raw"];
 export async function checkProviders(kind: string, input: Doc) {
   const c = await config();
   const need =
     kind === "publish"
       ? "TIKTOK_CLIENT_KEY"
-      : kind === "download" || kind === "research"
+      : ["download", "research", "collect", "opportunity_scan"].includes(kind)
         ? "ECHOTIK_USERNAME"
         : falKinds.includes(kind)
           ? "FAL_KEY"
@@ -60,6 +66,12 @@ export async function checkProviders(kind: string, input: Doc) {
     throw new AppError(
       409,
       "一键复刻还需要配置 fal.ai 视频生成服务",
+      "PROVIDER_NOT_CONFIGURED",
+    );
+  if (kind === "opportunity_scan" && !c.GEMINI_API_KEY)
+    throw new AppError(
+      409,
+      "机会扫描还需要 Gemini 评论分析服务",
       "PROVIDER_NOT_CONFIGURED",
     );
   if (
@@ -97,9 +109,13 @@ export async function createJob(
   input: Doc,
   dedupe: string,
   runAt?: string,
+  hold = false,
 ) {
   if (!kinds.includes(kind as any)) throw new AppError(400, "未知任务类型");
   if (dedupe.length > 128) throw new AppError(400, "无效请求标识");
+  dedupe = createHash("sha256")
+    .update(workspace() + "\0" + dedupe)
+    .digest("hex");
   const [existing] = await rows("SELECT * FROM jobs WHERE dedupe_key=?", [
     dedupe,
   ]);
@@ -116,19 +132,22 @@ export async function createJob(
       throw new AppError(400, "定时任务需在未来 30 天内");
   }
   const id = randomUUID();
+  await reserveCredits(id, kind);
   try {
     await execute(
-      "INSERT INTO jobs(id,kind,input,dedupe_key,run_at,status) VALUES(?,?,?,?,?,?)",
+      "INSERT INTO jobs(id,kind,input,dedupe_key,run_at,status,workspace_id) VALUES(?,?,?,?,?,?,?)",
       [
         id,
         kind,
         JSON.stringify(input),
         dedupe,
         at,
-        at ? "scheduled" : "queued",
+        hold ? "held" : at ? "scheduled" : "queued",
+        workspace(),
       ],
     );
   } catch (e: any) {
+    await finalizeCredits(id, false);
     if (e.code === "ER_DUP_ENTRY")
       return job(
         (await rows("SELECT * FROM jobs WHERE dedupe_key=?", [dedupe]))[0],
@@ -147,6 +166,114 @@ async function videoAsset(input: Doc): Promise<string> {
   return asset!.id;
 }
 async function runLocal(id: string, kind: string, input: Doc) {
+  if (kind === "collect" || kind === "opportunity_scan") {
+    const yesterday = new Date(Date.now() - 86400000)
+        .toISOString()
+        .slice(0, 10),
+      region = input.region || "US";
+    const path =
+      input.path ||
+      (kind === "opportunity_scan"
+        ? "/echotik/product/ranklist"
+        : "/echotik/video/ranklist");
+    let params: Doc = {
+      date: yesterday,
+      region,
+      rank_type: 1,
+      page_num: 1,
+      page_size: 10,
+      ...(kind === "opportunity_scan"
+        ? { product_rank_field: 1 }
+        : { video_rank_field: 2, created_by_ai: "true" }),
+      ...(input.params || {}),
+    };
+    const samples: Doc[] = [],
+      evidence: Doc[] = [];
+    const pages = Math.max(1, Math.min(Number(input.maxPages) || 1, 10));
+    for (let page = 0; page < pages; page++) {
+      const response = await echoQuery(path, params);
+      evidence.push(response);
+      const items = extractItems(response.data);
+      samples.push(...items);
+      if (!items.length) break;
+      if (path.startsWith("/echotik/")) {
+        if (items.length < Number(params.page_size || 10)) break;
+        params = { ...params, page_num: Number(params.page_num || 1) + 1 };
+      } else {
+        const d = response.data?.body || response.data;
+        const cursor = d?.next_cursor ?? d?.cursor ?? d?.max_cursor;
+        if (
+          !d?.has_more ||
+          cursor === undefined ||
+          String(cursor) === String(params.offset)
+        )
+          break;
+        params = { ...params, offset: String(cursor) };
+      }
+    }
+    if (kind === "collect") {
+      const normalized = samples.map((r) =>
+        normalizeItem(r, input.entity || "video"),
+      );
+      const observation = await put("observation", {
+        name: input.name || "定时数据采集",
+        items: normalized,
+        evidence,
+      });
+      const children: string[] = [];
+      if (input.extractPrompts === true) {
+        for (const item of normalized
+          .filter((i) => i.entity === "video" && i.id)
+          .slice(0, Math.min(Number(input.maxVideos) || 2, 10))) {
+          const child = await createJob(
+            "prompt",
+            {
+              sourceUrl: item.sourceUrl || item.id,
+              prompt: "从实际视频提取销售分镜和提示词",
+              sourceMetrics: item.raw,
+              region: item.region || region,
+            },
+            "collect:" + id + ":" + item.id,
+          );
+          children.push(child.id);
+        }
+      }
+      return {
+        observationId: observation!.id,
+        count: normalized.length,
+        promptJobs: children,
+        evidence,
+      };
+    }
+    const enriched: Doc[] = [];
+    for (const raw of samples.slice(
+      0,
+      Math.min(Number(input.maxProducts) || 3, 10),
+    )) {
+      const product = normalizeItem(raw, "product");
+      if (!product.id) continue;
+      const detail = await echoQuery("/echotik/product/detail", {
+        product_ids: product.id,
+      });
+      const comments = await echoQuery("/realtime/product/comment", {
+        product_id: product.id,
+        region,
+        offset: "1",
+      });
+      enriched.push({ product, detail, comments });
+    }
+    const analysis = await aiJson(
+      `根据提供的真实商品与评论样本，输出选品机会 JSON {title,summary,painPoints:[{problem,evidence,commentIds,frequencyInSample}],opportunities:[],risks:[],nextSteps:[],limitations:[]}。区分预估GMV、缺失数据与零值。不得编造成本、利润或需求规模。证据：${JSON.stringify(enriched).slice(0, 90000)}`,
+    );
+    const opportunity = await put("opportunity", {
+      ...analysis,
+      evidence: enriched,
+      region,
+      source: "EchoTik + Gemini",
+      collectedAt: new Date().toISOString(),
+    });
+    return { ...analysis, opportunityId: opportunity!.id, evidence: enriched };
+  }
   if (kind === "download") {
     const resolved = await resolveVideo(input.sourceUrl);
     const media = await fetchMedia(resolved.url);
@@ -217,6 +344,14 @@ async function startJob(r: Doc) {
   if (falKinds.includes(r.kind) || r.kind === "replicate") {
     const { model, payload, frame } = await falInput(r.kind, input);
     const fal = await falClient();
+    // Persist submission intent before sending a potentially billable request.
+    await updateJob(r.id, {
+      provider: {
+        name: "fal",
+        model: frame?.model || model,
+        stage: "submitting",
+      },
+    });
     const result = await fal.queue.submit((frame?.model || model) as any, {
       input: (frame?.payload || payload) as any,
       headers: { "X-Fal-No-Retry": "1" },
@@ -259,8 +394,20 @@ async function startJob(r: Doc) {
   await updateJob(r.id, { status: "completed", result });
 }
 async function pollJob(r: Doc) {
+  return withJobLock(r.id, async () => {
+    const current = await jobGet(r.id);
+    if (!current || !["processing", "review"].includes(current.status)) return;
+    return pollJobUnlocked(current);
+  });
+}
+async function pollJobUnlocked(r: Doc) {
   const p = parse(r.provider);
   if (p?.name === "fal") {
+    if (!p.requestId)
+      throw new AppError(
+        409,
+        "供应商提交结果不明确且没有请求 ID，请在供应商后台核对；系统不会重新提交",
+      );
     if (p.stage === "submitting_video")
       throw new AppError(
         409,
@@ -333,39 +480,40 @@ export async function tick() {
       "SELECT * FROM jobs WHERE status='processing' ORDER BY updated_at LIMIT 6",
     );
     for (const r of processing) {
-      try {
-        await pollJob(r);
-      } catch (e: any) {
-        await updateJob(r.id, {
-          status: "review",
-          error: e.message || "查询任务失败，请核对供应商状态",
-        });
-      }
+      await inWorkspace(r.workspace_id, async () => {
+        try {
+          await pollJob(r);
+        } catch (e: any) {
+          if (e.code === "JOB_BUSY") return;
+          await updateJob(r.id, {
+            status: "review",
+            error: e.message || "查询任务失败，请核对供应商状态",
+          });
+        }
+      });
     }
     const [next] = await rows(
       "SELECT * FROM jobs WHERE status IN ('queued','scheduled') AND (run_at IS NULL OR run_at<=UTC_TIMESTAMP(3)) ORDER BY created_at LIMIT 1",
     );
     if (next) {
-      const claim = await execute(
-        "UPDATE jobs SET status='running' WHERE id=? AND status IN ('queued','scheduled')",
-        [next.id],
-      );
-      if (claim.affectedRows)
-        try {
-          await startJob(next);
-        } catch (e: any) {
-          const current = await jobGet(next.id);
-          const hasProvider = !!current?.provider;
-          await updateJob(next.id, {
-            status:
-              hasProvider ||
-              falKinds.includes(next.kind) ||
-              ["publish", "replicate"].includes(next.kind)
-                ? "review"
-                : "failed",
-            error: e.message || "任务执行失败",
-          });
-        }
+      await inWorkspace(next.workspace_id, async () => {
+        const claim = await execute(
+          "UPDATE jobs SET status='running' WHERE id=? AND status IN ('queued','scheduled')",
+          [next.id],
+        );
+        if (claim.affectedRows)
+          try {
+            await startJob(next);
+          } catch (e: any) {
+            const current = await jobGet(next.id);
+            const hasProvider = !!current?.provider;
+            await updateJob(next.id, {
+              status:
+                hasProvider || next.kind === "publish" ? "review" : "failed",
+              error: e.message || "任务执行失败",
+            });
+          }
+      });
     }
   } finally {
     busy = false;
@@ -377,10 +525,18 @@ export async function recoverJobs() {
   );
 }
 export async function cancelJob(id: string) {
+  return withJobLock(id, () => cancelJobUnlocked(id));
+}
+async function cancelJobUnlocked(id: string) {
   const r = await jobGet(id);
   if (!r) throw new AppError(404, "任务不存在");
   const p = parse(r.provider);
   if (p?.name === "fal" && ["processing", "review"].includes(r.status)) {
+    if (!p.requestId)
+      throw new AppError(
+        409,
+        "没有供应商请求 ID，请先核对实际请求，不能保证取消",
+      );
     const fal = await falClient();
     await fal.queue.cancel(p.model, { requestId: p.requestId });
     await updateJob(id, {
@@ -391,11 +547,30 @@ export async function cancelJob(id: string) {
   }
   if (!["queued", "scheduled"].includes(r.status))
     throw new AppError(409, "该任务已提交，不能保证取消；请查看供应商状态");
-  await updateJob(id, { status: "cancelled" });
+  const cancelled = await execute(
+    "UPDATE jobs SET status='cancelled' WHERE id=? AND workspace_id=? AND status IN ('queued','scheduled')",
+    [id, workspace()],
+  );
+  if (!cancelled.affectedRows)
+    throw new AppError(409, "任务已开始执行，请刷新状态后核对");
+  await finalizeCredits(id, false);
 }
 export async function refreshJob(id: string) {
   const r = await jobGet(id);
   if (!r) throw new AppError(404, "任务不存在");
   if (!r.provider) throw new AppError(409, "没有供应商任务标识，无法恢复查询");
   await pollJob(r);
+  const current = await jobGet(id);
+  if (["completed", "inbox"].includes(current?.status))
+    await finalizeCredits(id, true);
+}
+export async function retryJob(id: string) {
+  const r = await jobGet(id);
+  if (!r) throw new AppError(404, "任务不存在");
+  if (!["failed", "cancelled"].includes(r.status))
+    throw new AppError(
+      409,
+      "只有明确失败或未提交已取消的任务可以重试；待核对任务需先核对供应商",
+    );
+  return createJob(r.kind, { ...parse(r.input), retryOf: id }, randomUUID());
 }

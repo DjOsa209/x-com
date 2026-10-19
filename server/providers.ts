@@ -91,6 +91,24 @@ export async function falInput(
   input: Doc,
 ): Promise<{ model: string; payload: Doc; frame?: Doc }> {
   const c = await config();
+  if (kind === "raw") {
+    const allowed = [
+      c.FAL_VIDEO_MODEL,
+      c.FAL_IMAGE_MODEL,
+      c.FAL_IMAGE_EDIT_MODEL,
+      c.FAL_ENHANCE_MODEL,
+      ...JSON.parse(process.env.FAL_EXTRA_MODELS_JSON || "[]"),
+    ];
+    if (!allowed.includes(input.modelId))
+      throw new AppError(400, "模型未加入服务端允许列表");
+    if (
+      !input.payload ||
+      typeof input.payload !== "object" ||
+      Array.isArray(input.payload)
+    )
+      throw new AppError(400, "原始模型输入必须是 JSON 对象");
+    return { model: input.modelId, payload: input.payload };
+  }
   if (kind === "image") {
     const refs = await Promise.all(
       (input.assetIds || []).slice(0, 5).map(falAsset),

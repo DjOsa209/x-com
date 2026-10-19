@@ -23,6 +23,21 @@ import { mediaRoot, saveMedia, assetFile } from "./media.ts";
 import { createJob, cancelJob, refreshJob } from "./jobs.ts";
 import * as tiktok from "./tiktok.ts";
 import { aiJson } from "./providers.ts";
+import {
+  access,
+  authRoutes,
+  requireOwner,
+  requirePlatformAdmin,
+  audit,
+} from "./auth.ts";
+import { workspace } from "./context.ts";
+import { projectRoutes } from "./projects.ts";
+import { billingRoutes, stripeWebhook } from "./billing.ts";
+import { storageRoutes } from "./storage-routes.ts";
+import { objectDelete } from "./storage.ts";
+import { automationRoutes } from "./automations.ts";
+import { retryJob } from "./jobs.ts";
+import { finalizeCredits } from "./credits.ts";
 
 export const app = express();
 app.disable("x-powered-by");
@@ -50,7 +65,11 @@ app.use((req, res, next) => {
   }
   next();
 });
+app.use(stripeWebhook);
 app.use(express.json({ limit: "2mb" }));
+app.use(access);
+app.use("/api", authRoutes);
+app.use("/api", projectRoutes, billingRoutes, storageRoutes, automationRoutes);
 const object = z.record(z.string(), z.any());
 const collections = [
   "asset",
@@ -61,6 +80,7 @@ const collections = [
   "prompt",
   "opportunity",
   "account",
+  "observation",
 ];
 const checkKind = (kind: string) => {
   if (!collections.includes(kind)) throw new AppError(404, "资源类型不存在");
@@ -69,7 +89,7 @@ const checkKind = (kind: string) => {
 app.get("/api/health", async (_req, res) => {
   try {
     await rows("SELECT 1");
-    res.json({ ok: true, database: "mysql", version: "0.1.0" });
+    res.json({ ok: true, database: "mysql", version: "0.2.0" });
   } catch {
     res.status(503).json({
       ok: false,
@@ -81,16 +101,101 @@ app.get("/api/health", async (_req, res) => {
 app.get("/api/status", async (_req, res) => {
   const settings = await publicConfig();
   const [usage] = await rows(
-    "SELECT COUNT(*) calls,SUM(success) successful FROM api_usage WHERE provider='echotik' AND endpoint<>'/echotik/batch/cover/download' AND created_at>=DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-01')",
+    "SELECT COUNT(*) calls,SUM(success) successful FROM api_usage WHERE workspace_id=? AND provider='echotik' AND endpoint<>'/echotik/batch/cover/download' AND created_at>=DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-01')",
+    [workspace()],
   );
   res.json({ ...settings, usage, endpointCount: catalog.length });
 });
 app.get("/api/settings", async (_req, res) => res.json(await publicConfig()));
 app.put("/api/settings", async (req, res) => {
-  await saveConfig(object.parse(req.body));
+  requireOwner();
+  const patch = object.parse(req.body);
+  if (
+    patch.CREDIT_COSTS_JSON !== undefined ||
+    patch.STORAGE_LIMIT_MB !== undefined
+  )
+    requirePlatformAdmin();
+  await saveConfig(patch);
+  await audit("settings.updated", { keys: Object.keys(patch) });
   res.json(await publicConfig());
 });
 app.get("/api/catalog", (_req, res) => res.json(catalog));
+app.get("/api/models", async (_req, res) => {
+  const c = await config();
+  res.json([
+    {
+      id: c.FAL_VIDEO_MODEL,
+      type: "video",
+      adapter: "kling-v3",
+      durations: [5, 10, 15],
+      roles: true,
+    },
+    {
+      id: c.FAL_IMAGE_MODEL,
+      type: "image",
+      adapter: "flux-schnell",
+      references: 0,
+    },
+    {
+      id: c.FAL_IMAGE_EDIT_MODEL,
+      type: "image-edit",
+      adapter: "nano-banana-edit",
+      references: 5,
+    },
+    {
+      id: c.FAL_ENHANCE_MODEL,
+      type: "enhance",
+      adapter: "topaz",
+      factors: [1, 4],
+    },
+  ]);
+});
+app.get("/api/worker", async (_req, res) => {
+  const [w] = await rows(
+    "SELECT payload,updated_at FROM system_state WHERE id='worker'",
+  );
+  res.json(w || { status: "not_started" });
+});
+app.post("/api/jobs/:id/retry", async (req, res) =>
+  res.json(await retryJob(String(req.params.id))),
+);
+app.post("/api/jobs/:id/resolve", async (req, res) => {
+  requireOwner();
+  const decision = z.enum(["failed", "completed"]).parse(req.body.decision);
+  if (decision === "failed") requirePlatformAdmin();
+  const id = String(req.params.id),
+    j = await jobGet(id);
+  if (!j || j.status !== "review")
+    throw new AppError(409, "只有待核对任务可以人工核对");
+  const note = z.string().min(10).max(1000).parse(req.body.note);
+  if (decision === "completed") {
+    // Only a provider response may prove completion; notes are not evidence.
+    await refreshJob(id);
+    const verified = await jobGet(id);
+    if (!["completed", "inbox"].includes(verified?.status))
+      throw new AppError(409, "供应商尚未确认完成，不能人工标记成功");
+  } else {
+    await execute(
+      "UPDATE jobs SET status='failed',error=? WHERE id=? AND workspace_id=? AND status='review'",
+      ["人工核对：" + note, id, workspace()],
+    );
+    await finalizeCredits(id, false);
+  }
+  await audit("job.review_resolved", { jobId: id, decision, note });
+  res.json({ ok: true });
+});
+app.get("/api/tiktok/connect/status", async (req, res) => {
+  const state = z.string().max(128).parse(req.query.state);
+  const { createHash } = await import("node:crypto");
+  const [s] = await rows(
+    "SELECT status,expires_at FROM oauth_states WHERE state_hash=? AND workspace_id=?",
+    [createHash("sha256").update(state).digest("hex"), workspace()],
+  );
+  res.json({
+    status:
+      s && new Date(s.expires_at).getTime() > Date.now() ? s.status : "expired",
+  });
+});
 app.post("/api/echotik/query", async (req, res) => {
   const b = z
     .object({
@@ -194,8 +299,17 @@ app.delete("/api/records/:kind/:id", async (req, res) => {
     const characters = await list("character");
     if (characters.some((c) => c.assetId === id))
       throw new AppError(409, "素材正在被角色引用，请先删除对应角色");
-    const { path } = await assetFile(id);
-    await unlink(path);
+    const a = await get(id, "asset");
+    if (a?.storageKey) {
+      await objectDelete(a.storageKey);
+      if (a.filename && basename(a.filename) === a.filename)
+        await unlink(resolve(".local/object-cache", a.filename)).catch(
+          () => {},
+        );
+    } else {
+      const { path } = await assetFile(id);
+      await unlink(path);
+    }
   }
   if (kind === "account") await remove(id + "-token", "token");
   await remove(id, kind);
@@ -228,11 +342,17 @@ app.post("/api/uploads", upload.single("file"), async (req, res) => {
     );
   res.status(201).json(await saveMedia(b, m, name));
 });
-app.get("/media/:filename", (req, res, next) => {
+app.get("/media/:filename", async (req, res, next) => {
   const name = String(req.params.filename);
   if (!/^[a-f0-9-]+\.(png|jpg|webp|mp4|mov|webm)$/.test(name))
     return next(new AppError(404, "文件不存在"));
-  res.sendFile(resolve(mediaRoot, name), { dotfiles: "allow" });
+  const [a] = await rows(
+    "SELECT id FROM records WHERE kind='asset' AND workspace_id=? AND JSON_UNQUOTE(JSON_EXTRACT(body,'$.filename'))=?",
+    [workspace(), name],
+  );
+  if (!a) throw new AppError(404, "素材不存在");
+  const { path } = await assetFile(a.id);
+  res.sendFile(path, { dotfiles: "allow" });
 });
 app.get("/api/assets/:id/download", async (req, res) => {
   const { asset, path } = await assetFile(String(req.params.id));
@@ -295,7 +415,7 @@ app.post("/api/tiktok/connect", async (_req, res) => {
     secure: process.env.NODE_ENV === "production",
     path: "/api/tiktok/callback",
   });
-  res.json({ url: auth.url });
+  res.json({ url: auth.url, state: auth.state });
 });
 app.get("/api/tiktok/callback", async (req, res) => {
   const cookie =
@@ -326,16 +446,20 @@ app.post("/api/tiktok/:id/videos", async (req, res) =>
 );
 app.get("/api/analytics", async (_req, res) => {
   const byStatus = await rows(
-    "SELECT status,COUNT(*) count FROM jobs GROUP BY status",
+    "SELECT status,COUNT(*) count FROM jobs WHERE workspace_id=? GROUP BY status",
+    [workspace()],
   );
   const byKind = await rows(
-    "SELECT kind,COUNT(*) count FROM jobs GROUP BY kind",
+    "SELECT kind,COUNT(*) count FROM jobs WHERE workspace_id=? GROUP BY kind",
+    [workspace()],
   );
   const usage = await rows(
-    "SELECT DATE_FORMAT(created_at,'%Y-%m-%d') day,COUNT(*) calls,SUM(success) successful FROM api_usage GROUP BY day ORDER BY day DESC LIMIT 30",
+    "SELECT DATE_FORMAT(created_at,'%Y-%m-%d') day,COUNT(*) calls,SUM(success) successful FROM api_usage WHERE workspace_id=? GROUP BY day ORDER BY day DESC LIMIT 30",
+    [workspace()],
   );
   const storage = await rows(
-    "SELECT COUNT(*) count,COALESCE(SUM(JSON_EXTRACT(body,'$.bytes')),0) bytes FROM records WHERE kind='asset'",
+    "SELECT COUNT(*) count,COALESCE(SUM(JSON_EXTRACT(body,'$.bytes')),0) bytes FROM records WHERE kind='asset' AND workspace_id=?",
+    [workspace()],
   );
   res.json({ byStatus, byKind, usage, storage: storage[0] });
 });
@@ -365,24 +489,28 @@ export function apiErrors() {
           code: err.code,
         });
       const status =
-        err instanceof AppError
-          ? err.status
-          : [400, 404, 413].includes(err.status)
+        err.code === "ER_DUP_ENTRY"
+          ? 409
+          : err instanceof AppError
             ? err.status
-            : 500;
+            : [400, 404, 413].includes(err.status)
+              ? err.status
+              : 500;
       res.status(status).json({
         error:
-          err instanceof AppError
-            ? err.message
-            : status === 404
-              ? "文件或接口不存在"
-              : status === 400
-                ? "请求格式无效"
-                : status === 413
-                  ? "请求内容超过大小上限"
-                  : err.code?.startsWith("ECONN")
-                    ? "MySQL 或上游连接失败，请检查设置"
-                    : "服务暂时无法处理请求，请查看服务器日志",
+          err.code === "ER_DUP_ENTRY"
+            ? "记录已存在，请使用新的标识或登录已有账号"
+            : err instanceof AppError
+              ? err.message
+              : status === 404
+                ? "文件或接口不存在"
+                : status === 400
+                  ? "请求格式无效"
+                  : status === 413
+                    ? "请求内容超过大小上限"
+                    : err.code?.startsWith("ECONN")
+                      ? "MySQL 或上游连接失败，请检查设置"
+                      : "服务暂时无法处理请求，请查看服务器日志",
         code: err.code || "INTERNAL_ERROR",
       });
       if (status === 500)

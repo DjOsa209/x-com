@@ -1,0 +1,199 @@
+- complementary:
+  - link "CLIPCAT.AI Logo":
+    - /url: /en/workspace
+    - img "CLIPCAT.AI Logo"
+  - navigation:
+    - generic: Create
+    - link "Video Marketing Agent":
+      - /url: /en/workspace
+      - generic: Video Marketing Agent
+    - link "Skill":
+      - /url: /en/workspace/openclaw
+      - generic: Skill
+    - link "Community":
+      - /url: /en/workspace/inspiration
+      - generic: Community
+    - link "AI Tools":
+      - /url: /en/workspace/ai-tools
+      - generic: AI Tools
+    - generic: Manage
+    - link "Video Publishing":
+      - /url: /en/workspace/publish
+      - generic: Video Publishing
+    - link "Analytics":
+      - /url: /en/workspace/analytics
+      - generic: Analytics
+    - link "My Assets":
+      - /url: /en/workspace/assets
+      - generic: My Assets
+    - link "My Characters":
+      - /url: /en/workspace/characters
+      - generic: My Characters
+    - link "Task Management":
+      - /url: /en/workspace/tasks
+      - generic: Task Management
+    - generic: My Tasks
+    - generic: No conversations yet
+  - button "Collapse":
+    - generic: Collapse
+- banner:
+  - link "Docs":
+    - /url: /en/blog
+    - text: Docs
+  - generic: 0 Credits
+  - button "Buy Credits"
+  - button "🎁 Earn Credits":
+    - generic: 🎁
+    - text: Earn Credits
+  - button "EN":
+    - generic: EN
+  - button:
+  - button "U":
+    - generic: U
+- main:
+  - heading "E-commerce Video Marketing Agent" [level=1]
+  - paragraph: Your AI employee is here. How can I help?
+  - button "Add Image Or paste a screenshot / drag images here":
+    - tooltip "Add Image Or paste a screenshot / drag images here":
+      - text: Add Image
+      - generic: Or paste a screenshot / drag images here
+  - textbox "Upload product image, describe your video info and requirements"
+  - generic: 0 / 4000
+  - button "1-Click Video":
+    - generic: 1-Click Video
+  - button "Seedance 2 Mini":
+    - generic: Seedance 2 Mini
+  - button "Ref":
+    - generic: Ref
+  - button "Role":
+    - generic: Role
+  - button "720p/10s/EN/9:16":
+    - generic: 720p/10s/EN/9:16
+  - generic: Chat Gen
+  - generic: 100 Credits
+  - button "Please upload a product image first":
+    - tooltip "Please upload a product image first"
+  - button "Selection":
+    - generic: Selection
+  - button "Viral Videos":
+    - generic: Viral Videos
+  - button "Promo Video":
+    - generic: Promo Video
+  - button "Promo Image GPT-Image2.5":
+    - generic: Promo Image
+    - generic: GPT-Image2.5
+  - button "Analytics":
+    - generic: Analytics
+  - heading "Recent" [level=2]
+  - link "View All":
+    - /url: /en/workspace/assets
+  - paragraph: No records yet
+  - heading "Viral Community" [level=2]
+  - link "View All":
+    - /url: /en/workspace/inspiration
+  - button "AI Viral Prompts": AI Viral Prompts
+  - button "TikTok Leaderboard"
+  - button "Search"
+  - button "Competitors"
+  - button "My Inspiration"
+  - button "Featured Cases"
+  - paragraph: The world's largest library of AI shopping-video prompts — every one a proven best-seller
+  - textbox "Semantic search — describe the shots or effects you want and we'll surface matching videos"
+  - button "Search" [disabled]
+  - generic: Country：
+  - button "All Countries"
+  - button "🇺🇸 United States":
+    - generic: 🇺🇸
+    - generic: United States
+  - button "🇬🇧 United Kingdom":
+    - generic: 🇬🇧
+    - generic: United Kingdom
+  - button "🇩🇪 Germany":
+    - generic: 🇩🇪
+    - generic: Germany
+  - button "🇪🇸 Spain":
+    - generic: 🇪🇸
+    - generic: Spain
+  - button "🇫🇷 France":
+    - generic: 🇫🇷
+    - generic: France
+  - button "🇮🇹 Italy":
+    - generic: 🇮🇹
+    - generic: Italy
+  - button "🇯🇵 Japan":
+    - generic: 🇯🇵
+    - generic: Japan
+  - button "🇲🇽 Mexico":
+    - generic: 🇲🇽
+    - generic: Mexico
+  - button "🇧🇷 Brazil":
+    - generic: 🇧🇷
+    - generic: Brazil
+  - button "🇮🇩 Indonesia":
+    - generic: 🇮🇩
+    - generic: Indonesia
+  - button "🇲🇾 Malaysia":
+    - generic: 🇲🇾
+    - generic: Malaysia
+  - button "🇵🇭 Philippines":
+    - generic: 🇵🇭
+    - generic: Philippines
+  - button "🇸🇬 Singapore":
+    - generic: 🇸🇬
+    - generic: Singapore
+  - button "🇹🇭 Thailand":
+    - generic: 🇹🇭
+    - generic: Thailand
+  - button "🇻🇳 Vietnam":
+    - generic: 🇻🇳
+    - generic: Vietnam
+  - button "Expand":
+    - text: Expand
+  - generic: Category：
+  - button "All Categories"
+  - button "Bookings & Vouchers"
+  - button "Home Supplies"
+  - button "Kitchenware"
+  - button "Textiles & Soft Furnishings"
+  - button "Household Appliances"
+  - button "Womenswear & Underwear"
+  - button "Muslim Fashion"
+  - button "Shoes"
+  - button "Beauty & Personal Care"
+  - button "Phones & Electronics"
+  - button "Computers & Office Equipment"
+  - button "Pet Supplies"
+  - button "Baby & Maternity"
+  - button "Sports & Outdoor"
+  - button "Toys & Hobbies"
+  - button "Furniture"
+  - button "Tools & Hardware"
+  - button "Home Improvement"
+  - button "Automotive & Motorcycle"
+  - button "Fashion Accessories"
+  - button "Food & Beverages"
+  - button "Health"
+  - button "Books, Magazines & Audio"
+  - button "Kids' Fashion"
+  - button "Menswear & Underwear"
+  - button "Luggage & Bags"
+  - button "Virtual Products"
+  - button "Pre-Owned"
+  - button "Collectibles"
+  - button "Jewelry Accessories & Derivatives"
+  - button "Expand":
+    - text: Expand
+  - button "More filters":
+    - text: More filters
+  - generic: Time Range：
+  - button "Weekly"
+  - button "Daily"
+  - button "All Time"
+  - button "Latest · Oct 12 - Oct 18":
+    - text: Latest · Oct 12 - Oct 18
+  - generic: Sort by：
+  - button "GMV":
+    - text: GMV
+  - generic: Nothing indexed for this combination yet — try another country, category or week.
+- alert
+- region "Notifications alt+T"

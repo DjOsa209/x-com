@@ -1,0 +1,515 @@
+- banner:
+  - navigation:
+    - link "Clipcat AI":
+      - /url: /en
+      - img "Clipcat AI"
+    - link "Home":
+      - /url: /en
+    - button "Products":
+      - text: Products
+    - button "Tools":
+      - text: Tools
+    - button "Models":
+      - text: Models
+    - link "Prompts":
+      - /url: /en/tools/ai-tiktok-videos-prompt
+    - link "Skill":
+      - /url: /en/tiktok/openclaw
+    - link "Blog":
+      - /url: /en/blog
+    - link "Pricing":
+      - /url: /en/pricing
+    - button:
+    - button "Switch to dark mode":
+    - button "Sign In":
+      - generic: Sign In
+    - button "Sign Up":
+      - generic: Sign Up
+- main:
+  - text: 🎉 Big Launch! Clipcat Discount for First 1000 Users!
+  - link "Buy Now":
+    - /url: /en/pricing
+  - button "Close":
+  - link "AI Video Library":
+    - /url: /en/tools/ai-tiktok-videos-prompt
+  - text: ›
+  - link "🇮🇹 Italy":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/country-it
+  - text: ›
+  - link "Beauty & Personal Care":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-beauty--personal-care
+  - heading "[Medicube – Negozio ufficiale… · Real Review · Curiosity Gap" [level=1]
+  - paragraph: "Medicube Zero Pore Blackhead Mud Mask 💙 maschera all’argilla pensata per aiutare a pulire i pori e ridurre l’aspetto dei punti neri ✨ La trovi nel carrellino. @medicube Italia #Medicube #ZeroPore #BlackheadMudMask #FreshForFall #Offerteperte"
+  - paragraph: In a cozy bedroom, a macro animation shows pore dirt first. A young Southern European female blogger holds a blue mud mask, starts with a doubtful tone, then applies the mask, waits 3 minutes, wipes off the mask with a cotton pad stained with blackhead dirt, and finally recommends the product. Shot with front-facing phone, soft lighting, tight pace.
+  - generic: Full prompt
+  - button "Translate":
+    - generic: Translate
+  - button "Replicate this video":
+    - text: Replicate this video
+  - button "Copy prompt"
+  - generic: "[Style]: TikTok realistic beauty review style, with true and natural picture details, fully restores the actual skincare operation process, and is full of immersive visual experience. [Environment]: The creator is in her cozy home bedroom, a soft daily home scene, with simple indoor furniture and decorations visible in the background, the overall layout is relaxed and casual, full of daily atmosphere. [Tone & Pacing]: The creator's tone is a colloquial sharing style with curiosity and surprise, the video rhythm is well-paced, progressing layer by layer from product display, application operation, effect demonstration to product recommendation, smooth and natural without dragging. [Camera]: The whole video uses the front-facing selfie perspective of a mobile phone, paired with a large number of close-up face shots, the camera occasionally has slight natural shaking, restoring the real texture of ordinary users shooting at home. [Lighting]: Soft indoor top natural light evenly falls on the creator's face, the light is bright but not harsh, clearly showing the details of facial skin and the texture of the mask. [Character]: Southern European white woman, 20-25 years old, energetic young beauty blogger, combination oily skin, obvious pores and blackheads visible on the T-zone, redness on the skin around the nose; three-dimensional deep facial features, long thick curly eyelashes, full lip shape, clear and smooth facial contour; bare face with only mascara applied, extremely light makeup, wearing a simple white halter camisole, paired with a pink plush bunny-shaped headband, enthusiastic and lively personality, full of affinity, smooth natural body movements, rich and real emotional layers. [Shots] Shot 1: - Duration: 0.0sec - 5.5sec - Scene Type: Ingredient Analysis - Scene: Macro close-up simulates a skincare animation scene, showing deep black dirt hidden in pores, then the blue gel-like skincare product slowly injects and fills the pores, after the dirt is completely brought out, the pores become clean and clear, Italian text and a Chinese national flag logo are displayed synchronously at the top of the frame. - Subject: Thank you. No, raga, è impossibile che sta roba Shot 2: - Duration: 5.5sec - 10.5sec - Scene Type: Creator's Personal Test Experience - Scene: The creator wearing a pink plush headband appears in front of the camera, a small window at the top of the frame synchronously plays back the previous macro skin animation, the creator holds the blue skincare tube and matching tool in her hand, makes a display gesture to the camera, with a curious and slightly skeptical expression on her face. - Subject: But being that it goes viral from all over the world Let's try it! Shot 3: - Duration: 10.5sec - 20.0sec - Scene Type: Demonstration of Ease of Use - Scene: The camera is close to the creator's face, she squeezes out the blue gel mask on both sides of her nose, the blue gel flows down the bridge of the nose to the cheeks, the creator gently tidies her hair with her fingers while demonstrating, speaking to the camera. - Subject: the thing that I'm not sure is that while she is ashy, we can already see all the pores and the glass I apply it to the surface Shot 4: - Duration: 20.0sec - 37.0sec - Scene Type: Product Usage Scene - Scene: The creator spreads the blue gel mask evenly with her fingertips, focusing on applying it to the T-zone, nose wings, both sides of the cheeks and the chin, until the blue mask completely covers the corresponding areas, the texture gradually becomes smooth and uniform. - Subject: the nose and the area T contains AK, BAK and PAK. that could help to remove Thank you. Now just wait 3 minutes Shot 5: - Duration: 37.0sec - 51.5sec - Scene Type: Product Effectiveness - Scene: The camera switches to a large close-up of the creator's face, after the original blue mask is completely dry, it turns light white, dense small black dots appear on the mask at the nose position, the creator points to the nose position with her fingertip, leans close to the camera to show the details of pores, blackheads and sebum emerging, with a disgusted and surprised expression. - Subject: And after three minutes, look at that. FIFO è uscito dal mio naso Look, from next to you, they see everything. I I'll say, \"Oh, I'll never have to get it.\" Shot 6: - Duration: 51.5sec - 69.5sec - Scene Type: Before and After Usage Comparison - Scene: The creator picks up a cotton pad, gently wipes off the dry mask residue on her face, the cotton pad after wiping the nose has obvious blue-black dirt marks, she shows the dirty cotton pad to the camera, then gently touches the smooth nose skin with her fingertips, showing a surprised and satisfied smile, demonstrating the real smooth and clean skin state after cleansing. - Subject: and we'll see... you - I feel the skin is loose I feel like a coldness is a lot of coldness. and my skin is surely too much I'm much more clean. Shot 7: - Duration: 69.5sec - 76.5sec - Scene Type: Order Process Guide - Scene: The creator picks up the blue skincare tube again, shows the product appearance to the camera from all angles, taps the text logo on the tube with her finger, and seriously makes the final product recommendation to the camera. - Subject: but now I've got everything in the live. I've got a lot of money, but I've got this TikTok shop because now Thank you. [Background Sound]: - Lively and upbeat TikTok-style background music: fast-paced, moderately high volume, with pop electronic elements, a catchy melody, full of 'product recommendation appeal' and 'twist surprise' atmosphere, suitable for beauty and skincare product promotion videos, matching the short-video rhythm of 'review + before-and-after comparison + emotional expression', the music style is similar to the commonly used BGM for viral TikTok makeup hauls, can strengthen audience emotional resonance and improve conversion effect, classified as a light beauty review BGM, adapted to the content structure of 'shock - experience - surprise - recommendation'. [Transition / Editing]: - Adopt jump-cut editing technique, fast and natural switching between each skincare process node, compact and smooth rhythm, fits the popular editing style of TikTok short videos, highlights the immersive experience of the skincare process."
+  - complementary:
+    - generic: "@Thaly💋"
+    - link "View original video →":
+      - /url: https://www.tiktok.com/share/video/7691690292554059041
+    - generic: Published
+    - generic: October 1, 2026
+    - generic: Market
+    - generic: 🇮🇹 Italy
+    - generic: Category
+    - generic: Beauty & Personal Care
+    - generic: Video type
+    - generic: Real Review
+    - generic: AI Commerce
+    - generic: 🇮🇹 Italy
+    - generic: Beauty & Personal Care
+    - generic: Real Review
+    - generic: GMV
+    - generic: $87K
+    - generic: Sales
+    - generic: 6K
+    - generic: Views
+    - generic: 7.8M
+    - generic: Likes
+    - generic: 56K
+    - generic: Shares
+    - generic: 12K
+    - generic: Saves
+    - generic: 20K
+    - generic: How this video works
+    - generic: Opening hook
+    - generic: Curiosity Gap
+    - generic: On camera
+    - generic: On-camera host
+    - generic: Female
+    - generic: 18-24
+    - generic: Voiceover
+    - generic: English
+    - generic: Promotion
+    - generic: No promo
+    - generic: Duration
+    - generic: Over 60s
+    - generic: Opens with
+    - paragraph: 「It's impossible that this stuff exists」
+    - generic: Target pain point
+    - paragraph: Large pores and obvious blackheads on T-zone
+    - generic: Visual elements
+    - generic: Pink Plush Rabbit Headband
+    - generic: Blue Mud Mask
+    - generic: Cotton Pad
+    - generic: Pore Animation
+    - generic: Bedroom
+    - generic: White Camisole
+    - generic: Close-up Face
+    - generic: Share
+    - button "Copy page link":
+      - generic: Copy page link
+    - button "Share on X":
+      - generic: Share on X
+  - heading "Related viral videos & prompts" [level=2]
+  - heading "More viral videos for this product" [level=3]
+  - article:
+    - link "$23K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-410400
+      - generic: $23K GMV
+    - heading "Italy · Beauty & Personal Care · Real Review" [level=3]
+    - generic: "@dr_chicheucot"
+    - generic: ▶ 1.2M
+    - generic: 🇮🇹 Italy
+    - generic: Beauty & Personal Care
+    - generic: Real Review
+    - 'link "Prompt · [Style]: A creative short video style that intercuts cartoon animation and live-action footage, with bright, vivid colors. It balances educational fun and the p"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-410400
+      - generic: Prompt ·
+      - text: "[Style]: A creative short video style that intercuts cartoon animation and live-action footage, with bright, vivid colors. It balances educational fun and the p"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-410400
+    - button "Copy share link":
+  - article:
+    - link "$3.2K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-183776
+      - generic: $3.2K GMV
+    - heading "Italy · Beauty & Personal Care · Real Review" [level=3]
+    - generic: "@Thaly💋"
+    - generic: ▶ 599K
+    - generic: 🇮🇹 Italy
+    - generic: Beauty & Personal Care
+    - generic: Real Review
+    - 'link "Prompt · [Style]: Italian TikTok lifestyle UGC review aesthetic, with vivid, saturated colors that exude an authentic at-home skincare sharing feel, carrying a natural,"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-183776
+      - generic: Prompt ·
+      - text: "[Style]: Italian TikTok lifestyle UGC review aesthetic, with vivid, saturated colors that exude an authentic at-home skincare sharing feel, carrying a natural,"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-183776
+    - button "Copy share link":
+  - article:
+    - link "$775 GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-712608
+      - generic: $775 GMV
+    - heading "Italy · Beauty & Personal Care · Real Review" [level=3]
+    - generic: "@Thaly💋"
+    - generic: ▶ 74K
+    - generic: 🇮🇹 Italy
+    - generic: Beauty & Personal Care
+    - generic: Real Review
+    - 'link "Prompt · [Style]: Beauty UGC realistic style, with high-definition macro skin details paired with the daily selfie texture of a lifestyle blogger, bright and true colors"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-712608
+      - generic: Prompt ·
+      - text: "[Style]: Beauty UGC realistic style, with high-definition macro skin details paired with the daily selfie texture of a lifestyle blogger, bright and true colors"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-712608
+    - button "Copy share link":
+  - article:
+    - link "$630 GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-755745
+      - generic: $630 GMV
+    - heading "Italy · Beauty & Personal Care · Real Review" [level=3]
+    - generic: "@Thaly💋"
+    - generic: ▶ 2.1M
+    - generic: 🇮🇹 Italy
+    - generic: Beauty & Personal Care
+    - generic: Real Review
+    - 'link "Prompt · [Style]: TikTok daily skincare review UGC style, authentic and relatable, with clear image details and the genuine, down-to-earth feel of a real-life personal s"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-755745
+      - generic: Prompt ·
+      - text: "[Style]: TikTok daily skincare review UGC style, authentic and relatable, with clear image details and the genuine, down-to-earth feel of a real-life personal s"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-755745
+    - button "Copy share link":
+  - heading "More Italy Beauty & Personal Care hits" [level=3]
+  - article:
+    - link "$24K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-238358
+      - generic: $24K GMV
+    - heading "Italy · Beauty & Personal Care · Real Review" [level=3]
+    - generic: "@Masderm_Italy"
+    - generic: ▶ 28K
+    - generic: 🇮🇹 Italy
+    - generic: Beauty & Personal Care
+    - generic: Real Review
+    - 'link "Prompt · [Style]: Home-based realistic UGC sharing style, with natural and raw visual quality that retains authentic daily home life details, no excessive filter modific"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-238358
+      - generic: Prompt ·
+      - text: "[Style]: Home-based realistic UGC sharing style, with natural and raw visual quality that retains authentic daily home life details, no excessive filter modific"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-238358
+    - button "Copy share link":
+  - article:
+    - link "$10K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-809889
+      - generic: $10K GMV
+    - heading "Italy · Beauty & Personal Care · Product Close-Up" [level=3]
+    - generic: "@linda.shopmilano26"
+    - generic: ▶ 33K
+    - generic: 🇮🇹 Italy
+    - generic: Beauty & Personal Care
+    - generic: Product Close-Up
+    - 'link "Prompt · [Style]: Realistic presentation style for beauty and skincare products, with a unified pink main color palette, soft and delicate highlights, clearly showcasing"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-809889
+      - generic: Prompt ·
+      - text: "[Style]: Realistic presentation style for beauty and skincare products, with a unified pink main color palette, soft and delicate highlights, clearly showcasing"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-809889
+    - button "Copy share link":
+  - article:
+    - link "$5.6K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-127382
+      - generic: $5.6K GMV
+    - heading "Italy · Beauty & Personal Care · Promo Pitch" [level=3]
+    - generic: "@ZVEV"
+    - generic: ▶ 60K
+    - generic: 🇮🇹 Italy
+    - generic: Beauty & Personal Care
+    - generic: Promo Pitch
+    - 'link "Prompt · [Style]: Realistic beauty product recommendation style, highlighting the product''s authentic texture and on-skin effect. The visuals have bright, rich colors, w"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-127382
+      - generic: Prompt ·
+      - text: "[Style]: Realistic beauty product recommendation style, highlighting the product's authentic texture and on-skin effect. The visuals have bright, rich colors, w"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-127382
+    - button "Copy share link":
+  - article:
+    - link "$3.9K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-199446
+      - generic: $3.9K GMV
+    - heading "Italy · Beauty & Personal Care · Promo Pitch" [level=3]
+    - generic: "@Zio_Fabry_LibroRapido"
+    - generic: ▶ 33K
+    - generic: 🇮🇹 Italy
+    - generic: Beauty & Personal Care
+    - generic: Promo Pitch
+    - 'link "Prompt · [Style]: An exaggerated, eye-catching TikTok viral beauty product short video style, with strong visual impact from the camera, extremely exaggerated makeup eff"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-199446
+      - generic: Prompt ·
+      - text: "[Style]: An exaggerated, eye-catching TikTok viral beauty product short video style, with strong visual impact from the camera, extremely exaggerated makeup eff"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-199446
+    - button "Copy share link":
+  - article:
+    - link "$2.5K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-309025
+      - generic: $2.5K GMV
+    - heading "Italy · Beauty & Personal Care · Real Review" [level=3]
+    - generic: "@famiglia2.3"
+    - generic: ▶ 122K
+    - generic: 🇮🇹 Italy
+    - generic: Beauty & Personal Care
+    - generic: Real Review
+    - 'link "Prompt · [Style]: UGC short video style for authentic product recommendations, with realistic, everyday footage that highlights the native experience of using the produc"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-309025
+      - generic: Prompt ·
+      - text: "[Style]: UGC short video style for authentic product recommendations, with realistic, everyday footage that highlights the native experience of using the produc"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-309025
+    - button "Copy share link":
+  - article:
+    - link "$2.4K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-883744
+      - generic: $2.4K GMV
+    - heading "Italy · Beauty & Personal Care · Handheld Demo" [level=3]
+    - generic: "@M.T786🇮🇹"
+    - generic: ▶ 5.1K
+    - generic: 🇮🇹 Italy
+    - generic: Beauty & Personal Care
+    - generic: Handheld Demo
+    - 'link "Prompt · [Style]: Exquisite realistic beauty recommendation short video, with soft bright pink-toned colors. The shimmer and embossed details of the beauty products are"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-883744
+      - generic: Prompt ·
+      - text: "[Style]: Exquisite realistic beauty recommendation short video, with soft bright pink-toned colors. The shimmer and embossed details of the beauty products are"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-883744
+    - button "Copy share link":
+  - heading "More Real Review videos" [level=3]
+  - article:
+    - link "$154K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/th-health-622536
+      - generic: $154K GMV
+    - heading "Thailand · Health · Real Review" [level=3]
+    - generic: "@แม่เกดลูก2 📸"
+    - generic: ▶ 319K
+    - generic: 🇹🇭 Thailand
+    - generic: Health
+    - generic: Real Review
+    - 'link "Prompt · [Style]: Fresh, healing realistic product-sharing aesthetic, with bright and soft color tones, natural, luminous fine skin texture, combining the laid-back feel"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/th-health-622536
+      - generic: Prompt ·
+      - text: "[Style]: Fresh, healing realistic product-sharing aesthetic, with bright and soft color tones, natural, luminous fine skin texture, combining the laid-back feel"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/th-health-622536
+    - button "Copy share link":
+  - article:
+    - link "$59K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-household-539213
+      - generic: $59K GMV
+    - heading "United States · Household Appliances · Real Review" [level=3]
+    - generic: "@Sweetcrispy Plus"
+    - generic: ▶ 1.1M
+    - generic: 🇺🇸 United States
+    - generic: Household Appliances
+    - generic: Real Review
+    - 'link "Prompt · [Style]: Realistic product showcase style, with exquisite, premium image quality, soft and vivid colors, highlighting the practical and convenient features of t"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-household-539213
+      - generic: Prompt ·
+      - text: "[Style]: Realistic product showcase style, with exquisite, premium image quality, soft and vivid colors, highlighting the practical and convenient features of t"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-household-539213
+    - button "Copy share link":
+  - article:
+    - link "$38K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/ph-food-520021
+      - generic: $38K GMV
+    - heading "Philippines · Food & Beverages · Real Review" [level=3]
+    - generic: "@Nature Market"
+    - generic: ▶ 1M
+    - generic: 🇵🇭 Philippines
+    - generic: Food & Beverages
+    - generic: Real Review
+    - 'link "Prompt · [Style]: Fresh, healing e-commerce food presentation style, with bright and vivid picture colors, full and appetizing food details, and an overall casual, lifes"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/ph-food-520021
+      - generic: Prompt ·
+      - text: "[Style]: Fresh, healing e-commerce food presentation style, with bright and vivid picture colors, full and appetizing food details, and an overall casual, lifes"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/ph-food-520021
+    - button "Copy share link":
+  - article:
+    - link "$30K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-beauty-967821
+      - generic: $30K GMV
+    - heading "United States · Beauty & Personal Care · Real Review" [level=3]
+    - generic: "@JILLIAN FELICE ✨"
+    - generic: ▶ 1.5M
+    - generic: 🇺🇸 United States
+    - generic: Beauty & Personal Care
+    - generic: Real Review
+    - 'link "Prompt · [Style]: Realistic beauty tutorial style, with a strong authentic UGC sharing vibe. The image colors are bright and natural, highlighting skin texture and produ"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-beauty-967821
+      - generic: Prompt ·
+      - text: "[Style]: Realistic beauty tutorial style, with a strong authentic UGC sharing vibe. The image colors are bright and natural, highlighting skin texture and produ"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-beauty-967821
+    - button "Copy share link":
+  - article:
+    - link "$27K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/mx-home-396820
+      - generic: $27K GMV
+    - heading "Mexico · Home Supplies · Real Review" [level=3]
+    - generic: "@Mami del Sofá y la Cocina"
+    - generic: ▶ 22K
+    - generic: 🇲🇽 Mexico
+    - generic: Home Supplies
+    - generic: Real Review
+    - 'link "Prompt · [Style]: Douyin lifestyle practical product sharing realistic style, bright and clean visuals, clear and straightforward detail display, highly practical for da"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/mx-home-396820
+      - generic: Prompt ·
+      - text: "[Style]: Douyin lifestyle practical product sharing realistic style, bright and clean visuals, clear and straightforward detail display, highly practical for da"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/mx-home-396820
+    - button "Copy share link":
+  - article:
+    - link "$26K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-automotive-558925
+      - generic: $26K GMV
+    - heading "United States · Automotive & Motorcycle · Real Review" [level=3]
+    - generic: "@Peyton"
+    - generic: ▶ 233K
+    - generic: 🇺🇸 United States
+    - generic: Automotive & Motorcycle
+    - generic: Real Review
+    - 'link "Prompt · [Style]: Realistic automotive detailing showcase style, with sharp, well-defined highlights, maximum restoration of paint finish texture, emphasizing the starkl"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-automotive-558925
+      - generic: Prompt ·
+      - text: "[Style]: Realistic automotive detailing showcase style, with sharp, well-defined highlights, maximum restoration of paint finish texture, emphasizing the starkl"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-automotive-558925
+    - button "Copy share link":
+  - heading "How to use this prompt (two ways)" [level=2]
+  - generic: Method 1 · Replicate
+  - list:
+    - listitem: Hit the "Replicate" button above the prompt.
+    - listitem: Make the same viral video in one click on Clipcat.ai.
+    - listitem: Just one step — upload your product image and hit generate.
+  - generic: Method 2 · Copy the prompt
+  - list:
+    - listitem: Copy the full structured prompt above.
+    - listitem: Open an AI video platform (Clipcat.ai, for example) and paste it in.
+    - listitem: Swap the selling points, style and details for your own product, then generate.
+  - paragraph: This is one viral prompt from the Clipcat AI video prompt library. There are millions more real viral AI shoppable videos and prompts here, free to search and copy by market, product category and video type.
+  - link "Browse the library":
+    - /url: /en/tools/ai-tiktok-videos-prompt
+  - generic: Free forever · Hand-picked hits
+  - heading "Decode TikTok's winners, free forever." [level=2]:
+    - text: Decode TikTok's winners,
+    - emphasis: free forever.
+  - paragraph: Clipcat.ai is the AI video marketing automation platform trusted by TikTok sellers, creators and affiliates worldwide. Every AI shoppable video and prompt here is hand-picked to help you spot winners faster and make better ones.
+  - button "Open Clipcat.ai":
+    - text: Open Clipcat.ai
+  - generic: 15 TikTok markets · 30+ categories of high-GMV hits
+- contentinfo:
+  - img "Clipcat"
+  - paragraph: Create viral TikTok videos end to end and win TikTok e-commerce growth.
+  - link "Email":
+    - /url: mailto:support@clipcat.ai
+  - heading "Company" [level=5]
+  - link "Home":
+    - /url: /en
+  - link "Privacy":
+    - /url: /en/privacy-policy
+  - link "Terms":
+    - /url: /en/terms-of-service
+  - link "Cookie":
+    - /url: /en/cookie-policy
+  - heading "Products" [level=5]
+  - link "AI TikTok Video Generator":
+    - /url: /en/ai-tiktok-video-generator
+  - link "Viral Video Cloning":
+    - /url: /en/viral-video-cloning
+  - link "AI Avatar Generator":
+    - /url: /en/ai-avatar-generator
+  - heading "Tools" [level=5]
+  - link "Collect Viral Videos":
+    - /url: /en/tools/collect-viral-videos
+  - link "Video Analysis":
+    - /url: /en/tools/video-analysis
+  - link "TikTok Blue-Ocean Product Discovery":
+    - /url: /en/tools/blue-ocean-products
+  - link "Save Reference Footage":
+    - /url: /en/tools/video-download
+  - link "Viral Ad Prompt Generator":
+    - /url: /en/tools/viral-prompt-generator
+  - link "Video Upscale":
+    - /url: /en/tools/video-upscale
+  - link "Video to Prompt":
+    - /url: /en/tools/reverse-video-prompt
+  - link "Image Translation":
+    - /url: /en/tools/image-translation
+  - link "More →":
+    - /url: /en/tools
+  - heading "Models" [level=5]
+  - link "Seedance 2.0":
+    - /url: /en/models/seedance-2-0
+  - link "Seedance 2.5":
+    - /url: /en/models/seedance-2-5
+  - link "Grok Imagine 1.5":
+    - /url: /en/models/grok-imagine-1-5
+  - link "Veo 3.1":
+    - /url: /en/models/veo-3-1
+  - link "Sora 2":
+    - /url: /en/models/sora-2
+  - heading "Resources" [level=5]
+  - link "Blog":
+    - /url: /en/blog
+  - link "Dang.ai":
+    - /url: https://dang.ai/tool/clipcat-ai-ai-tiktok-shop-video-generator
+  - link "FaxianAI":
+    - /url: https://www.faxianai.com/
+  - link "SEO LvL":
+    - /url: https://seolvl.com/site/clipcat
+  - link "Clipcat on PeerPush":
+    - /url: https://peerpush.com/p/clipcat
+  - link "More →":
+    - /url: /en/resources
+  - generic: CLIPCAT.AI
+  - generic: © 2026 Clipcat. All rights reserved.
+  - generic: Made for TikTok creators & sellers.
+  - paragraph:
+    - strong: CLIPCAT AI LTD
+  - paragraph:
+    - text: 128, City Road, London, EC1V 2NX, UNITED KINGDOM
+    - text: Registered in UNITED KINGDOM, Number 16995167
+  - paragraph:
+    - link "support@clipcat.ai":
+      - /url: mailto:support@clipcat.ai
+- alert
+- region "Notifications alt+T"

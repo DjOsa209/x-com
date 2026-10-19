@@ -35,6 +35,13 @@ vi.mock("../server/db.ts", () => ({
       });
       return { affectedRows: 1 };
     }
+    if (sql.includes("SET status='cancelled'")) {
+      const r = state.records.get(v[0]);
+      if (!r || !["queued", "scheduled"].includes(r.status))
+        return { affectedRows: 0 };
+      r.status = "cancelled";
+      return { affectedRows: 1 };
+    }
     if (sql.includes("SET status='running'")) {
       const r = state.records.get(v[0]);
       if (r && ["queued", "scheduled"].includes(r.status)) {
@@ -125,6 +132,17 @@ vi.mock("../server/tiktok.ts", () => ({
   transferPost: vi.fn(async () => {}),
   postStatus: vi.fn(async () => ({ status: state.publishStatus })),
 }));
+vi.mock("../server/locks.ts", () => ({
+  withJobLock: vi.fn(async (_id: string, action: () => Promise<any>) =>
+    action(),
+  ),
+}));
+vi.mock("../server/credits.ts", () => ({
+  reserveCredits: vi.fn(async () => {}),
+  finalizeCredits: vi.fn(async () => {}),
+}));
+import { falInput } from "../server/providers.ts";
+import { AppError } from "../server/errors.ts";
 import {
   createJob,
   tick,
@@ -142,6 +160,31 @@ beforeEach(() => {
   vi.clearAllMocks();
 });
 describe("durable generation transitions", () => {
+  it("records an ambiguous first submission without automatically resubmitting", async () => {
+    state.failSubmit = true;
+    const j = await createJob(
+      "video",
+      { prompt: "coffee", assetIds: ["product-image"] },
+      "ambiguous-first",
+    );
+    await tick();
+    expect(state.records.get(j.id).status).toBe("review");
+    expect(state.records.get(j.id).provider.stage).toBe("submitting");
+    await expect(refreshJob(j.id)).rejects.toThrow("没有请求 ID");
+    expect(state.submits).toHaveLength(1);
+  });
+  it("fails local validation before a billable request instead of freezing it for review", async () => {
+    vi.mocked(falInput).mockRejectedValueOnce(new AppError(404, "素材不存在"));
+    const j = await createJob(
+      "image",
+      { prompt: "coffee" },
+      "missing-local-asset",
+    );
+    await tick();
+    expect(state.records.get(j.id).status).toBe("failed");
+    expect(state.submits).toHaveLength(0);
+  });
+
   it("deduplicates a repeated client submission", async () => {
     const a = await createJob(
       "script",

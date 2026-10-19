@@ -3,6 +3,13 @@ import { mkdirSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { rows, execute, type Doc } from "./db.ts";
 import { AppError } from "./errors.ts";
+import { workspace } from "./context.ts";
+import { createHash } from "node:crypto";
+const settingsId = () =>
+  workspace() === "local"
+    ? "providers"
+    : "p-" +
+      createHash("sha256").update(workspace()).digest("hex").slice(0, 30);
 
 mkdirSync(".local", { recursive: true, mode: 0o700 });
 const keyFile = resolve(".local/master.key");
@@ -48,6 +55,9 @@ export const defaults: Doc = {
   TIKTOK_SCOPES: "user.info.basic,video.publish,video.upload,video.list",
   DOWNLOAD_RESOLVER_URL: "",
   DOWNLOAD_RESOLVER_KEY: "",
+  CREDIT_COSTS_JSON:
+    '{"script":1,"analysis":1,"replicate":2,"video":1,"image":1,"enhance":1,"download":0,"insights":1,"prompt":1,"publish":0,"research":0}',
+  STORAGE_LIMIT_MB: "10240",
 };
 export const secretKeys = [
   "ECHOTIK_USERNAME",
@@ -60,13 +70,13 @@ export const secretKeys = [
 ];
 export async function config(): Promise<Doc> {
   const [r] = await rows("SELECT payload FROM settings WHERE id=?", [
-    "providers",
+    settingsId(),
   ]);
   const saved = r ? JSON.parse(unseal(r.payload)) : {};
   return Object.fromEntries(
     Object.entries(defaults).map(([k, v]) => [
       k,
-      saved[k] ?? process.env[k] ?? v,
+      saved[k] ?? (workspace() === "local" ? process.env[k] : undefined) ?? v,
     ]),
   );
 }
@@ -74,6 +84,7 @@ export async function saveConfig(patch: Doc) {
   for (const [k, min, max] of [
     ["ECHOTIK_MONTHLY_LIMIT", 1, 100000000],
     ["ECHOTIK_CACHE_SECONDS", 0, 86400],
+    ["STORAGE_LIMIT_MB", 1, 104857600],
   ] as const) {
     if (
       patch[k] !== undefined &&
@@ -82,6 +93,24 @@ export async function saveConfig(patch: Doc) {
         Number(patch[k]) > max)
     )
       throw new AppError(400, `${k} 必须为 ${min}–${max} 之间的整数`);
+  }
+  if (patch.CREDIT_COSTS_JSON !== undefined) {
+    let costs;
+    try {
+      costs = JSON.parse(patch.CREDIT_COSTS_JSON);
+    } catch {
+      throw new AppError(400, "任务额度需要合法 JSON");
+    }
+    if (
+      !costs ||
+      Array.isArray(costs) ||
+      typeof costs !== "object" ||
+      Object.values(costs).some(
+        (v) =>
+          !Number.isSafeInteger(v) || Number(v) < 0 || Number(v) > 100000000,
+      )
+    )
+      throw new AppError(400, "每种任务的额度必须为非负整数");
   }
   for (const [k, v] of Object.entries(patch)) {
     if (k !== "clearSecrets" && typeof v !== "string" && typeof v !== "number")
@@ -102,7 +131,7 @@ export async function saveConfig(patch: Doc) {
   for (const k of patch.clearSecrets || [])
     if (secretKeys.includes(k)) old[k] = "";
   await execute("REPLACE INTO settings(id,payload) VALUES(?,?)", [
-    "providers",
+    settingsId(),
     seal(JSON.stringify(old)),
   ]);
 }

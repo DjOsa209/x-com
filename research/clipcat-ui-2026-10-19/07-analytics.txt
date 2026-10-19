@@ -1,0 +1,315 @@
+- complementary:
+  - link "CLIPCAT.AI Logo":
+    - /url: /en/workspace
+    - img "CLIPCAT.AI Logo"
+  - navigation:
+    - generic: Create
+    - link "Video Marketing Agent":
+      - /url: /en/workspace
+      - generic: Video Marketing Agent
+    - link "Skill":
+      - /url: /en/workspace/openclaw
+      - generic: Skill
+    - link "Community":
+      - /url: /en/workspace/inspiration
+      - generic: Community
+    - link "AI Tools":
+      - /url: /en/workspace/ai-tools
+      - generic: AI Tools
+    - generic: Manage
+    - link "Video Publishing":
+      - /url: /en/workspace/publish
+      - generic: Video Publishing
+    - link "Analytics":
+      - /url: /en/workspace/analytics
+      - generic: Analytics
+    - link "My Assets":
+      - /url: /en/workspace/assets
+      - generic: My Assets
+    - link "My Characters":
+      - /url: /en/workspace/characters
+      - generic: My Characters
+    - link "Task Management":
+      - /url: /en/workspace/tasks
+      - generic: Task Management
+    - generic: My Tasks
+    - generic: Loading...
+  - button "Collapse":
+    - generic: Collapse
+- banner:
+  - link "Docs":
+    - /url: /en/blog
+    - text: Docs
+  - generic: 0 Credits
+  - button "Buy Credits"
+  - button "🎁 Earn Credits":
+    - generic: 🎁
+    - text: Earn Credits
+  - button "EN":
+    - generic: EN
+  - button:
+  - button "U":
+    - generic: U
+- main:
+  - heading "Analytics" [level=1]
+  - generic: Members only
+  - heading "Upgrade to unlock analytics for every video on your account" [level=2]
+  - list:
+    - generic: By account·Track the key metrics of every TikTok account you own.
+    - generic: By video·See how every video ranks and remix the winners right away
+    - generic: Roll up and compare·Aggregate your data effortlessly and compare video performance at a glance.
+  - link "Upgrade to unlock analytics":
+    - /url: /en/pricing
+    - text: Upgrade to unlock analytics
+  - button "See a sample"
+  - generic: Everything below is sample data — it will be replaced with your real results after you upgrade and connect an account
+  - text: Total plays
+  - generic: 38.6K
+  - generic: +18.2%
+  - generic: +1.9K
+  - generic: 2.7K
+  - generic: Likes this week
+  - generic: "+12"
+  - generic: "186"
+  - generic: Comments this week
+  - generic: "+126"
+  - generic: "132"
+  - generic: Shares this week
+  - generic: "-0.4%"
+  - generic: 8.3%
+  - generic: Engagement this week
+  - generic: +1.2K
+  - generic: 42.8K
+  - generic: Followers
+  - generic: +3.1K
+  - generic: 218K
+  - generic: Total likes
+  - generic: "+5"
+  - generic: "12"
+  - generic: Posts this week
+  - generic: +18.2%
+  - generic: 38.6K
+  - generic: Views this week
+  - heading "Performance trend" [level=2]
+  - text: Plays & follower growth
+  - list:
+    - text: Plays
+    - text: New followers
+  - text: Engagement trend
+  - list:
+    - text: Engagement
+    - text: Likes
+  - heading "Video rankings" [level=2]
+  - paragraph: Videos published during the selected period
+  - textbox "Search videos…"
+  - button "Export":
+    - text: Export
+  - table:
+    - rowgroup:
+      - row "Video Posted Plays Likes Comments Shares Share rate Engagement Action":
+        - columnheader "Video"
+        - columnheader "Posted":
+          - button "Posted":
+            - text: Posted
+        - columnheader "Plays":
+          - button "Plays":
+            - text: Plays
+        - columnheader "Likes":
+          - button "Likes":
+            - text: Likes
+        - columnheader "Comments":
+          - button "Comments":
+            - text: Comments
+        - columnheader "Shares":
+          - button "Shares":
+            - text: Shares
+        - columnheader "Share rate":
+          - button "Share rate":
+            - text: Share rate
+        - columnheader "Engagement":
+          - button "Engagement":
+            - text: Engagement
+        - columnheader "Action"
+    - rowgroup:
+      - row "👑 冬季油皮粉底测评 @美妆主号 External post This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits. 6/16 102K 14K 980 620 0.6% 15.8% Remix":
+        - cell "👑 冬季油皮粉底测评 @美妆主号 External post This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits.":
+          - generic: 👑
+          - generic: 冬季油皮粉底测评
+          - generic: "@美妆主号"
+          - text: External post
+          - tooltip "This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits."
+        - cell "6/16"
+        - cell "102K"
+        - cell "14K"
+        - cell "980"
+        - cell "620"
+        - cell "0.6%"
+        - cell "15.8%"
+        - cell "Remix":
+          - button "Remix":
+            - generic: Remix
+      - row "2 三步上妆教程 @美妆主号 External post This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits. 6/16 74K 8.2K 540 310 0.4% 12.2% Remix":
+        - cell "2 三步上妆教程 @美妆主号 External post This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits.":
+          - generic: "2"
+          - generic: 三步上妆教程
+          - generic: "@美妆主号"
+          - text: External post
+          - tooltip "This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits."
+        - cell "6/16"
+        - cell "74K"
+        - cell "8.2K"
+        - cell "540"
+        - cell "310"
+        - cell "0.4%"
+        - cell "12.2%"
+        - cell "Remix":
+          - button "Remix":
+            - generic: Remix
+      - row "3 护肤误区盘点 @美妆主号 External post This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits. 6/15 50K 600 40 30 0.1% 1.2% Remix":
+        - cell "3 护肤误区盘点 @美妆主号 External post This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits.":
+          - generic: "3"
+          - generic: 护肤误区盘点
+          - generic: "@美妆主号"
+          - text: External post
+          - tooltip "This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits."
+        - cell "6/15"
+        - cell "50K"
+        - cell "600"
+        - cell "40"
+        - cell "30"
+        - cell "0.1%"
+        - cell "1.2%"
+        - cell "Remix":
+          - button "Remix":
+            - generic: Remix
+      - row "4 新品口红试色合集 @测试号 External post This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits. 6/15 31K 3.1K 260 180 0.6% 11.4% Remix":
+        - cell "4 新品口红试色合集 @测试号 External post This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits.":
+          - generic: "4"
+          - generic: 新品口红试色合集
+          - generic: "@测试号"
+          - text: External post
+          - tooltip "This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits."
+        - cell "6/15"
+        - cell "31K"
+        - cell "3.1K"
+        - cell "260"
+        - cell "180"
+        - cell "0.6%"
+        - cell "11.4%"
+        - cell "Remix":
+          - button "Remix":
+            - generic: Remix
+      - row "5 卸妆产品大对比 @美妆主号 External post This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits. 6/14 24K 2.6K 190 150 0.6% 12.3% Remix":
+        - cell "5 卸妆产品大对比 @美妆主号 External post This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits.":
+          - generic: "5"
+          - generic: 卸妆产品大对比
+          - generic: "@美妆主号"
+          - text: External post
+          - tooltip "This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits."
+        - cell "6/14"
+        - cell "24K"
+        - cell "2.6K"
+        - cell "190"
+        - cell "150"
+        - cell "0.6%"
+        - cell "12.3%"
+        - cell "Remix":
+          - button "Remix":
+            - generic: Remix
+      - row "6 早八快速妆容 @测试号 External post This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits. 6/14 18K 1.5K 90 80 0.4% 9.3% Remix":
+        - cell "6 早八快速妆容 @测试号 External post This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits.":
+          - generic: "6"
+          - generic: 早八快速妆容
+          - generic: "@测试号"
+          - text: External post
+          - tooltip "This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits."
+        - cell "6/14"
+        - cell "18K"
+        - cell "1.5K"
+        - cell "90"
+        - cell "80"
+        - cell "0.4%"
+        - cell "9.3%"
+        - cell "Remix":
+          - button "Remix":
+            - generic: Remix
+      - row "7 遮瑕实测 @美妆主号 External post This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits. 6/13 15K 1.3K 70 60 0.4% 9.5% Remix":
+        - cell "7 遮瑕实测 @美妆主号 External post This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits.":
+          - generic: "7"
+          - generic: 遮瑕实测
+          - generic: "@美妆主号"
+          - text: External post
+          - tooltip "This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits."
+        - cell "6/13"
+        - cell "15K"
+        - cell "1.3K"
+        - cell "70"
+        - cell "60"
+        - cell "0.4%"
+        - cell "9.5%"
+        - cell "Remix":
+          - button "Remix":
+            - generic: Remix
+      - row "8 定妆喷雾测评 @测试号 External post This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits. 6/13 11K 900 50 40 0.4% 9% Remix":
+        - cell "8 定妆喷雾测评 @测试号 External post This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits.":
+          - generic: "8"
+          - generic: 定妆喷雾测评
+          - generic: "@测试号"
+          - text: External post
+          - tooltip "This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits."
+        - cell "6/13"
+        - cell "11K"
+        - cell "900"
+        - cell "50"
+        - cell "40"
+        - cell "0.4%"
+        - cell "9%"
+        - cell "Remix":
+          - button "Remix":
+            - generic: Remix
+      - row "9 眉笔教程 @美妆主号 External post This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits. 6/12 8.3K 600 30 25 0.3% 7.9% Remix":
+        - cell "9 眉笔教程 @美妆主号 External post This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits.":
+          - generic: "9"
+          - generic: 眉笔教程
+          - generic: "@美妆主号"
+          - text: External post
+          - tooltip "This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits."
+        - cell "6/12"
+        - cell "8.3K"
+        - cell "600"
+        - cell "30"
+        - cell "25"
+        - cell "0.3%"
+        - cell "7.9%"
+        - cell "Remix":
+          - button "Remix":
+            - generic: Remix
+      - row "10 腮红画法 @测试号 External post This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits. 6/12 6K 420 22 18 0.3% 7.7% Remix":
+        - cell "10 腮红画法 @测试号 External post This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits.":
+          - generic: "10"
+          - generic: 腮红画法
+          - generic: "@测试号"
+          - text: External post
+          - tooltip "This post was not published via Clipcat. Remixing has to parse the video link first, which costs 10 credits."
+        - cell "6/12"
+        - cell "6K"
+        - cell "420"
+        - cell "22"
+        - cell "18"
+        - cell "0.3%"
+        - cell "7.7%"
+        - cell "Remix":
+          - button "Remix":
+            - generic: Remix
+  - generic: 10 in total · page 1 / 1
+  - button [disabled]:
+  - generic: 1 / 1
+  - button [disabled]:
+  - heading "Niche viral references" [level=2]
+  - paragraph: Search viral videos in your niche
+  - paragraph: Head to "Search viral" in the Inspiration hub to find high-play videos in your niche by keyword — reference or remix them directly
+  - button "Go to Search viral":
+    - text: Go to Search viral
+- alert
+- generic: 1.5K
+- region "Notifications alt+T"

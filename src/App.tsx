@@ -51,6 +51,16 @@ import {
   Help,
   Downloads,
 } from "./pages/Manage";
+import {
+  AuthGate,
+  Account,
+  Team,
+  Projects,
+  Automations,
+  Billing,
+  Admin,
+  Models,
+} from "./pages/Platform";
 const navigation = [
   {
     group: "创作",
@@ -79,6 +89,23 @@ const navigation = [
       ["/explorer", "EchoTik 数据接口", Code2],
       ["/competitors", "竞品跟踪", Compass],
       ["/settings", "连接与设置", Settings2],
+    ],
+  },
+  {
+    group: "运营后台",
+    items: [
+      ["/projects", "项目与分镜", Clapperboard],
+      ["/automations", "自动采集与机会", Compass],
+      ["/models", "模型与高级生成", Code2],
+    ],
+  },
+  {
+    group: "组织与管理",
+    items: [
+      ["/team", "工作空间与团队", Users],
+      ["/billing", "额度与订单", ChartNoAxesCombined],
+      ["/admin", "后台管理", Settings2],
+      ["/account", "我的账号", Users],
     ],
   },
 ];
@@ -235,13 +262,20 @@ function Shell() {
                 </span>
                 <Plug size={13} />
               </Link>
-              <Link to="/settings" className="avatar" aria-label="工作空间设置">
+              <Link to="/account" className="avatar" aria-label="我的账号">
                 X
               </Link>
             </div>
           </header>
           <main id="main-content">
             <Routes>
+              <Route path="/account" element={<Account />} />
+              <Route path="/team" element={<Team />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/automations" element={<Automations />} />
+              <Route path="/billing" element={<Billing />} />
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/models" element={<Models />} />
               <Route path="/" element={<Workspace />} />
               <Route path="/inspiration" element={<Inspiration />} />
               <Route path="/explorer" element={<Explorer />} />
@@ -299,7 +333,9 @@ export default function App() {
       <a className="skip-link" href="#main-content">
         跳转到主要内容
       </a>
-      <Shell />
+      <AuthGate>
+        <Shell />
+      </AuthGate>
     </BrowserRouter>
   );
 }

@@ -1,6 +1,6 @@
 {
   "name": "x-ecommerce",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,7 +11,10 @@
     "db:docker": "docker compose up -d mysql",
     "test": "vitest run",
     "test:integration": "tsx scripts/integration.ts",
-    "catalog:refresh": "tsx scripts/refresh-catalog.ts"
+    "catalog:refresh": "tsx scripts/refresh-catalog.ts",
+    "worker": "tsx server/worker.ts",
+    "test:backend": "tsx scripts/backend-integration.ts",
+    "test:storage": "tsx scripts/storage-integration.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1152.0",

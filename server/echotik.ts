@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { rows, execute, parse, type Doc } from "./db.ts";
 import { config } from "./config.ts";
 import { AppError } from "./errors.ts";
+import { workspace } from "./context.ts";
 
 export type Endpoint = {
   path: string;
@@ -67,7 +68,12 @@ export async function echoQuery(
     );
   const cacheKey = createHash("sha256")
     .update(
-      JSON.stringify([path, Object.entries(query).sort(), c.ECHOTIK_USERNAME]),
+      JSON.stringify([
+        workspace(),
+        path,
+        Object.entries(query).sort(),
+        c.ECHOTIK_USERNAME,
+      ]),
     )
     .digest("hex");
   if (!refresh) {
@@ -80,7 +86,8 @@ export async function echoQuery(
   if (inflight.has(cacheKey)) return inflight.get(cacheKey)!;
   const request = (async () => {
     const [{ used }] = await rows(
-      "SELECT COUNT(*) used FROM api_usage WHERE provider='echotik' AND success=1 AND endpoint<>'/echotik/batch/cover/download' AND created_at>=DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-01')",
+      "SELECT COUNT(*) used FROM api_usage WHERE workspace_id=? AND provider='echotik' AND success=1 AND endpoint<>'/echotik/batch/cover/download' AND created_at>=DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-01')",
+      [workspace()],
     );
     if (
       path !== "/echotik/batch/cover/download" &&
@@ -152,8 +159,8 @@ export async function echoQuery(
       return payload;
     } finally {
       await execute(
-        "INSERT INTO api_usage(provider,endpoint,success) VALUES(?,?,?)",
-        ["echotik", path, success],
+        "INSERT INTO api_usage(provider,endpoint,success,workspace_id) VALUES(?,?,?,?)",
+        ["echotik", path, success, workspace()],
       );
     }
   })();

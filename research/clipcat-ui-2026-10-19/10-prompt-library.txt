@@ -1,0 +1,577 @@
+- banner:
+  - navigation:
+    - link "Clipcat AI":
+      - /url: /en
+      - img "Clipcat AI"
+    - link "Home":
+      - /url: /en
+    - button "Products":
+      - text: Products
+    - button "Tools":
+      - text: Tools
+    - button "Models":
+      - text: Models
+    - link "Prompts":
+      - /url: /en/tools/ai-tiktok-videos-prompt
+    - link "Skill":
+      - /url: /en/tiktok/openclaw
+    - link "Blog":
+      - /url: /en/blog
+    - link "Pricing":
+      - /url: /en/pricing
+    - button:
+    - button "Switch to dark mode":
+    - button "Sign In":
+      - generic: Sign In
+    - button "Sign Up":
+      - generic: Sign Up
+- main:
+  - text: 🎉 Big Launch! Clipcat Discount for First 1000 Users!
+  - link "Buy Now":
+    - /url: /en/pricing
+  - button "Close":
+  - generic: Stop guessing what goes viral — every video here actually sold
+  - heading "AI Shoppable Videos & Prompt Library" [level=1]:
+    - generic: AI Shoppable Videos
+    - generic: "& Prompt Library"
+  - paragraph: The largest free library of AI TikTok Shop videos and prompts, covering every market and category with proven high-GMV hits. Copy any prompt, or replicate the whole video in one click. Updated daily with real viral winners.
+  - generic: 27086+
+  - text: viral AI videos
+  - generic: "15"
+  - text: markets live
+  - generic: "30"
+  - text: categories live
+  - generic: Daily
+  - text: updates
+  - generic: Top GMV · Italy
+  - generic: $87K
+  - textbox "Describe the look, shot or voiceover — e.g. \"warm indoor light, handheld close-up, real person\""
+  - button "Search" [disabled]
+  - generic: "Semantic search: describe the shots or the effect you want and we'll surface the matching videos."
+  - heading "🔥 Hottest this week" [level=2]
+  - generic: Ranked by highest GMV over the past 7 days
+  - article:
+    - link "1 $87K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-059041
+      - generic: "1"
+      - generic: $87K GMV
+    - heading "Italy · Beauty & Personal Care · Real Review" [level=3]
+    - generic: "@Thaly💋"
+    - generic: ▶ 7.8M
+    - generic: 🇮🇹 Italy
+    - generic: Beauty & Personal Care
+    - generic: Real Review
+    - 'link "Prompt · [Style]: TikTok realistic beauty review style, with true and natural picture details, fully restores the actual skincare operation process, and is full of immer"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-059041
+      - generic: Prompt ·
+      - text: "[Style]: TikTok realistic beauty review style, with true and natural picture details, fully restores the actual skincare operation process, and is full of immer"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/it-beauty-059041
+    - button "Copy share link":
+  - article:
+    - link "2 $57K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/de-beauty-188256
+      - generic: "2"
+      - generic: $57K GMV
+    - heading "Germany · Beauty & Personal Care · Talking Head" [level=3]
+    - generic: "@Viktoriya✨"
+    - generic: ▶ 109K
+    - generic: 🇩🇪 Germany
+    - generic: Beauty & Personal Care
+    - generic: Talking Head
+    - 'link "Prompt · [Style]: Authentic, daily-life skincare recommendation UGC style, showing skin condition and product usage effects from a close-up selfie perspective, with raw,"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/de-beauty-188256
+      - generic: Prompt ·
+      - text: "[Style]: Authentic, daily-life skincare recommendation UGC style, showing skin condition and product usage effects from a close-up selfie perspective, with raw,"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/de-beauty-188256
+    - button "Copy share link":
+  - article:
+    - link "3 $49K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-home-309343
+      - generic: "3"
+      - generic: $49K GMV
+    - heading "United States · Home Supplies · Story Skit" [level=3]
+    - generic: "@Shopaholic Confessions"
+    - generic: ▶ 564K
+    - generic: 🇺🇸 United States
+    - generic: Home Supplies
+    - generic: Story Skit
+    - 'link "Prompt · [Style]: Comedic, absurd realistic style with UGC short video playful texture, using exaggerated mask props to create strong comedic contrast [Environment]: Ope"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-home-309343
+      - generic: Prompt ·
+      - text: "[Style]: Comedic, absurd realistic style with UGC short video playful texture, using exaggerated mask props to create strong comedic contrast [Environment]: Ope"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-home-309343
+    - button "Copy share link":
+  - article:
+    - link "4 $48K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-shoes-842638
+      - generic: "4"
+      - generic: $48K GMV
+    - heading "United States · Shoes · Handheld Demo" [level=3]
+    - generic: "@justagirlfinds"
+    - generic: ▶ 129K
+    - generic: 🇺🇸 United States
+    - generic: Shoes
+    - generic: Handheld Demo
+    - 'link "Prompt · [Style]: Luxury casual atmospheric realistic style, the entire frame is filled with warm golden luster, emphasizing the plush texture of the snow boots and thei"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-shoes-842638
+      - generic: Prompt ·
+      - text: "[Style]: Luxury casual atmospheric realistic style, the entire frame is filled with warm golden luster, emphasizing the plush texture of the snow boots and thei"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-shoes-842638
+    - button "Copy share link":
+  - article:
+    - link "5 $38K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-automotive-558925
+      - generic: "5"
+      - generic: $38K GMV
+    - heading "United States · Automotive & Motorcycle · Real Review" [level=3]
+    - generic: "@Peyton"
+    - generic: ▶ 233K
+    - generic: 🇺🇸 United States
+    - generic: Automotive & Motorcycle
+    - generic: Real Review
+    - 'link "Prompt · [Style]: Realistic automotive detailing showcase style, with sharp, well-defined highlights, maximum restoration of paint finish texture, emphasizing the starkl"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-automotive-558925
+      - generic: Prompt ·
+      - text: "[Style]: Realistic automotive detailing showcase style, with sharp, well-defined highlights, maximum restoration of paint finish texture, emphasizing the starkl"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-automotive-558925
+    - button "Copy share link":
+  - article:
+    - link "6 $34K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-health-558687
+      - generic: "6"
+      - generic: $34K GMV
+    - heading "United States · Health · Talking Head" [level=3]
+    - generic: "@Lopeztips 📲"
+    - generic: ▶ 47K
+    - generic: 🇺🇸 United States
+    - generic: Health
+    - generic: Talking Head
+    - 'link "Prompt · [Style]: Douyin UGC realistic live-stream sales style, with natural and authentic image quality, no excessive filter modifications, perfectly restoring the orig"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-health-558687
+      - generic: Prompt ·
+      - text: "[Style]: Douyin UGC realistic live-stream sales style, with natural and authentic image quality, no excessive filter modifications, perfectly restoring the orig"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-health-558687
+    - button "Copy share link":
+  - article:
+    - link "7 $31K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/de-home-830880
+      - generic: "7"
+      - generic: $31K GMV
+    - heading "Germany · Home Supplies · Handheld Demo" [level=3]
+    - generic: "@Alexander König"
+    - generic: ▶ 448K
+    - generic: 🇩🇪 Germany
+    - generic: Home Supplies
+    - generic: Handheld Demo
+    - 'link "Prompt · [Style]: Realistic home display style, with clean and bright frames, highlighting the product''s practicality, appearance and texture, creating a healing and com"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/de-home-830880
+      - generic: Prompt ·
+      - text: "[Style]: Realistic home display style, with clean and bright frames, highlighting the product's practicality, appearance and texture, creating a healing and com"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/de-home-830880
+    - button "Copy share link":
+  - article:
+    - link "8 $29K GMV":
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-menswear-848269
+      - generic: "8"
+      - generic: $29K GMV
+    - heading "United States · Menswear & Underwear · Real Review" [level=3]
+    - generic: "@bigfitsociety"
+    - generic: ▶ 1.4M
+    - generic: 🇺🇸 United States
+    - generic: Menswear & Underwear
+    - generic: Real Review
+    - 'link "Prompt · [Style]: Realistic home outfit presentation style, with bright and clean visuals, natural and authentic outfit texture, combining the approachable feel of daily"':
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-menswear-848269
+      - generic: Prompt ·
+      - text: "[Style]: Realistic home outfit presentation style, with bright and clean visuals, natural and authentic outfit texture, combining the approachable feel of daily"
+    - button "Replicate":
+      - text: Replicate
+    - link "View prompt":
+      - /url: /en/tools/ai-tiktok-videos-prompt/us-menswear-848269
+    - button "Copy share link":
+  - heading "Browse by market" [level=2]
+  - generic: All 15 TikTok markets covered
+  - link "🇺🇸 United States 8901 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/country-us
+    - generic: 🇺🇸
+    - generic: United States
+    - generic: 8901 viral videos
+  - link "🇬🇧 United Kingdom 1275 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/country-gb
+    - generic: 🇬🇧
+    - generic: United Kingdom
+    - generic: 1275 viral videos
+  - link "🇩🇪 Germany 1019 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/country-de
+    - generic: 🇩🇪
+    - generic: Germany
+    - generic: 1019 viral videos
+  - link "🇪🇸 Spain 957 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/country-es
+    - generic: 🇪🇸
+    - generic: Spain
+    - generic: 957 viral videos
+  - link "🇫🇷 France 959 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/country-fr
+    - generic: 🇫🇷
+    - generic: France
+    - generic: 959 viral videos
+  - link "🇮🇹 Italy 1235 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/country-it
+    - generic: 🇮🇹
+    - generic: Italy
+    - generic: 1235 viral videos
+  - link "🇯🇵 Japan 1447 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/country-jp
+    - generic: 🇯🇵
+    - generic: Japan
+    - generic: 1447 viral videos
+  - link "🇲🇽 Mexico 1436 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/country-mx
+    - generic: 🇲🇽
+    - generic: Mexico
+    - generic: 1436 viral videos
+  - link "🇧🇷 Brazil 1481 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/country-br
+    - generic: 🇧🇷
+    - generic: Brazil
+    - generic: 1481 viral videos
+  - link "🇮🇩 Indonesia 1381 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/country-id
+    - generic: 🇮🇩
+    - generic: Indonesia
+    - generic: 1381 viral videos
+  - link "🇲🇾 Malaysia 1495 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/country-my
+    - generic: 🇲🇾
+    - generic: Malaysia
+    - generic: 1495 viral videos
+  - link "🇵🇭 Philippines 1295 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/country-ph
+    - generic: 🇵🇭
+    - generic: Philippines
+    - generic: 1295 viral videos
+  - link "🇸🇬 Singapore 1639 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/country-sg
+    - generic: 🇸🇬
+    - generic: Singapore
+    - generic: 1639 viral videos
+  - link "🇹🇭 Thailand 1174 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/country-th
+    - generic: 🇹🇭
+    - generic: Thailand
+    - generic: 1174 viral videos
+  - link "🇻🇳 Vietnam 1392 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/country-vn
+    - generic: 🇻🇳
+    - generic: Vietnam
+    - generic: 1392 viral videos
+  - heading "Browse by category" [level=2]
+  - generic: All 30 top-level TikTok categories covered
+  - link "Bookings & Vouchers 17 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-bookings--vouchers
+    - generic: Bookings & Vouchers
+    - generic: 17 viral videos
+  - link "Home Supplies 1043 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-home-supplies
+    - generic: Home Supplies
+    - generic: 1043 viral videos
+  - link "Kitchenware 1033 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-kitchenware
+    - generic: Kitchenware
+    - generic: 1033 viral videos
+  - link "Textiles & Soft Furnishings 1058 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-textiles--soft-furnishings
+    - generic: Textiles & Soft Furnishings
+    - generic: 1058 viral videos
+  - link "Household Appliances 1069 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-household-appliances
+    - generic: Household Appliances
+    - generic: 1069 viral videos
+  - link "Womenswear & Underwear 1128 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-womenswear--underwear
+    - generic: Womenswear & Underwear
+    - generic: 1128 viral videos
+  - link "Muslim Fashion 278 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-muslim-fashion
+    - generic: Muslim Fashion
+    - generic: 278 viral videos
+  - link "Shoes 1099 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-shoes
+    - generic: Shoes
+    - generic: 1099 viral videos
+  - link "Beauty & Personal Care 941 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-beauty--personal-care
+    - generic: Beauty & Personal Care
+    - generic: 941 viral videos
+  - link "Phones & Electronics 996 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-phones--electronics
+    - generic: Phones & Electronics
+    - generic: 996 viral videos
+  - link "Computers & Office Equipment 1007 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-computers--office-equipment
+    - generic: Computers & Office Equipment
+    - generic: 1007 viral videos
+  - link "Pet Supplies 1025 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-pet-supplies
+    - generic: Pet Supplies
+    - generic: 1025 viral videos
+  - link "Baby & Maternity 1006 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-baby--maternity
+    - generic: Baby & Maternity
+    - generic: 1006 viral videos
+  - link "Sports & Outdoor 1062 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-sports--outdoor
+    - generic: Sports & Outdoor
+    - generic: 1062 viral videos
+  - link "Toys & Hobbies 983 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-toys--hobbies
+    - generic: Toys & Hobbies
+    - generic: 983 viral videos
+  - link "Furniture 1117 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-furniture
+    - generic: Furniture
+    - generic: 1117 viral videos
+  - link "Tools & Hardware 1179 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-tools--hardware
+    - generic: Tools & Hardware
+    - generic: 1179 viral videos
+  - link "Home Improvement 975 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-home-improvement
+    - generic: Home Improvement
+    - generic: 975 viral videos
+  - link "Automotive & Motorcycle 1145 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-automotive--motorcycle
+    - generic: Automotive & Motorcycle
+    - generic: 1145 viral videos
+  - link "Fashion Accessories 1102 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-fashion-accessories
+    - generic: Fashion Accessories
+    - generic: 1102 viral videos
+  - link "Food & Beverages 937 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-food--beverages
+    - generic: Food & Beverages
+    - generic: 937 viral videos
+  - link "Health 889 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-health
+    - generic: Health
+    - generic: 889 viral videos
+  - link "Books, Magazines & Audio 842 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-books-magazines--audio
+    - generic: Books, Magazines & Audio
+    - generic: 842 viral videos
+  - link "Kids' Fashion 858 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-kids-fashion
+    - generic: Kids' Fashion
+    - generic: 858 viral videos
+  - link "Menswear & Underwear 1040 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-menswear--underwear
+    - generic: Menswear & Underwear
+    - generic: 1040 viral videos
+  - link "Luggage & Bags 1090 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-luggage--bags
+    - generic: Luggage & Bags
+    - generic: 1090 viral videos
+  - link "Virtual Products 191 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-virtual-products
+    - generic: Virtual Products
+    - generic: 191 viral videos
+  - link "Pre-Owned 203 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-pre-owned
+    - generic: Pre-Owned
+    - generic: 203 viral videos
+  - link "Collectibles 780 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-collectibles
+    - generic: Collectibles
+    - generic: 780 viral videos
+  - link "Jewelry Accessories & Derivatives 993 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/cat-jewelry-accessories--derivatives
+    - generic: Jewelry Accessories & Derivatives
+    - generic: 993 viral videos
+  - heading "Browse by video type" [level=2]
+  - generic: 13 AI shoppable video formats covered
+  - link "Real Review 3827 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/type-real-review
+    - generic: Real Review
+    - generic: 3827 viral videos
+  - link "Talking Head 1611 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/type-talking-head
+    - generic: Talking Head
+    - generic: 1611 viral videos
+  - link "Handheld Demo 11182 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/type-handheld-demo
+    - generic: Handheld Demo
+    - generic: 11182 viral videos
+  - link "OOTD Showcase 1939 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/type-ootd
+    - generic: OOTD Showcase
+    - generic: 1939 viral videos
+  - link "Lifestyle Scene 2277 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/type-lifestyle-scene
+    - generic: Lifestyle Scene
+    - generic: 2277 viral videos
+  - link "Unboxing POV 284 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/type-unboxing-pov
+    - generic: Unboxing POV
+    - generic: 284 viral videos
+  - link "Promo Pitch 3074 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/type-promo-pitch
+    - generic: Promo Pitch
+    - generic: 3074 viral videos
+  - link "Story Skit 536 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/type-story-skit
+    - generic: Story Skit
+    - generic: 536 viral videos
+  - link "Product Close-Up 2013 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/type-product-closeup
+    - generic: Product Close-Up
+    - generic: 2013 viral videos
+  - link "ASMR Immersion 61 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/type-asmr
+    - generic: ASMR Immersion
+    - generic: 61 viral videos
+  - link "Brand TVC 182 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/type-brand-tvc
+    - generic: Brand TVC
+    - generic: 182 viral videos
+  - link "Product Comparison 21 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/type-product-compare
+    - generic: Product Comparison
+    - generic: 21 viral videos
+  - link "Outfit Transformation 3 viral videos":
+    - /url: /en/tools/ai-tiktok-videos-prompt/browse/type-outfit-transform
+    - generic: Outfit Transformation
+    - generic: 3 viral videos
+  - heading "Three steps from prompt to AI shoppable video" [level=2]
+  - paragraph: How to use this prompt (two ways).
+  - generic: Method 1 · Replicate
+  - list:
+    - listitem: Hit the "Replicate" button above the prompt.
+    - listitem: Make the same viral video in one click on Clipcat.ai.
+    - listitem: Just one step — upload your product image and hit generate.
+  - generic: Method 2 · Copy the prompt
+  - list:
+    - listitem: Copy the full structured prompt above.
+    - listitem: Open an AI video platform (Clipcat.ai, for example) and paste it in.
+    - listitem: Swap the selling points, style and details for your own product, then generate.
+  - heading "What is the Clipcat AI video prompt library?" [level=2]
+  - paragraph: Clipcat is a free library of AI shoppable videos and prompts, collecting the AI-made TikTok videos that actually drove sales across every market and product category. Each one ships with the complete prompt behind its results, sorted by market, category and date, and refreshed daily.
+  - paragraph: Copy any prompt, swap in your own product or selling points, and you can make your own version with the latest AI models in minutes. Browse by market or category, or replicate an entire video in one click. New free hits and prompts land every day.
+  - heading "More prompt features" [level=2]
+  - generic: Viral replication
+  - heading "Replicate any hit in one click" [level=3]
+  - paragraph: Found a hit you like? Upload your own product image and replicate it into an AI shoppable video with the same style and pacing. The original's shots, script and selling-point structure are applied automatically — ready to post in minutes.
+  - button "Try it free →"
+  - img "Replicate any hit in one click"
+  - separator
+  - generic: Viral prompts
+  - heading "One sentence, one viral prompt" [level=3]
+  - paragraph: Describe your product and selling points in a single sentence. Clipcat searches this library, combines it with your brief, and writes a production-ready viral prompt — plus why the original worked and a link to it. Feed it straight into a video model.
+  - button "Try it free →"
+  - img "One sentence, one viral prompt"
+  - generic: Free forever · Hand-picked hits
+  - heading "Decode TikTok's winners, free forever." [level=2]:
+    - text: Decode TikTok's winners,
+    - emphasis: free forever.
+  - paragraph: Clipcat.ai is the AI video marketing automation platform trusted by TikTok sellers, creators and affiliates worldwide. Every AI shoppable video and prompt here is hand-picked to help you spot winners faster and make better ones.
+  - button "Open Clipcat.ai":
+    - text: Open Clipcat.ai
+  - generic: 15 TikTok markets · 30+ categories of high-GMV hits
+- contentinfo:
+  - img "Clipcat"
+  - paragraph: Create viral TikTok videos end to end and win TikTok e-commerce growth.
+  - link "Email":
+    - /url: mailto:support@clipcat.ai
+  - heading "Company" [level=5]
+  - link "Home":
+    - /url: /en
+  - link "Privacy":
+    - /url: /en/privacy-policy
+  - link "Terms":
+    - /url: /en/terms-of-service
+  - link "Cookie":
+    - /url: /en/cookie-policy
+  - heading "Products" [level=5]
+  - link "AI TikTok Video Generator":
+    - /url: /en/ai-tiktok-video-generator
+  - link "Viral Video Cloning":
+    - /url: /en/viral-video-cloning
+  - link "AI Avatar Generator":
+    - /url: /en/ai-avatar-generator
+  - heading "Tools" [level=5]
+  - link "Collect Viral Videos":
+    - /url: /en/tools/collect-viral-videos
+  - link "Video Analysis":
+    - /url: /en/tools/video-analysis
+  - link "TikTok Blue-Ocean Product Discovery":
+    - /url: /en/tools/blue-ocean-products
+  - link "Save Reference Footage":
+    - /url: /en/tools/video-download
+  - link "Viral Ad Prompt Generator":
+    - /url: /en/tools/viral-prompt-generator
+  - link "Video Upscale":
+    - /url: /en/tools/video-upscale
+  - link "Video to Prompt":
+    - /url: /en/tools/reverse-video-prompt
+  - link "Image Translation":
+    - /url: /en/tools/image-translation
+  - link "More →":
+    - /url: /en/tools
+  - heading "Models" [level=5]
+  - link "Seedance 2.0":
+    - /url: /en/models/seedance-2-0
+  - link "Seedance 2.5":
+    - /url: /en/models/seedance-2-5
+  - link "Grok Imagine 1.5":
+    - /url: /en/models/grok-imagine-1-5
+  - link "Veo 3.1":
+    - /url: /en/models/veo-3-1
+  - link "Sora 2":
+    - /url: /en/models/sora-2
+  - heading "Resources" [level=5]
+  - link "Blog":
+    - /url: /en/blog
+  - link "Dang.ai":
+    - /url: https://dang.ai/tool/clipcat-ai-ai-tiktok-shop-video-generator
+  - link "FaxianAI":
+    - /url: https://www.faxianai.com/
+  - link "SEO LvL":
+    - /url: https://seolvl.com/site/clipcat
+  - link "Clipcat on PeerPush":
+    - /url: https://peerpush.com/p/clipcat
+  - link "More →":
+    - /url: /en/resources
+  - generic: CLIPCAT.AI
+  - generic: © 2026 Clipcat. All rights reserved.
+  - generic: Made for TikTok creators & sellers.
+  - paragraph:
+    - strong: CLIPCAT AI LTD
+  - paragraph:
+    - text: 128, City Road, London, EC1V 2NX, UNITED KINGDOM
+    - text: Registered in UNITED KINGDOM, Number 16995167
+  - paragraph:
+    - link "support@clipcat.ai":
+      - /url: mailto:support@clipcat.ai
+- alert
+- region "Notifications alt+T"

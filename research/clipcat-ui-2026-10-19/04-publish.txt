@@ -1,0 +1,72 @@
+- complementary:
+  - link "CLIPCAT.AI Logo":
+    - /url: /en/workspace
+    - img "CLIPCAT.AI Logo"
+  - navigation:
+    - generic: Create
+    - link "Video Marketing Agent":
+      - /url: /en/workspace
+      - generic: Video Marketing Agent
+    - link "Skill":
+      - /url: /en/workspace/openclaw
+      - generic: Skill
+    - link "Community":
+      - /url: /en/workspace/inspiration
+      - generic: Community
+    - link "AI Tools":
+      - /url: /en/workspace/ai-tools
+      - generic: AI Tools
+    - generic: Manage
+    - link "Video Publishing":
+      - /url: /en/workspace/publish
+      - generic: Video Publishing
+    - link "Analytics":
+      - /url: /en/workspace/analytics
+      - generic: Analytics
+    - link "My Assets":
+      - /url: /en/workspace/assets
+      - generic: My Assets
+    - link "My Characters":
+      - /url: /en/workspace/characters
+      - generic: My Characters
+    - link "Task Management":
+      - /url: /en/workspace/tasks
+      - generic: Task Management
+    - generic: My Tasks
+    - generic: No conversations yet
+  - button "Collapse":
+    - generic: Collapse
+- banner:
+  - link "Docs":
+    - /url: /en/blog
+    - text: Docs
+  - generic: 0 Credits
+  - button "Buy Credits"
+  - button "🎁 Earn Credits":
+    - generic: 🎁
+    - text: Earn Credits
+  - button "EN":
+    - generic: EN
+  - button:
+  - button "U":
+    - generic: U
+- main:
+  - heading "Publishing" [level=1]
+  - textbox "Search videos"
+  - button "All"
+  - button "Scheduled"
+  - button "Publishing"
+  - button "Completed"
+  - button "Failed"
+  - button "New post":
+    - text: New post
+  - complementary:
+    - button "Expand":
+    - button:
+  - generic: Content (created)
+  - generic: Account
+  - generic: Type
+  - generic: Status
+  - generic: Stats
+  - generic: Actions
+  - generic: No posts yet

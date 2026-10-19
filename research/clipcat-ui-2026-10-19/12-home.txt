@@ -1,0 +1,283 @@
+- banner:
+  - navigation:
+    - link "Clipcat AI":
+      - /url: /en
+      - img "Clipcat AI"
+    - link "Home":
+      - /url: /en
+    - button "Products":
+      - text: Products
+    - button "Tools":
+      - text: Tools
+    - button "Models":
+      - text: Models
+    - link "Prompts":
+      - /url: /en/tools/ai-tiktok-videos-prompt
+    - link "Skill":
+      - /url: /en/tiktok/openclaw
+    - link "Blog":
+      - /url: /en/blog
+    - link "Pricing":
+      - /url: /en/pricing
+    - button:
+    - button "Sign In":
+      - generic: Sign In
+    - button "Sign Up":
+      - generic: Sign Up
+- main:
+  - text: 🎉 Big Launch! Clipcat Discount for First 1000 Users!
+  - link "Buy Now":
+    - /url: /en/pricing
+  - button "Close":
+  - heading "Create Viral TikTok in One Place" [level=1]:
+    - text: Create Viral TikTok
+    - text: in One Place
+  - generic: Product Research
+  - generic: "|"
+  - generic: Find Winners
+  - generic: "|"
+  - generic: Generate Videos
+  - generic: Replicate Hits
+  - generic: "|"
+  - generic: Product Imagery
+  - generic: "|"
+  - generic: Analytics
+  - img "Clipcat"
+  - img "Clipcat"
+  - img "Clipcat"
+  - img "Clipcat"
+  - img "Clipcat"
+  - img "Clipcat"
+  - img "Clipcat"
+  - img "Clipcat"
+  - button "START"
+  - generic: Click to start · Create for free
+  - generic: Scroll
+  - heading "Viral Videos" [level=2]:
+    - text: Viral
+    - text: Videos
+  - paragraph: Discover TikTok winners and replicate them in one click
+  - text: AI Generated
+  - button "Sound":
+  - text: AI Generated
+  - button "Sound":
+  - text: AI Generated
+  - button "Sound":
+  - text: AI Generated
+  - button "Sound":
+  - text: AI Generated
+  - button "Sound":
+  - text: AI Generated
+  - button "Sound":
+  - text: AI Generated
+  - button "Sound":
+  - text: AI Generated
+  - button "Sound":
+  - text: AI Generated
+  - button "Sound":
+  - text: AI Generated
+  - button "Sound":
+  - heading "The go-to viral video platform for TikTok sellers worldwide" [level=2]
+  - paragraph: AI shoppable videos that truly convert — 10x e-commerce conversion, winning TikTok growth.
+  - generic: 10M+
+  - generic: Videos Generated
+  - generic: 8x
+  - generic: E-commerce Conversion
+  - generic: 90%
+  - generic: Lower Production Cost
+  - img "eBay"
+  - img "amazon"
+  - img "allegro"
+  - img "Mercado Libre"
+  - img "Etsy"
+  - img "Lazada"
+  - img "Shopee"
+  - generic: TikTok Shop
+  - img "Shopify"
+  - generic: Temu
+  - img "eBay"
+  - img "amazon"
+  - img "allegro"
+  - img "Mercado Libre"
+  - img "Etsy"
+  - img "Lazada"
+  - img "Shopee"
+  - generic: TikTok Shop
+  - img "Shopify"
+  - generic: Temu
+  - generic: Discover hot products and videos
+  - list:
+    - generic: Smart product research
+    - generic: ——combine sales data to spot hot niches and surface high-potential products fast
+    - generic: Viral video discovery
+    - generic: ——capture trending videos in real time and break down their content structure
+    - generic: Benchmarking
+    - generic: ——follow reference TikTok accounts, review their new posts, and analyze or take inspiration in one click
+  - button "Browse Winners"
+  - generic: Hot Niches
+  - generic: This Week ▾
+  - text: "128"
+  - generic: Winning Products
+  - text: "42"
+  - generic: High-Potential Niches
+  - generic: View Trend
+  - generic: GMV ↑ 34%
+  - button "Sound":
+  - generic: 🔥 Trending Now
+  - button "Sound":
+  - generic: Original Hit
+  - generic: Replicate
+  - generic: →
+  - button "Sound":
+  - generic: Your Product
+  - generic: Generating
+  - generic: 78%
+  - generic: Generate videos, replicate winners in one click
+  - list:
+    - generic: Native shoppable video generation
+    - generic: ——just provide product info to generate ultra-realistic native videos across all TikTok languages
+    - generic: Viral video replication
+    - generic: ——reuse a winner's script, narrative and visuals — a different story with the same viral feel
+    - generic: Consistent on-camera character
+    - generic: ——customize a digital avatar so your character stays consistent across every video
+  - button "Start Creating"
+  - generic: Analytics that lock in what works
+  - list:
+    - generic: Unified multi-account management
+    - generic: ——analyze and operate all your TikTok accounts in one place
+    - generic: Video diagnostics
+    - generic: ——see through the numbers, find performance gaps and cut ineffective plays
+    - generic: Iterate on winning strategy
+    - generic: ——get clear next moves and keep optimizing so winners no longer rely on luck
+  - button "View Analytics"
+  - generic: Video Performance
+  - generic: Last 7 Days
+  - text: Engagement
+  - text: 4.2×
+  - generic: ROAS
+  - text: Diagnosis
+  - generic: Weak hook in the first 3 seconds — lead with your selling point.
+  - heading "Covering every core step of TikTok video marketing" [level=2]:
+    - text: Covering every core step of
+    - text: TikTok video marketing
+  - generic: fugaishipingyingxiao
+  - generic: "01"
+  - generic: Discover
+  - heading "Product Research" [level=3]
+  - paragraph: Uncover hot niches and winning-product trends, screen high-potential products with sales data, and get actionable sourcing advice.
+  - generic: "02"
+  - generic: Collect
+  - heading "Auto-Collect Winners" [level=3]
+  - paragraph: Precisely collect viral TikTok videos by keyword and auto-organize them into analyzable, replicable structured tables.
+  - generic: "03"
+  - generic: Generate
+  - heading "Generate Viral Videos" [level=3]
+  - paragraph: Based on winning structures and product info, generate ultra-realistic voiceover / OOTD / review UGC videos in one click.
+  - generic: "04"
+  - generic: Replicate
+  - heading "Replicate Winners" [level=3]
+  - paragraph: Swap your product into a proven winning structure and fully replicate its hook, pacing and selling-point logic.
+  - generic: "05"
+  - generic: Imagery
+  - heading "Generate Product Imagery" [level=3]
+  - paragraph: Generate white-background shots / model try-ons / scene images in one click to cover every asset for detail pages and ads.
+  - generic: "06"
+  - generic: Analyze
+  - heading "Analytics" [level=3]
+  - paragraph: Analyze post-publish performance, pinpoint bad-case root causes, and get the next optimization move to keep iterating on winners.
+  - button "Previous" [disabled]:
+  - button "Next":
+  - paragraph: FAQ
+  - heading "Frequently Asked Questions" [level=2]:
+    - text: Frequently Asked
+    - text: Questions
+  - paragraph: Everything you need to know about Clipcat.
+  - button "What is Clipcat?": What is Clipcat?
+  - paragraph: Clipcat AI is your TikTok e-commerce video marketing agent that simplifies and supercharges your entire TikTok selling workflow. From collecting winners to generating viral videos to publishing and analytics, the full pipeline is connected in one place — helping you create high-converting shoppable content fast and grow your TikTok business.
+  - button "Who is Clipcat for?": Who is Clipcat for?
+  - paragraph: Clipcat is a great fit for anyone who wants to simplify TikTok content creation and master full-funnel growth — whether you're an e-commerce seller, media buyer, content creator, brand or cross-border team. From product research to viral shoppable videos, Clipcat helps you produce on-trend content at scale, at low cost and high efficiency.
+  - button "What can I create with Clipcat?": What can I create with Clipcat?
+  - paragraph: You can create TikTok shoppable short videos, viral replica videos, voiceover seeding and unboxing reviews, OOTD looks, multi-language and multi-market localized videos, plus e-commerce imagery like white-background hero shots, scene images and detail shots — and complete work like product research, competitor tracking and account analytics.
+  - button "How do I create my first video with Clipcat?": How do I create my first video with Clipcat?
+  - paragraph: Go to the Clipcat platform, enter the e-commerce video marketing Agent, upload your product images (multiple, multi-angle shots help keep the product consistent), and describe the shoppable content and requirements you want; you can also paste a TikTok reference link to replicate a winner. You can customize aspect ratio, language and duration (default 15s, English). After submitting, your video is ready in about 10–20 minutes — feel free to do something else and come back for the result.
+  - button "Do I need editing or video experience?": Do I need editing or video experience?
+  - paragraph: No. Clipcat is built for e-commerce sellers, media buyers and brand teams. Just upload product images and state your goal, or paste a reference link — the script, storyboard, voiceover and rendering are all handled by AI, with no editing or filming skills required.
+  - button "How is Clipcat different from other AI video tools?": How is Clipcat different from other AI video tools?
+  - paragraph: Clipcat isn't an isolated single-shot visual tool — it's an all-in-one growth agent built for TikTok. Paste a link and it breaks down a winner's script, visuals and underlying logic, then swaps your product into a proven winning framework to generate a new video, with consistent on-camera characters so you can build a trusted account IP. Its data comes from real TikTok search and TikTok Shop product-page information, not model fabrication.
+- contentinfo:
+  - img "Clipcat"
+  - paragraph: Create viral TikTok videos end to end and win TikTok e-commerce growth.
+  - link "Email":
+    - /url: mailto:support@clipcat.ai
+  - heading "Company" [level=5]
+  - link "Home":
+    - /url: /en
+  - link "Privacy":
+    - /url: /en/privacy-policy
+  - link "Terms":
+    - /url: /en/terms-of-service
+  - link "Cookie":
+    - /url: /en/cookie-policy
+  - heading "Products" [level=5]
+  - link "AI TikTok Video Generator":
+    - /url: /en/ai-tiktok-video-generator
+  - link "Viral Video Cloning":
+    - /url: /en/viral-video-cloning
+  - link "AI Avatar Generator":
+    - /url: /en/ai-avatar-generator
+  - heading "Tools" [level=5]
+  - link "Collect Viral Videos":
+    - /url: /en/tools/collect-viral-videos
+  - link "Video Analysis":
+    - /url: /en/tools/video-analysis
+  - link "TikTok Blue-Ocean Product Discovery":
+    - /url: /en/tools/blue-ocean-products
+  - link "Save Reference Footage":
+    - /url: /en/tools/video-download
+  - link "Viral Ad Prompt Generator":
+    - /url: /en/tools/viral-prompt-generator
+  - link "Video Upscale":
+    - /url: /en/tools/video-upscale
+  - link "Video to Prompt":
+    - /url: /en/tools/reverse-video-prompt
+  - link "Image Translation":
+    - /url: /en/tools/image-translation
+  - link "More →":
+    - /url: /en/tools
+  - heading "Models" [level=5]
+  - link "Seedance 2.0":
+    - /url: /en/models/seedance-2-0
+  - link "Seedance 2.5":
+    - /url: /en/models/seedance-2-5
+  - link "Grok Imagine 1.5":
+    - /url: /en/models/grok-imagine-1-5
+  - link "Veo 3.1":
+    - /url: /en/models/veo-3-1
+  - link "Sora 2":
+    - /url: /en/models/sora-2
+  - heading "Resources" [level=5]
+  - link "Blog":
+    - /url: /en/blog
+  - link "Dang.ai":
+    - /url: https://dang.ai/tool/clipcat-ai-ai-tiktok-shop-video-generator
+  - link "FaxianAI":
+    - /url: https://www.faxianai.com/
+  - link "SEO LvL":
+    - /url: https://seolvl.com/site/clipcat
+  - link "Clipcat on PeerPush":
+    - /url: https://peerpush.com/p/clipcat
+  - link "More →":
+    - /url: /en/resources
+  - generic: CLIPCAT.AI
+  - generic: © 2026 Clipcat. All rights reserved.
+  - generic: Made for TikTok creators & sellers.
+  - paragraph:
+    - strong: CLIPCAT AI LTD
+  - paragraph:
+    - text: 128, City Road, London, EC1V 2NX, UNITED KINGDOM
+    - text: Registered in UNITED KINGDOM, Number 16995167
+  - paragraph:
+    - link "support@clipcat.ai":
+      - /url: mailto:support@clipcat.ai
+- alert
+- region "Notifications alt+T"

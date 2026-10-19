@@ -1,0 +1,45 @@
+- complementary:
+  - link:
+    - /url: /en/workspace
+  - heading "AI Tools" [level=2]
+  - navigation:
+    - link "Video Analysis":
+      - /url: /en/workspace/ai-tools/video-analysis
+      - generic: Video Analysis
+    - link "Quality Enhance":
+      - /url: /en/workspace/ai-tools/quality-enhance
+      - generic: Quality Enhance
+  - button "Collapse":
+    - generic: Collapse
+- banner:
+  - link "Docs":
+    - /url: /en/blog
+    - text: Docs
+  - generic: 0 Credits
+  - button "Buy Credits"
+  - button "🎁 Earn Credits":
+    - generic: 🎁
+    - text: Earn Credits
+  - button "EN":
+    - generic: EN
+  - button:
+  - button "U":
+    - generic: U
+- main:
+  - heading "Video Analysis" [level=1]
+  - paragraph: Deep insight into TikTok short video creative core, extract voiceover and visuals
+  - generic: Video
+  - button "Video Link":
+    - text: Video Link
+  - button "Local Upload":
+    - text: Local Upload
+  - textbox "Enter TikTok link"
+  - button "Analyze Video 10":
+    - text: Analyze Video
+    - text: "10"
+  - heading "Task List" [level=2]
+  - paragraph: View video analysis tasks
+  - heading "No tasks yet" [level=3]
+  - paragraph: Enter a TikTok link or upload a video, AI will extract the video script
+- alert
+- region "Notifications alt+T"

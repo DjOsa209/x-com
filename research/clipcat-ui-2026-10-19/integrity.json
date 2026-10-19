@@ -1,0 +1,86 @@
+[
+  {
+    "id": "01-workspace",
+    "image_bytes": 48172,
+    "mhtml_bytes": 561368,
+    "image_sha256": "c2804543e234c55c1e254d79e1a2812232751a3c1cfb48a0062c401bbc0c1177",
+    "mhtml_sha256": "8ad80009aa1c0e9bc3706eedb6f68069094d17a4e766b3462cafac05e9bae607"
+  },
+  {
+    "id": "02-video-analysis",
+    "image_bytes": 39276,
+    "mhtml_bytes": 514326,
+    "image_sha256": "5c817381db38553935e440e74ca3598d1ecf867f20575ea1be5678dcfc9375ef",
+    "mhtml_sha256": "a51384ab3a90bb556e404bfe15461a4ba0260121e1be652c10dcd772b309b218"
+  },
+  {
+    "id": "03-quality-enhance",
+    "image_bytes": 48367,
+    "mhtml_bytes": 517038,
+    "image_sha256": "69f7d91d2f92010f1e1e630d80e56a543abd8845207de7c8863832832c69d5c3",
+    "mhtml_sha256": "befcfd743343dd3ed367dadf4af11241567bfd93640711187b15d39587423ac9"
+  },
+  {
+    "id": "04-publish",
+    "image_bytes": 37470,
+    "mhtml_bytes": 527042,
+    "image_sha256": "b9cbbf10b169a9726c35f11b8f8cd4d61affe54cb5eaf74a60dffd032936c43f",
+    "mhtml_sha256": "16762182e2b1773eea18e23811a3231e3a8fc55c7a9255eda1999a170e3c40a3"
+  },
+  {
+    "id": "05-assets",
+    "image_bytes": 32736,
+    "mhtml_bytes": 528667,
+    "image_sha256": "8b6f3037a77aaa67060b4fca08370e75c64b81fbff27fb1dbc13b23aeb509db8",
+    "mhtml_sha256": "287d435cfd199358187db891ecff36563e1f6b9dd7b34125ab4e06eb127fc864"
+  },
+  {
+    "id": "06-characters",
+    "image_bytes": 33484,
+    "mhtml_bytes": 524237,
+    "image_sha256": "4b5b13cb3f4cc2884b5f3b64096fb8a7edb035cba8325a9b59b07e7ab9e1ed05",
+    "mhtml_sha256": "97d908059f6c5286e4fbc436ab0acb855b21783eca43792a3ae174a2c816d6c2"
+  },
+  {
+    "id": "07-analytics",
+    "image_bytes": 74801,
+    "mhtml_bytes": 615186,
+    "image_sha256": "bceefcf9411452d7a66c72fd4b9d94ebd638a9ee8166fad76684b6b51a840b5b",
+    "mhtml_sha256": "fd334dbedc96577128eaeec9d64425553b6464adc4f18ec52beaa60de12802b3"
+  },
+  {
+    "id": "08-tasks",
+    "image_bytes": 31817,
+    "mhtml_bytes": 525410,
+    "image_sha256": "103ec701786da4b4cedafa7b327993bcaede2e95c300c2394c4a1a9696a59613",
+    "mhtml_sha256": "c1500e6f3f57eb82e205b989dafb1bc1bb735041112eddab722826d4c59d4e51"
+  },
+  {
+    "id": "09-inspiration",
+    "image_bytes": 63185,
+    "mhtml_bytes": 542111,
+    "image_sha256": "f52e11007dbeb8b78fbba6e987d183ae1f57549703a2122be88287374041c399",
+    "mhtml_sha256": "e3646f55bd4cbf2b38bcc8ba9975402b26db799e50ee90144558da2052e82ecd"
+  },
+  {
+    "id": "10-prompt-library",
+    "image_bytes": 759308,
+    "mhtml_bytes": 1843448,
+    "image_sha256": "e682aa657ef7c532171dea5f2850cbbe52a9e005eabde49248854e0d1d4b1364",
+    "mhtml_sha256": "72a588de856c50af6c5318c642ca20c907da865ed4658962d758b7c55fe0ef62"
+  },
+  {
+    "id": "11-prompt-detail",
+    "image_bytes": 810290,
+    "mhtml_bytes": 1173754,
+    "image_sha256": "814cac6c96d71344c360c794dd44ac51103d81c2ab45a3033beabd258216af50",
+    "mhtml_sha256": "48463080caa6737358df7fddc6de44aa9399e8cfc0422e9aa96f707ef75a8607"
+  },
+  {
+    "id": "12-home",
+    "image_bytes": 102184,
+    "mhtml_bytes": 1057500,
+    "image_sha256": "9805f88261eb249ecfe7e91eb450bb3894992919a24caf71204bb8a035a3b7d0",
+    "mhtml_sha256": "828127df0e32e7a8be89ddc1c92f1591459a70bb21ba7fd1fc266479041d6364"
+  }
+]

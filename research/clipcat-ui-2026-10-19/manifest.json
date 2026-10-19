@@ -1,0 +1,110 @@
+[
+  {
+    "id": "01-workspace",
+    "title": "主工作台",
+    "url": "https://clipcat.ai/en/workspace",
+    "dom": "01-workspace.txt",
+    "mhtml": "01-workspace.mhtml",
+    "archiveStatus": "saved",
+    "image": "01-workspace.jpg"
+  },
+  {
+    "id": "02-video-analysis",
+    "title": "视频分析",
+    "url": "https://clipcat.ai/en/workspace/ai-tools/video-analysis",
+    "dom": "02-video-analysis.txt",
+    "mhtml": "02-video-analysis.mhtml",
+    "archiveStatus": "saved",
+    "image": "02-video-analysis.jpg"
+  },
+  {
+    "id": "03-quality-enhance",
+    "title": "视频超分",
+    "url": "https://clipcat.ai/en/workspace/ai-tools/quality-enhance",
+    "dom": "03-quality-enhance.txt",
+    "mhtml": "03-quality-enhance.mhtml",
+    "archiveStatus": "saved",
+    "image": "03-quality-enhance.jpg"
+  },
+  {
+    "id": "04-publish",
+    "title": "视频发布",
+    "url": "https://clipcat.ai/en/workspace/publish",
+    "dom": "04-publish.txt",
+    "mhtml": "04-publish.mhtml",
+    "archiveStatus": "saved",
+    "image": "04-publish.jpg"
+  },
+  {
+    "id": "05-assets",
+    "title": "素材库",
+    "url": "https://clipcat.ai/en/workspace/assets",
+    "dom": "05-assets.txt",
+    "mhtml": "05-assets.mhtml",
+    "archiveStatus": "saved",
+    "image": "05-assets.jpg"
+  },
+  {
+    "id": "06-characters",
+    "title": "角色管理",
+    "url": "https://clipcat.ai/en/workspace/characters",
+    "dom": "06-characters.txt",
+    "mhtml": "06-characters.mhtml",
+    "archiveStatus": "saved",
+    "image": "06-characters.jpg"
+  },
+  {
+    "id": "07-analytics",
+    "title": "账号分析",
+    "url": "https://clipcat.ai/en/workspace/analytics",
+    "dom": "07-analytics.txt",
+    "mhtml": "07-analytics.mhtml",
+    "archiveStatus": "saved",
+    "image": "07-analytics.jpg"
+  },
+  {
+    "id": "08-tasks",
+    "title": "任务管理",
+    "url": "https://clipcat.ai/en/workspace/tasks",
+    "dom": "08-tasks.txt",
+    "mhtml": "08-tasks.mhtml",
+    "archiveStatus": "saved",
+    "image": "08-tasks.jpg"
+  },
+  {
+    "id": "09-inspiration",
+    "title": "灵感与选品中心",
+    "url": "https://clipcat.ai/en/workspace/inspiration",
+    "dom": "09-inspiration.txt",
+    "mhtml": "09-inspiration.mhtml",
+    "archiveStatus": "saved",
+    "image": "09-inspiration.jpg"
+  },
+  {
+    "id": "10-prompt-library",
+    "title": "爆款提示词库",
+    "url": "https://clipcat.ai/en/tools/ai-tiktok-videos-prompt",
+    "dom": "10-prompt-library.txt",
+    "mhtml": "10-prompt-library.mhtml",
+    "archiveStatus": "saved",
+    "image": "10-prompt-library.jpg"
+  },
+  {
+    "id": "11-prompt-detail",
+    "title": "爆款案例详情",
+    "url": "https://clipcat.ai/en/tools/ai-tiktok-videos-prompt/it-beauty-059041",
+    "dom": "11-prompt-detail.txt",
+    "mhtml": "11-prompt-detail.mhtml",
+    "archiveStatus": "saved",
+    "image": "11-prompt-detail.jpg"
+  },
+  {
+    "id": "12-home",
+    "title": "官网首页",
+    "url": "https://clipcat.ai/en",
+    "dom": "12-home.txt",
+    "mhtml": "12-home.mhtml",
+    "archiveStatus": "saved",
+    "image": "12-home.jpg"
+  }
+]

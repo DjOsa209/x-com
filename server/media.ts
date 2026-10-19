@@ -7,6 +7,13 @@ import { get, put, type Doc } from "./db.ts";
 import { AppError } from "./errors.ts";
 import { echoQuery } from "./echotik.ts";
 import { config } from "./config.ts";
+import {
+  withStorageLock,
+  assertStorage,
+  objectPut,
+  objectDelete,
+  materialize,
+} from "./storage.ts";
 
 export const mediaRoot = resolve(".local/uploads");
 await mkdir(mediaRoot, { recursive: true, mode: 0o700 });
@@ -110,41 +117,50 @@ export async function saveMedia(
   name: string,
   extra: Doc = {},
 ) {
-  const ext = (
-    {
-      "image/png": ".png",
-      "image/jpeg": ".jpg",
-      "image/webp": ".webp",
-      "video/mp4": ".mp4",
-      "video/webm": ".webm",
-      "video/quicktime": ".mov",
-    } as Doc
-  )[mime];
-  if (!ext) throw new AppError(400, "不支持的媒体类型", "INVALID_MEDIA");
-  const filename = randomUUID() + ext;
-  await writeFile(resolve(mediaRoot, filename), bytes, { mode: 0o600 });
-  try {
-    return await put("asset", {
-      name: name.slice(0, 200),
-      type: mime.startsWith("image/") ? "image" : "video",
-      mime,
-      bytes: bytes.length,
-      filename,
-      url: "/media/" + filename,
-      tags: [],
-      ...extra,
-    });
-  } catch (e) {
-    const { unlink } = await import("node:fs/promises");
-    await unlink(resolve(mediaRoot, filename)).catch(() => {});
-    throw e;
-  }
+  return withStorageLock(async () => {
+    await assertStorage(bytes.length);
+    const ext = (
+      {
+        "image/png": ".png",
+        "image/jpeg": ".jpg",
+        "image/webp": ".webp",
+        "video/mp4": ".mp4",
+        "video/webm": ".webm",
+        "video/quicktime": ".mov",
+      } as Doc
+    )[mime];
+    if (!ext) throw new AppError(400, "不支持的媒体类型", "INVALID_MEDIA");
+    const filename = randomUUID() + ext;
+    const storageKey = await objectPut(filename, bytes, mime);
+    if (!storageKey)
+      await writeFile(resolve(mediaRoot, filename), bytes, { mode: 0o600 });
+    try {
+      return await put("asset", {
+        name: name.slice(0, 200),
+        type: mime.startsWith("image/") ? "image" : "video",
+        mime,
+        bytes: bytes.length,
+        filename,
+        storageKey,
+        url: "/media/" + filename,
+        tags: [],
+        ...extra,
+      });
+    } catch (e) {
+      const { unlink } = await import("node:fs/promises");
+      if (storageKey) await objectDelete(storageKey).catch(() => {});
+      else await unlink(resolve(mediaRoot, filename)).catch(() => {});
+      throw e;
+    }
+  });
 }
 export async function assetFile(id: string) {
   const a = await get(id, "asset");
   if (!a || !a.filename || basename(a.filename) !== a.filename)
     throw new AppError(404, "素材不存在", "NOT_FOUND");
-  const path = resolve(mediaRoot, a.filename);
+  const path = a.storageKey
+    ? await materialize(a)
+    : resolve(mediaRoot, a.filename);
   await stat(path);
   return { asset: a, path };
 }

@@ -1,0 +1,57 @@
+- complementary:
+  - link:
+    - /url: /en/workspace
+  - heading "AI Tools" [level=2]
+  - navigation:
+    - link "Video Analysis":
+      - /url: /en/workspace/ai-tools/video-analysis
+      - generic: Video Analysis
+    - link "Quality Enhance":
+      - /url: /en/workspace/ai-tools/quality-enhance
+      - generic: Quality Enhance
+  - button "Collapse":
+    - generic: Collapse
+- banner:
+  - link "Docs":
+    - /url: /en/blog
+    - text: Docs
+  - generic: 0 Credits
+  - button "Buy Credits"
+  - button "🎁 Earn Credits":
+    - generic: 🎁
+    - text: Earn Credits
+  - button "EN":
+    - generic: EN
+  - button:
+  - button "U":
+    - generic: U
+- main:
+  - heading "Quality Enhance" [level=1]
+  - paragraph: Use AI to enhance video quality, upscaling videos to HD and even 2K for crisper, clearer detail.
+  - generic: Video Source
+  - button "Projects":
+    - text: Projects
+  - button "Assets":
+    - text: Assets
+  - textbox "Search projects..."
+  - paragraph:
+    - text: Loading...
+  - generic: Resolution
+  - generic: Input
+  - generic: Auto-detected · max 2K
+  - generic: Resolution is detected after you pick or upload a video
+  - generic: Output
+  - generic: Target
+  - button "720p" [disabled]
+  - button "1080p" [disabled]
+  - button "2K" [disabled]
+  - button "Enhance 10" [disabled]:
+    - text: Enhance
+    - text: "10"
+  - paragraph: Pick a completed video from a project
+  - heading "Task List" [level=2]
+  - paragraph: View quality enhance tasks. Long tasks usually take 6–10 min.
+  - heading "No tasks yet" [level=3]
+  - paragraph: Pick a project / asset video or upload a local video to enhance.
+- alert
+- region "Notifications alt+T"

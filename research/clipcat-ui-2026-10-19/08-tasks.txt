@@ -1,0 +1,62 @@
+- complementary:
+  - link "CLIPCAT.AI Logo":
+    - /url: /en/workspace
+    - img "CLIPCAT.AI Logo"
+  - navigation:
+    - generic: Create
+    - link "Video Marketing Agent":
+      - /url: /en/workspace
+      - generic: Video Marketing Agent
+    - link "Skill":
+      - /url: /en/workspace/openclaw
+      - generic: Skill
+    - link "Community":
+      - /url: /en/workspace/inspiration
+      - generic: Community
+    - link "AI Tools":
+      - /url: /en/workspace/ai-tools
+      - generic: AI Tools
+    - generic: Manage
+    - link "Video Publishing":
+      - /url: /en/workspace/publish
+      - generic: Video Publishing
+    - link "Analytics":
+      - /url: /en/workspace/analytics
+      - generic: Analytics
+    - link "My Assets":
+      - /url: /en/workspace/assets
+      - generic: My Assets
+    - link "My Characters":
+      - /url: /en/workspace/characters
+      - generic: My Characters
+    - link "Task Management":
+      - /url: /en/workspace/tasks
+      - generic: Task Management
+    - generic: My Tasks
+    - generic: Loading...
+  - button "Collapse":
+    - generic: Collapse
+- banner:
+  - link "Docs":
+    - /url: /en/blog
+    - text: Docs
+  - generic: 0 Credits
+  - button "Buy Credits"
+  - button "🎁 Earn Credits":
+    - generic: 🎁
+    - text: Earn Credits
+  - button "EN":
+    - generic: EN
+  - button:
+  - button "U":
+    - generic: U
+- main:
+  - heading "All Tasks" [level=1]
+  - textbox "Search sessions"
+  - link "New task":
+    - /url: /en/agent/chat
+    - text: New task
+  - button "Scheduled tasks":
+    - text: Scheduled tasks
+- alert
+- region "Notifications alt+T"

@@ -1,0 +1,1232 @@
+{
+  "parent_evidence_id": "ev_62ffe4deb66a1773a95f138d9f619709770fcb114a72b1f4a52d58772384c27a",
+  "observations": [
+    {
+      "node_id": "jag_node_0c96ebe2c7d459aafbb713325c3663bf564612a4a111b4508c8ebb0be07a37f2",
+      "kind": "endpoint",
+      "observations": [
+        {
+          "label": "network endpoint",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "/api/workspace/leave",
+            "mechanism": "call:fetch"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea",
+              "sha256": "e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "21041-06e858e2a763c1bf.js",
+                "start": {
+                  "line": 1,
+                  "column": 5395
+                },
+                "end": {
+                  "line": 1,
+                  "column": 5434
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence."
+            ],
+            "evidence_ids": []
+          }
+        }
+      ]
+    },
+    {
+      "node_id": "jag_node_2420c92f8426adc4814613b109386eca5d728354516591ef376ef3661008e14e",
+      "kind": "endpoint",
+      "observations": [
+        {
+          "label": "network endpoint",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "/api/workspace/members",
+            "mechanism": "call:fetch"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea",
+              "sha256": "e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "21041-06e858e2a763c1bf.js",
+                "start": {
+                  "line": 1,
+                  "column": 4950
+                },
+                "end": {
+                  "line": 1,
+                  "column": 5004
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence."
+            ],
+            "evidence_ids": []
+          }
+        },
+        {
+          "label": "network endpoint",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "/api/workspace/members",
+            "mechanism": "call:fetch"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea",
+              "sha256": "e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "21041-06e858e2a763c1bf.js",
+                "start": {
+                  "line": 1,
+                  "column": 5060
+                },
+                "end": {
+                  "line": 1,
+                  "column": 5120
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence."
+            ],
+            "evidence_ids": []
+          }
+        }
+      ]
+    },
+    {
+      "node_id": "jag_node_32093824940955569b0e2af420c9f330a4dadaaa522e070c3b9191c5977f5de4",
+      "kind": "endpoint",
+      "observations": [
+        {
+          "label": "network endpoint",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "/api/user/get-user-credits",
+            "mechanism": "call:fetch"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_0f846d5f1582396c846d75cd02c668e02b9191c4772cd846c067b5003222d16d",
+              "sha256": "0f846d5f1582396c846d75cd02c668e02b9191c4772cd846c067b5003222d16d"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "78141-97fb64cfe33c5d7f.js",
+                "start": {
+                  "line": 1,
+                  "column": 1309
+                },
+                "end": {
+                  "line": 1,
+                  "column": 1360
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence."
+            ],
+            "evidence_ids": []
+          }
+        }
+      ]
+    },
+    {
+      "node_id": "jag_node_36d9b6afa31c4bd3e48bdd4fc6b9a1f2b81a4be45f114ae8a55f990fbccad26a",
+      "kind": "endpoint",
+      "observations": [
+        {
+          "label": "network endpoint",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "/api/user/billing-profile",
+            "mechanism": "call:fetch"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea",
+              "sha256": "e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "21041-06e858e2a763c1bf.js",
+                "start": {
+                  "line": 1,
+                  "column": 45332
+                },
+                "end": {
+                  "line": 1,
+                  "column": 45449
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence."
+            ],
+            "evidence_ids": []
+          }
+        }
+      ]
+    },
+    {
+      "node_id": "jag_node_60ba4d66754d0191bebb467036b14ce9065fe7588d9042100acea8f1d8b02554",
+      "kind": "endpoint",
+      "observations": [
+        {
+          "label": "network endpoint",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "/api/workspace/invite",
+            "mechanism": "call:fetch"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea",
+              "sha256": "e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "21041-06e858e2a763c1bf.js",
+                "start": {
+                  "line": 1,
+                  "column": 4718
+                },
+                "end": {
+                  "line": 1,
+                  "column": 4795
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence."
+            ],
+            "evidence_ids": []
+          }
+        },
+        {
+          "label": "network endpoint",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "/api/workspace/invite",
+            "mechanism": "call:fetch"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea",
+              "sha256": "e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "21041-06e858e2a763c1bf.js",
+                "start": {
+                  "line": 1,
+                  "column": 4848
+                },
+                "end": {
+                  "line": 1,
+                  "column": 4897
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence."
+            ],
+            "evidence_ids": []
+          }
+        }
+      ]
+    },
+    {
+      "node_id": "jag_node_70bb83e440ca11c0330346bd793f82c12ff284047259cc215c41502c40576e0f",
+      "kind": "endpoint",
+      "observations": [
+        {
+          "label": "network endpoint",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "/api/user/invites",
+            "mechanism": "call:fetch"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea",
+              "sha256": "e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "21041-06e858e2a763c1bf.js",
+                "start": {
+                  "line": 1,
+                  "column": 52743
+                },
+                "end": {
+                  "line": 1,
+                  "column": 52868
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence."
+            ],
+            "evidence_ids": []
+          }
+        },
+        {
+          "label": "network endpoint",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "/api/user/invites",
+            "mechanism": "call:fetch"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea",
+              "sha256": "e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "21041-06e858e2a763c1bf.js",
+                "start": {
+                  "line": 1,
+                  "column": 52438
+                },
+                "end": {
+                  "line": 1,
+                  "column": 52563
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence."
+            ],
+            "evidence_ids": []
+          }
+        }
+      ]
+    },
+    {
+      "node_id": "jag_node_79e40cc97acbbc1172da44f3f62df4b56819e72e7cba85e469c53372e726b318",
+      "kind": "endpoint",
+      "observations": [
+        {
+          "label": "network endpoint",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "/api/user/apikeys/delete",
+            "mechanism": "call:fetch"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea",
+              "sha256": "e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "21041-06e858e2a763c1bf.js",
+                "start": {
+                  "line": 1,
+                  "column": 53582
+                },
+                "end": {
+                  "line": 1,
+                  "column": 53704
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence."
+            ],
+            "evidence_ids": []
+          }
+        }
+      ]
+    },
+    {
+      "node_id": "jag_node_7dcfcc31d7ef1c2c21db9c6658f1f74ea1c5669851f3261c7b902507b8b5546a",
+      "kind": "endpoint",
+      "observations": [
+        {
+          "label": "network endpoint",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "/api/workspace/invite/accept",
+            "mechanism": "call:fetch"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea",
+              "sha256": "e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "21041-06e858e2a763c1bf.js",
+                "start": {
+                  "line": 1,
+                  "column": 5286
+                },
+                "end": {
+                  "line": 1,
+                  "column": 5342
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence."
+            ],
+            "evidence_ids": []
+          }
+        }
+      ]
+    },
+    {
+      "node_id": "jag_node_848e4a82bd228d527df879e5a164ff8cd2879f5b67483f4a9d107c774cf805e6",
+      "kind": "endpoint",
+      "observations": [
+        {
+          "label": "network endpoint",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "/api/user/get-user-info",
+            "mechanism": "call:fetch"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_0f846d5f1582396c846d75cd02c668e02b9191c4772cd846c067b5003222d16d",
+              "sha256": "0f846d5f1582396c846d75cd02c668e02b9191c4772cd846c067b5003222d16d"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "78141-97fb64cfe33c5d7f.js",
+                "start": {
+                  "line": 1,
+                  "column": 1580
+                },
+                "end": {
+                  "line": 1,
+                  "column": 1628
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence."
+            ],
+            "evidence_ids": []
+          }
+        }
+      ]
+    },
+    {
+      "node_id": "jag_node_96286a8c02edc07cb9bdec548ed28dde573c2efa7c830f88e0869e0401b6f048",
+      "kind": "endpoint",
+      "observations": [
+        {
+          "label": "network endpoint",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "/api/user/apikeys/create",
+            "mechanism": "call:fetch"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea",
+              "sha256": "e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "21041-06e858e2a763c1bf.js",
+                "start": {
+                  "line": 1,
+                  "column": 53395
+                },
+                "end": {
+                  "line": 1,
+                  "column": 53444
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence."
+            ],
+            "evidence_ids": []
+          }
+        }
+      ]
+    },
+    {
+      "node_id": "jag_node_9c77ffcbf3ccfc9765ee0d286cd052490c12f4760bcdcd71e217dd694922139a",
+      "kind": "endpoint",
+      "observations": [
+        {
+          "label": "network endpoint",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "/api/user/credits-list",
+            "mechanism": "call:fetch"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea",
+              "sha256": "e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "21041-06e858e2a763c1bf.js",
+                "start": {
+                  "line": 1,
+                  "column": 53888
+                },
+                "end": {
+                  "line": 1,
+                  "column": 54090
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence."
+            ],
+            "evidence_ids": []
+          }
+        },
+        {
+          "label": "network endpoint",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "/api/user/credits-list",
+            "mechanism": "call:fetch"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea",
+              "sha256": "e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "21041-06e858e2a763c1bf.js",
+                "start": {
+                  "line": 1,
+                  "column": 51375
+                },
+                "end": {
+                  "line": 1,
+                  "column": 51534
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence."
+            ],
+            "evidence_ids": []
+          }
+        }
+      ]
+    },
+    {
+      "node_id": "jag_node_a1c009dabdc1b495f4eb0dd667f23fc543b69f643caff1383f3c6b64db0c9924",
+      "kind": "endpoint",
+      "observations": [
+        {
+          "label": "network endpoint",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "/api/user/apikeys",
+            "mechanism": "call:fetch"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea",
+              "sha256": "e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "21041-06e858e2a763c1bf.js",
+                "start": {
+                  "line": 1,
+                  "column": 52104
+                },
+                "end": {
+                  "line": 1,
+                  "column": 52221
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence."
+            ],
+            "evidence_ids": []
+          }
+        }
+      ]
+    },
+    {
+      "node_id": "jag_node_ca30e7750f8dd38004166bb0e48a47b0070f82fd28a04214ecf8e4d7b2987a69",
+      "kind": "endpoint",
+      "observations": [
+        {
+          "label": "/api/workspace",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "/api/workspace",
+            "mechanism": "call:fetch"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea",
+              "sha256": "e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "21041-06e858e2a763c1bf.js",
+                "start": {
+                  "line": 1,
+                  "column": 4523
+                },
+                "end": {
+                  "line": 1,
+                  "column": 4566
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence."
+            ],
+            "evidence_ids": []
+          }
+        },
+        {
+          "label": "/api/workspace",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "/api/workspace",
+            "mechanism": "call:fetch"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea",
+              "sha256": "e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "21041-06e858e2a763c1bf.js",
+                "start": {
+                  "line": 1,
+                  "column": 4425
+                },
+                "end": {
+                  "line": 1,
+                  "column": 4467
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence."
+            ],
+            "evidence_ids": []
+          }
+        },
+        {
+          "label": "/api/workspace",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "/api/workspace",
+            "mechanism": "call:fetch"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea",
+              "sha256": "e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "21041-06e858e2a763c1bf.js",
+                "start": {
+                  "line": 1,
+                  "column": 4345
+                },
+                "end": {
+                  "line": 1,
+                  "column": 4383
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence."
+            ],
+            "evidence_ids": []
+          }
+        },
+        {
+          "label": "/api/workspace",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "/api/workspace",
+            "mechanism": "call:fetch"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea",
+              "sha256": "e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "21041-06e858e2a763c1bf.js",
+                "start": {
+                  "line": 1,
+                  "column": 4622
+                },
+                "end": {
+                  "line": 1,
+                  "column": 4657
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence."
+            ],
+            "evidence_ids": []
+          }
+        }
+      ]
+    },
+    {
+      "node_id": "jag_node_cc0fe02f776fbdd4b3e1da20db85fcbb8a523754e24bcc80b5a9d22ffc8e3960",
+      "kind": "endpoint",
+      "observations": [
+        {
+          "label": "/api/user/orders",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "/api/user/orders",
+            "mechanism": "call:fetch"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea",
+              "sha256": "e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "21041-06e858e2a763c1bf.js",
+                "start": {
+                  "line": 1,
+                  "column": 51036
+                },
+                "end": {
+                  "line": 1,
+                  "column": 51077
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence."
+            ],
+            "evidence_ids": []
+          }
+        }
+      ]
+    },
+    {
+      "node_id": "jag_node_ecdd8d4d691c2c418867bcb6d73c5702b36a58a80556713d036b74d44710f783",
+      "kind": "endpoint",
+      "observations": [
+        {
+          "label": "network endpoint",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "`/api/workspace/invite/${encodeURIComponent(e)}`",
+            "mechanism": "call:fetch",
+            "resolution": "partial"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea",
+              "sha256": "e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "21041-06e858e2a763c1bf.js",
+                "start": {
+                  "line": 1,
+                  "column": 5173
+                },
+                "end": {
+                  "line": 1,
+                  "column": 5243
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence.",
+              "The request target is not an exact literal; the endpoint value retains the unresolved source expression."
+            ],
+            "evidence_ids": []
+          }
+        }
+      ]
+    },
+    {
+      "node_id": "jag_node_ff813fdc5d5aaf15dc87e3a02de6a7d8e8ee73519bbec5a24acef57843685a5e",
+      "kind": "endpoint",
+      "observations": [
+        {
+          "label": "network endpoint",
+          "properties": {
+            "endpoint_kind": "network",
+            "value": "`/api/user/orders/${encodeURIComponent(e)}/billing-document`",
+            "mechanism": "call:fetch",
+            "resolution": "partial"
+          },
+          "evidence": {
+            "authority": "ast-static-analysis",
+            "state": "observed",
+            "confidence": "exact",
+            "artifact": {
+              "available": true,
+              "artifact_id": "art_e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea",
+              "sha256": "e1c2d58a1897559fe84b2abc9308253a122478b3403951ebfa2e073eb3c529ea"
+            },
+            "location": {
+              "available": true,
+              "value": {
+                "kind": "source-range",
+                "source": "21041-06e858e2a763c1bf.js",
+                "start": {
+                  "line": 1,
+                  "column": 47572
+                },
+                "end": {
+                  "line": 1,
+                  "column": 47729
+                }
+              }
+            },
+            "extractor": {
+              "name": "rea-javascript-artifact-reconstruction",
+              "version": "1",
+              "operation": "discover-static-endpoint",
+              "executable_sha256": null
+            },
+            "coverage": {
+              "status": "partial",
+              "truncated": false,
+              "omitted_count": null,
+              "limits": []
+            },
+            "limitations": [
+              "AST coverage is incomplete; omitted or dynamic facts must not be interpreted as absence.",
+              "The request target is not an exact literal; the endpoint value retains the unresolved source expression."
+            ],
+            "evidence_ids": []
+          }
+        }
+      ]
+    }
+  ]
+}

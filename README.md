@@ -1,8 +1,8 @@
 # X-Ecommerce
 
-基于 EchoTik 的电商研究与内容创作平台。本项目按照保存的 Clipcat 界面和已确认的功能流程实现，使用自己的品牌、前后端代码和数据接入。当前交付为 **本机单工作区版本**，数据库使用 **MySQL 8.4**。
+基于 EchoTik 的电商研究与内容创作平台。本项目按照保存的 Clipcat 界面和已确认的功能流程实现，使用自己的品牌、前后端代码和数据接入。当前版本 **0.2.0**，包含运营后台、账号与团队、工作空间隔离、额度账本和可配置支付/对象存储，数据库使用 **MySQL 8.4**。
 
-> 本地页面、持久化和工作流可运行。EchoTik、Gemini、fal.ai、TikTok 尚无真实账户凭证，因此没有实际消费额度、生成视频或发布内容；对应连接器已实现，但供应商返回数据与应用审核需在接入后联调。不能把本版称为已经通过全部生产验证的 1:1 替代品。
+> 本地页面、持久化和工作流可运行。EchoTik、Gemini、fal.ai、TikTok 尚无真实账户凭证，因此没有实际消费额度、生成视频或发布内容；对应连接器已实现；Stripe 和 S3 也提供可配置适配。真实供应商响应、应用审核和生产部署需在接入后联调。不能把本版称为已经通过全部生产验证的 1:1 替代品。
 
 ## 本机运行
 
@@ -58,7 +58,7 @@ EchoTik 使用 API 专属 username/password 的 HTTP Basic，不是 TikTok 密�
 - `fal-ai/kling-video/v3/standard/image-to-video`：图生视频，可传角色 elements。
 - `fal-ai/topaz/upscale/video`：超分，按短边目标尺寸计算 upscale_factor。
 
-修改模型 ID 时，应同时检查该模型 schema，不能假设任意模型可替换。当前视频流程先根据商品图、角色与画幅生成首帧，再生成带声音的视频，属于两次供应商生成请求；复刻另含 Gemini 视频分析请求。实际费用由供应商决定，平台没有虚构积分或收费报价。
+修改模型 ID 时，应同时检查该模型 schema，不能假设任意模型可替换。当前视频流程先根据商品图、角色与画幅生成首帧，再生成带声音的视频，属于两次供应商生成请求；复刻另含 Gemini 视频分析请求。实际费用由供应商决定，平台内部额度可自行配置，不代表供应商收费报价。
 
 独立解析器的约定为 `POST <DOWNLOAD_RESOLVER_URL>`，JSON 输入 `{ "url": "公开视频分享链接" }`，可选 `Authorization: Bearer <KEY>`，JSON 返回 `{ "video_url": "https://.../video.mp4" }`。该配置指向你自己的适配服务；本项目未预置、购买或验证第三方抖音数据服务。
 
@@ -85,15 +85,64 @@ EchoTik 使用 API 专属 username/password 的 HTTP Basic，不是 TikTok 密�
 
 **本版没有复制 Clipcat 的专有提示词数据库、后台算法、模型账户或视频素材。** 提示词库从实际视频逐步积累；没有虚构高 GMV 案例或模拟生成成功。销售原因属于推断，不是因果或业绩保证。
 
-Clipcat 的登录、团队、多租户、订阅计费与积分结算不属于本机单工作区版本。当前没有用户隔离，不应直接绑定公网地址作为商业 SaaS。生产版本需另行完成身份、权限、租户隔离、对象存储、独立 worker、备份及运行部署。
+## 新增后台与使用入口
+
+- **项目与分镜**：草稿 → 脚本生成 → 等待确认 → 编辑分镜 → 确认 1–4 条视频 → 子任务。确认保存版本快照，相同确认请求不会重复生成；部分成功时仅重试失败子项。复刻项目可通过 API 设置 `input.mode=replicate` 并提供参考视频，从分析开始。
+- **自动采集与机会**：按 15 分钟到 30 天的间隔采集 EchoTik AI 带货视频榜单，或组合商品榜单、详情、评论及 Gemini 分析；采集证据进入观察/机会库。可选择提取前 2 条视频的提示词。服务运行时才执行计划。
+- **模型与高级生成**：已适配模型目录及原始 JSON 输入；模型限制在配置的四个适配器及平台环境 `FAL_EXTRA_MODELS_JSON` 白名单内。更换模型要检查 schema。
+- **账号与团队**：首位管理员初始化、密码散列、服务端会话、邀请注册、已有账号接受邀请、空间切换、成员角色修改/移除、退出空间、账号停用、操作审计。角色为 owner/admin/operator/viewer，viewer 为本项目扩展。
+- **额度与订单**：可选平台内部额度计量、发放、任务预留、成功结算、失败/未提交取消释放、幂等流水和订单状态。内部单位不是供应商价格。只有平台管理员可以发放额度、修改任务单价和存储限额；默认未启用计量。
+- **素材存储**：本地文件或 S3 兼容存储；签名上传 → 大小/类型/文件头校验 → 独立素材对象确认。上传申请会预留容量，过期由 worker 清理。
+- **独立 worker**：`npm run worker`；MySQL 锁保证单个调度者，任务锁防止手动查询和后台轮询同时推进两阶段生成。单个任务失败不会自动重复提交不确定的付费请求。
+
+这些是依据公开客户端证据独立实现的后台，并非 Clipcat 的服务端源码。REA 实际运行收据、接口节点和无法恢复的边界见 [后台逆向方向](docs/research/clipcat-backend-direction-2026-10-19.md)。本项目尚未提供 Clipcat 专有案例库、积分批次有效期/到期扣除、退款/争议的自动追缴、企业 SSO、邮件投递或生产监控告警。支付侧当前支持购买/订阅到账与幂等发放；退款、取消订阅可先在 Stripe 管理后台处理，自动账务联动尚未实现。
+
+## 登录与部署配置
+
+`npm run dev` 默认是仅面向本机的可信开发模式；访问 `/account` 可初始化管理员。需要验证用户权限或共享访问时，设置 `AUTH_REQUIRED=true` 并重启。`npm start` 在 production 环境默认要求登录。首位初始化管理员会接管已有 local 工作空间；后续用户通过邀请加入。部署时先完成首位管理员初始化，再开放给用户。临时测试账号均由测试自动清理，没有替用户创建管理员或设置密码。
+
+部署使用稳定的 `X_ENCRYPTION_KEY`（64 位十六进制，备份时同时保留）、MySQL 连接信息、`APP_PUBLIC_URL=https://你的域名`、`X_ALLOWED_HOSTS=你的域名` 和 HTTPS 反向代理。Web 服务可设置 `WORKER_EXTERNAL=true`，单独运行 `npm run worker`；多个 worker 可以启动，但同一时刻只有一个获得 MySQL 调度锁。开发绑定仍为 `127.0.0.1`，公网监听需要显式配置 HOST。反向代理转发原始 Host，并保持同域 API。
+
+### Stripe（可选）
+
+平台环境变量（不通过租户设置下发）：
+
+```dotenv
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+APP_PUBLIC_URL=http://localhost:4317
+BILLING_PACKS_JSON=[]
+```
+
+`BILLING_PACKS_JSON` 格式：`[{"id":"starter","name":"入门额度","priceId":"price_你的真实价格ID","credits":100,"mode":"payment"}]`，订阅使用 `mode=subscription`。需要先在自己的 Stripe 测试环境建立 Price，再配置；未配置时购买入口不启用。Webhook 地址 `/api/billing/webhook`，支持 `checkout.session.completed`、`checkout.session.async_payment_succeeded`、`checkout.session.expired`、`invoice.paid`。必须使用原始 body 验签，发放通过 session/invoice 唯一引用去重；浏览器成功回跳不直接发放额度。订阅周期通过实际 paid invoice 确认。
+
+### S3 / R2 / MinIO（可选）
+
+```dotenv
+STORAGE_DRIVER=s3
+S3_ENDPOINT=
+S3_REGION=auto
+S3_BUCKET=
+S3_ACCESS_KEY_ID=
+S3_SECRET_ACCESS_KEY=
+S3_FORCE_PATH_STYLE=false
+```
+
+AWS S3 通常不填 endpoint，并填写实际 region；R2/MinIO 填兼容 endpoint，MinIO 通常使用 path style。存储桶保持私有，浏览器直传需要桶 CORS 允许自己的站点发起 PUT 和 Content-Type 请求头。签名有效期 10 分钟；确认后的素材使用独立对象 key，旧上传链接不能覆盖它。服务端代理预览/下载前检查登录及所属空间。原有本地素材继续按原路径读取，不会自动迁移。
+
+备份范围包括 MySQL、加密主密钥、`.local/uploads/` 或整个对象存储桶；缓存不是备份。需要自行配置桶生命周期/数据库备份并演练恢复。不要把工作区 API 返回的数据直接当成已获准再分发的数据产品。
 
 ## 数据与任务设计
 
 - `records`：素材、角色、草稿、收藏、竞品、提示词、账号与加密 OAuth token。
 - `jobs`：输入、结果、供应商请求 ID、状态、计划时间、幂等请求键。
-- `cache_entries`：按接口和参数缓存响应。
+- `cache_entries`：按工作空间、接口和参数缓存响应。
 - `api_usage`：实际请求成功/失败统计。
-- `settings`：AES-256-GCM 加密配置。
+- `settings`：按空间 AES-256-GCM 加密配置；只有 local 空间可回退读取环境中的供应商凭证。
+- `users/sessions/workspaces/memberships/invites/audit_log`：账号、空间、邀请和审计。
+- `projects/project_confirmations`：项目、版本和不可替换的确认快照。
+- `credit_wallets/credit_reservations/credit_ledger/billing_orders`：可用/冻结额度、结算流水和实际支付订单。
+- `automations/system_state/oauth_states`：自动任务、worker 心跳和持久授权状态。
 
 加密主密钥在 `.local/master.key`，也可通过 `X_ENCRYPTION_KEY` 指定 64 位十六进制值。数据库备份必须同时妥善保留主密钥和本地素材；缺少主密钥无法恢复凭证。不要提交 `.local/`、`.env` 或 `.env.local`。
 
@@ -109,7 +158,9 @@ TikTok 使用文件上传方式，不要求供应商媒体域名归属验证。�
 
 ```bash
 npm test
-npm run test:integration  # 先保持 MySQL 和应用运行
+npm run test:integration  # 先保持 MySQL 和本机开发应用运行
+npm run test:backend      # 真实 MySQL，临时 HTTP 服务及测试账号
+npm run test:storage      # 真实 MySQL + 本地 S3 协议服务，不连接云账户
 npm run build
 ```
 

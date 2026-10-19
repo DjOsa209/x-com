@@ -3,8 +3,9 @@ import { config, seal, unseal } from "./config.ts";
 import { get, put, type Doc } from "./db.ts";
 import { readAsset } from "./media.ts";
 import { AppError } from "./errors.ts";
+import { rows, execute } from "./db.ts";
+import { workspace, scope } from "./context.ts";
 
-const oauth = new Map<string, number>();
 export async function authUrl() {
   const c = await config();
   if (!c.TIKTOK_CLIENT_KEY || !c.TIKTOK_CLIENT_SECRET)
@@ -13,9 +14,15 @@ export async function authUrl() {
       "请先在设置中配置 TikTok 开发者应用",
       "PROVIDER_NOT_CONFIGURED",
     );
-  for (const [key, exp] of oauth) if (exp < Date.now()) oauth.delete(key);
   const state = randomBytes(32).toString("hex");
-  oauth.set(state, Date.now() + 600000);
+  await execute(
+    "INSERT INTO oauth_states(state_hash,workspace_id,user_id,status,expires_at) VALUES(?,?,?,'ready',DATE_ADD(UTC_TIMESTAMP(),INTERVAL 10 MINUTE))",
+    [
+      createHash("sha256").update(state).digest("hex"),
+      workspace(),
+      scope().userId,
+    ],
+  );
   const query = new URLSearchParams({
     client_key: c.TIKTOK_CLIENT_KEY,
     response_type: "code",
@@ -47,47 +54,71 @@ async function tokenRequest(body: Doc) {
   return data;
 }
 export async function callback(code: string, state: string, cookie: string) {
-  if (!state || state !== cookie || (oauth.get(state) || 0) < Date.now())
+  const hash = createHash("sha256").update(state).digest("hex");
+  const [s] = await rows(
+    "SELECT status FROM oauth_states WHERE state_hash=? AND workspace_id=? AND user_id=? AND expires_at>UTC_TIMESTAMP()",
+    [hash, workspace(), scope().userId],
+  );
+  if (!state || state !== cookie || s?.status !== "ready")
     throw new AppError(400, "授权状态失效，请重新连接 TikTok", "OAUTH_STATE");
-  oauth.delete(state);
-  const c = await config();
-  const token = await tokenRequest({
-    code,
-    grant_type: "authorization_code",
-    redirect_uri: c.TIKTOK_REDIRECT_URI,
-  });
-  const id =
-    "tt-" +
-    createHash("sha256").update(token.open_id).digest("hex").slice(0, 28);
-  await put(
-    "token",
-    {
-      encrypted: seal(
-        JSON.stringify({
-          ...token,
-          expiresAt: Date.now() + token.expires_in * 1000,
-        }),
-      ),
-    },
-    id + "-token",
+  const claimed = await execute(
+    "UPDATE oauth_states SET status='processing' WHERE state_hash=? AND status='ready'",
+    [hash],
   );
-  const info = await tikCall(
-    id,
-    "/v2/user/info/?fields=open_id,display_name,avatar_url",
-    undefined,
-    "GET",
-  );
-  await put(
-    "account",
-    {
-      name: info.user?.display_name || "TikTok",
-      avatar: info.user?.avatar_url,
-      scopes: token.scope,
-      provider: "tiktok",
-    },
-    id,
-  );
-  return id;
+  if (!claimed.affectedRows) throw new AppError(409, "授权回调已处理");
+  try {
+    const c = await config();
+    const token = await tokenRequest({
+      code,
+      grant_type: "authorization_code",
+      redirect_uri: c.TIKTOK_REDIRECT_URI,
+    });
+    const id =
+      "tt-" +
+      createHash("sha256")
+        .update(workspace() + ":" + token.open_id)
+        .digest("hex")
+        .slice(0, 28);
+    await put(
+      "token",
+      {
+        encrypted: seal(
+          JSON.stringify({
+            ...token,
+            expiresAt: Date.now() + token.expires_in * 1000,
+          }),
+        ),
+      },
+      id + "-token",
+    );
+    const info = await tikCall(
+      id,
+      "/v2/user/info/?fields=open_id,display_name,avatar_url",
+      undefined,
+      "GET",
+    );
+    await put(
+      "account",
+      {
+        name: info.user?.display_name || "TikTok",
+        avatar: info.user?.avatar_url,
+        scopes: token.scope,
+        provider: "tiktok",
+      },
+      id,
+    );
+    await execute(
+      "UPDATE oauth_states SET status='connected' WHERE state_hash=?",
+      [hash],
+    );
+    return id;
+  } catch (e) {
+    await execute(
+      "UPDATE oauth_states SET status='failed' WHERE state_hash=?",
+      [hash],
+    );
+    throw e;
+  }
 }
 export async function accountToken(id: string) {
   const stored = await get(id + "-token", "token");

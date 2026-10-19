@@ -3448,3 +3448,53 @@ details .param-grid {
   font-size: 10px;
   color: #756d80;
 }
+.auth-screen {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: #f8f9fb;
+  padding: 30px;
+}
+.auth-card {
+  width: 100%;
+  max-width: 430px;
+  padding: 32px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+.auth-card h1 {
+  font-size: 25px;
+  margin: 20px 0 10px;
+}
+.auth-card > .muted {
+  font-size: 12px;
+}
+.auth-card .form-stack {
+  margin-top: 25px;
+}
+.auth-brand {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  color: #4b425d;
+}
+.account-form {
+  max-width: 430px;
+  margin-top: 25px;
+}
+.space-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+.config-section > .inline-actions {
+  margin-top: 20px;
+}
+.config-section > .table-wrap {
+  margin-top: 20px;
+}
+.auth-card > .button {
+  margin-top: 15px;
+}

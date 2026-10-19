@@ -3,13 +3,12 @@ import express from "express";
 import { resolve } from "node:path";
 import { app, apiErrors } from "./app.ts";
 import { migrate, pool } from "./db.ts";
-import { tick, recoverJobs } from "./jobs.ts";
+import { workerCycle } from "./worker-runtime.ts";
 const port = Number(process.env.PORT || 4317),
   host = process.env.HOST || "127.0.0.1";
 let ready = false;
 try {
   await migrate();
-  await recoverJobs();
   ready = true;
 } catch (e: any) {
   console.error(
@@ -36,10 +35,9 @@ const worker = setInterval(async () => {
   try {
     if (!ready) {
       await migrate();
-      await recoverJobs();
       ready = true;
     }
-    await tick();
+    if (process.env.WORKER_EXTERNAL !== "true") await workerCycle();
   } catch (e: any) {
     if (["ECONNREFUSED", "PROTOCOL_CONNECTION_LOST"].includes(e.code))
       ready = false;

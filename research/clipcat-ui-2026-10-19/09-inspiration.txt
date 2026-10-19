@@ -1,0 +1,159 @@
+- complementary:
+  - link "CLIPCAT.AI Logo":
+    - /url: /en/workspace
+    - img "CLIPCAT.AI Logo"
+  - navigation:
+    - generic: Create
+    - link "Video Marketing Agent":
+      - /url: /en/workspace
+      - generic: Video Marketing Agent
+    - link "Skill":
+      - /url: /en/workspace/openclaw
+      - generic: Skill
+    - link "Community":
+      - /url: /en/workspace/inspiration
+      - generic: Community
+    - link "AI Tools":
+      - /url: /en/workspace/ai-tools
+      - generic: AI Tools
+    - generic: Manage
+    - link "Video Publishing":
+      - /url: /en/workspace/publish
+      - generic: Video Publishing
+    - link "Analytics":
+      - /url: /en/workspace/analytics
+      - generic: Analytics
+    - link "My Assets":
+      - /url: /en/workspace/assets
+      - generic: My Assets
+    - link "My Characters":
+      - /url: /en/workspace/characters
+      - generic: My Characters
+    - link "Task Management":
+      - /url: /en/workspace/tasks
+      - generic: Task Management
+    - generic: My Tasks
+    - generic: Loading...
+  - button "Collapse":
+    - generic: Collapse
+- banner:
+  - link "Docs":
+    - /url: /en/blog
+    - text: Docs
+  - generic: 0 Credits
+  - button "Buy Credits"
+  - button "🎁 Earn Credits":
+    - generic: 🎁
+    - text: Earn Credits
+  - button "EN":
+    - generic: EN
+  - button:
+  - button "U":
+    - generic: U
+- main:
+  - heading "Viral Community" [level=1]
+  - button "AI Viral Prompts": AI Viral Prompts
+  - button "TikTok Leaderboard"
+  - button "Search"
+  - button "Competitors"
+  - button "My Inspiration"
+  - button "Featured Cases"
+  - paragraph: The world's largest library of AI shopping-video prompts — every one a proven best-seller
+  - textbox "Semantic search — describe the shots or effects you want and we'll surface matching videos"
+  - button "Search" [disabled]
+  - generic: Country：
+  - button "All Countries"
+  - button "🇺🇸 United States":
+    - generic: 🇺🇸
+    - generic: United States
+  - button "🇬🇧 United Kingdom":
+    - generic: 🇬🇧
+    - generic: United Kingdom
+  - button "🇩🇪 Germany":
+    - generic: 🇩🇪
+    - generic: Germany
+  - button "🇪🇸 Spain":
+    - generic: 🇪🇸
+    - generic: Spain
+  - button "🇫🇷 France":
+    - generic: 🇫🇷
+    - generic: France
+  - button "🇮🇹 Italy":
+    - generic: 🇮🇹
+    - generic: Italy
+  - button "🇯🇵 Japan":
+    - generic: 🇯🇵
+    - generic: Japan
+  - button "🇲🇽 Mexico":
+    - generic: 🇲🇽
+    - generic: Mexico
+  - button "🇧🇷 Brazil":
+    - generic: 🇧🇷
+    - generic: Brazil
+  - button "🇮🇩 Indonesia":
+    - generic: 🇮🇩
+    - generic: Indonesia
+  - button "🇲🇾 Malaysia":
+    - generic: 🇲🇾
+    - generic: Malaysia
+  - button "🇵🇭 Philippines":
+    - generic: 🇵🇭
+    - generic: Philippines
+  - button "🇸🇬 Singapore":
+    - generic: 🇸🇬
+    - generic: Singapore
+  - button "🇹🇭 Thailand":
+    - generic: 🇹🇭
+    - generic: Thailand
+  - button "🇻🇳 Vietnam":
+    - generic: 🇻🇳
+    - generic: Vietnam
+  - button "Expand":
+    - text: Expand
+  - generic: Category：
+  - button "All Categories"
+  - button "Bookings & Vouchers"
+  - button "Home Supplies"
+  - button "Kitchenware"
+  - button "Textiles & Soft Furnishings"
+  - button "Household Appliances"
+  - button "Womenswear & Underwear"
+  - button "Muslim Fashion"
+  - button "Shoes"
+  - button "Beauty & Personal Care"
+  - button "Phones & Electronics"
+  - button "Computers & Office Equipment"
+  - button "Pet Supplies"
+  - button "Baby & Maternity"
+  - button "Sports & Outdoor"
+  - button "Toys & Hobbies"
+  - button "Furniture"
+  - button "Tools & Hardware"
+  - button "Home Improvement"
+  - button "Automotive & Motorcycle"
+  - button "Fashion Accessories"
+  - button "Food & Beverages"
+  - button "Health"
+  - button "Books, Magazines & Audio"
+  - button "Kids' Fashion"
+  - button "Menswear & Underwear"
+  - button "Luggage & Bags"
+  - button "Virtual Products"
+  - button "Pre-Owned"
+  - button "Collectibles"
+  - button "Jewelry Accessories & Derivatives"
+  - button "Expand":
+    - text: Expand
+  - button "More filters":
+    - text: More filters
+  - generic: Time Range：
+  - button "Weekly"
+  - button "Daily"
+  - button "All Time"
+  - button "Latest · Oct 12 - Oct 18":
+    - text: Latest · Oct 12 - Oct 18
+  - generic: Sort by：
+  - button "GMV":
+    - text: GMV
+- alert
+- region "Notifications alt+T"

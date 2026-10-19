@@ -1113,7 +1113,15 @@ export function Settings() {
     try {
       await api("/settings", {
         method: "PUT",
-        body: JSON.stringify({ ...values, clearSecrets: clear }),
+        body: JSON.stringify({
+          ...Object.fromEntries(
+            Object.entries(values).filter(
+              ([key]) =>
+                !["CREDIT_COSTS_JSON", "STORAGE_LIMIT_MB"].includes(key),
+            ),
+          ),
+          clearSecrets: clear,
+        }),
       });
       setValues((v) =>
         Object.fromEntries(

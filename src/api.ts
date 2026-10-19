@@ -33,6 +33,21 @@ export async function api<T = any>(
 export const post = (path: string, body: unknown = {}) =>
   api(path, { method: "POST", body: JSON.stringify(body) });
 export async function upload(file: File) {
+  const storage = await api<Doc>("/storage");
+  if (storage.driver === "s3") {
+    const signed = await post("/storage/presign", {
+      name: file.name,
+      mime: file.type,
+      bytes: file.size,
+    });
+    const r = await fetch(signed.uploadUrl, {
+      method: "PUT",
+      headers: signed.headers,
+      body: file,
+    });
+    if (!r.ok) throw new ApiError("对象存储上传失败，请重新申请上传");
+    return post("/storage/confirm", { uploadId: signed.uploadId });
+  }
   const form = new FormData();
   form.append("file", file);
   return api<Doc>("/uploads", { method: "POST", body: form });
@@ -75,6 +90,9 @@ export const stateNames: Doc = {
   inbox: "已送达草稿箱",
 };
 export const kindNames: Doc = {
+  raw: "高级模型生成",
+  collect: "数据采集",
+  opportunity_scan: "选品机会扫描",
   script: "销售脚本",
   analysis: "视频分析",
   replicate: "爆款复刻脚本",
