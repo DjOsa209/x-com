@@ -1,0 +1,670 @@
+{
+  "date": "2026-10-19",
+  "scope": "Static public-client analysis only; no target execution, paid generation or publish requests",
+  "runs": [
+    {
+      "label": "replication-clients",
+      "rea_version": "6.7.0",
+      "operation": "analyze_javascript_application",
+      "evidence_id": "ev_fabcbbfc66f11cbc3bbaa394536e4ca431c6aa977fc6c52666cda4d7e6a3d8d7",
+      "subject": {
+        "name": "clipcat-public",
+        "digest": {
+          "sha256": "92ed56b0c4eeb4d110582d406762edc80d8b2bd88a2401ae0202763f43389cef"
+        },
+        "local_path": "/private/var/folders/2b/z81n4myx7k765ws80j1fgvc00000gn/T/rea-clipcat-review-wvebubsa/clipcat-public",
+        "format": "directory",
+        "architecture": null
+      },
+      "parameters": {
+        "format": "auto",
+        "integrity_policy": "fail",
+        "max_semantic_nodes": 100000,
+        "max_semantic_nodes_per_file": 25000,
+        "source_paths": [
+          "22639-944483e554ca68a4.js",
+          "46623-633d29565140baba.js",
+          "80350-12a591116ae87047.js",
+          "page-c4aad586e833e1f5.js",
+          "layout-f254ec1278905a8f.js"
+        ],
+        "max_heap_mb": 1024,
+        "analysis_timeout_ms": 180000
+      },
+      "statistics": {
+        "relevant_files": 61,
+        "nested_asar_containers": 0,
+        "text_bytes_read": 196352,
+        "invalid_utf8_files": 0,
+        "parsed_javascript_files": 5,
+        "skipped_javascript_files": 0,
+        "visited_ast_nodes": 50252,
+        "findings": 364,
+        "modules": 36,
+        "parse_failures": 0
+      },
+      "application_coverage": {
+        "status": "partial",
+        "truncated": false,
+        "omitted_count": null,
+        "limits": []
+      },
+      "semantic_coverage": {
+        "status": "partial",
+        "truncated": false,
+        "omitted_nodes": null,
+        "omitted_relations": null,
+        "limits": [],
+        "families": [
+          {
+            "family": "boundary",
+            "status": "partial",
+            "retained_relations": 34,
+            "omitted_relations": null,
+            "unknown_ids_count": 54
+          },
+          {
+            "family": "call-flow",
+            "status": "partial",
+            "retained_relations": 930,
+            "omitted_relations": null,
+            "unknown_ids_count": 3324
+          },
+          {
+            "family": "child-process",
+            "status": "partial",
+            "retained_relations": 0,
+            "omitted_relations": null,
+            "unknown_ids_count": 52
+          },
+          {
+            "family": "closure",
+            "status": "partial",
+            "retained_relations": 3441,
+            "omitted_relations": null,
+            "unknown_ids_count": 52
+          },
+          {
+            "family": "configuration",
+            "status": "partial",
+            "retained_relations": 0,
+            "omitted_relations": null,
+            "unknown_ids_count": 52
+          },
+          {
+            "family": "data-flow",
+            "status": "partial",
+            "retained_relations": 49000,
+            "omitted_relations": null,
+            "unknown_ids_count": 2582
+          },
+          {
+            "family": "event",
+            "status": "partial",
+            "retained_relations": 0,
+            "omitted_relations": null,
+            "unknown_ids_count": 52
+          },
+          {
+            "family": "object-flow",
+            "status": "partial",
+            "retained_relations": 4479,
+            "omitted_relations": null,
+            "unknown_ids_count": 5142
+          },
+          {
+            "family": "promise-ownership",
+            "status": "partial",
+            "retained_relations": 92,
+            "omitted_relations": null,
+            "unknown_ids_count": 105
+          },
+          {
+            "family": "request",
+            "status": "partial",
+            "retained_relations": 39,
+            "omitted_relations": null,
+            "unknown_ids_count": 60
+          },
+          {
+            "family": "resource-lifecycle",
+            "status": "partial",
+            "retained_relations": 0,
+            "omitted_relations": null,
+            "unknown_ids_count": 52
+          },
+          {
+            "family": "timer",
+            "status": "partial",
+            "retained_relations": 24,
+            "omitted_relations": null,
+            "unknown_ids_count": 65
+          }
+        ]
+      },
+      "complete_output_path": "/tmp/clipcat-replication-rea-evidence-20261019.json",
+      "output_bytes": 74030316,
+      "source_selection": {
+        "requested_paths": [
+          "22639-944483e554ca68a4.js",
+          "46623-633d29565140baba.js",
+          "80350-12a591116ae87047.js",
+          "page-c4aad586e833e1f5.js",
+          "layout-f254ec1278905a8f.js"
+        ],
+        "unselected_files": 56
+      },
+      "complete_output_sha256": "d814874f986c4660ea527729353832add6dd8b314ed8e7f687c7124014a0e073"
+    },
+    {
+      "label": "model-helpers",
+      "rea_version": "6.7.0",
+      "operation": "analyze_javascript_application",
+      "evidence_id": "ev_886e685526abc000b365c4c5edc02bf10f293818aeb6ceabcdbb9699221c1d6c",
+      "subject": {
+        "name": "clipcat-public",
+        "digest": {
+          "sha256": "92ed56b0c4eeb4d110582d406762edc80d8b2bd88a2401ae0202763f43389cef"
+        },
+        "local_path": "/private/var/folders/2b/z81n4myx7k765ws80j1fgvc00000gn/T/rea-clipcat-review-wvebubsa/clipcat-public",
+        "format": "directory",
+        "architecture": null
+      },
+      "parameters": {
+        "format": "auto",
+        "integrity_policy": "fail",
+        "max_semantic_nodes": 25000,
+        "max_semantic_nodes_per_file": 25000,
+        "source_paths": ["45824-8fda6813bea7b70e.js"],
+        "max_heap_mb": 1024,
+        "analysis_timeout_ms": 180000
+      },
+      "statistics": {
+        "relevant_files": 61,
+        "nested_asar_containers": 0,
+        "text_bytes_read": 16912,
+        "invalid_utf8_files": 0,
+        "parsed_javascript_files": 1,
+        "skipped_javascript_files": 0,
+        "visited_ast_nodes": 4112,
+        "findings": 2,
+        "modules": 2,
+        "parse_failures": 0
+      },
+      "application_coverage": {
+        "status": "partial",
+        "truncated": false,
+        "omitted_count": null,
+        "limits": []
+      },
+      "semantic_coverage": {
+        "status": "partial",
+        "truncated": false,
+        "omitted_nodes": null,
+        "omitted_relations": null,
+        "limits": [],
+        "families": [
+          {
+            "family": "boundary",
+            "status": "partial",
+            "retained_relations": 6,
+            "omitted_relations": null,
+            "unknown_ids_count": 57
+          },
+          {
+            "family": "call-flow",
+            "status": "partial",
+            "retained_relations": 230,
+            "omitted_relations": null,
+            "unknown_ids_count": 144
+          },
+          {
+            "family": "child-process",
+            "status": "partial",
+            "retained_relations": 0,
+            "omitted_relations": null,
+            "unknown_ids_count": 56
+          },
+          {
+            "family": "closure",
+            "status": "partial",
+            "retained_relations": 127,
+            "omitted_relations": null,
+            "unknown_ids_count": 56
+          },
+          {
+            "family": "configuration",
+            "status": "partial",
+            "retained_relations": 0,
+            "omitted_relations": null,
+            "unknown_ids_count": 56
+          },
+          {
+            "family": "data-flow",
+            "status": "partial",
+            "retained_relations": 2006,
+            "omitted_relations": null,
+            "unknown_ids_count": 301
+          },
+          {
+            "family": "event",
+            "status": "partial",
+            "retained_relations": 0,
+            "omitted_relations": null,
+            "unknown_ids_count": 56
+          },
+          {
+            "family": "object-flow",
+            "status": "partial",
+            "retained_relations": 155,
+            "omitted_relations": null,
+            "unknown_ids_count": 263
+          },
+          {
+            "family": "promise-ownership",
+            "status": "partial",
+            "retained_relations": 0,
+            "omitted_relations": null,
+            "unknown_ids_count": 56
+          },
+          {
+            "family": "request",
+            "status": "partial",
+            "retained_relations": 0,
+            "omitted_relations": null,
+            "unknown_ids_count": 56
+          },
+          {
+            "family": "resource-lifecycle",
+            "status": "partial",
+            "retained_relations": 0,
+            "omitted_relations": null,
+            "unknown_ids_count": 56
+          },
+          {
+            "family": "timer",
+            "status": "partial",
+            "retained_relations": 0,
+            "omitted_relations": null,
+            "unknown_ids_count": 56
+          }
+        ]
+      },
+      "complete_output_path": "/tmp/clipcat-replication-models-rea-evidence-20261019.json",
+      "output_bytes": 4609286,
+      "source_selection": {
+        "requested_paths": ["45824-8fda6813bea7b70e.js"],
+        "unselected_files": 60
+      },
+      "complete_output_sha256": "20340aaf0b368024770940696ca30ec27a9b4d9e2dceddb22645405d0bd68fe9"
+    },
+    {
+      "label": "anonymous-project-page-clients",
+      "rea_version": "6.7.0",
+      "operation": "analyze_javascript_application",
+      "evidence_id": "ev_341e0887cdc1ed9273d207424935264af1c793986eb9cf2ea95965503d3fc18a",
+      "subject": {
+        "name": "project-public",
+        "digest": {
+          "sha256": "269cf556d97b2770b9d6ce4cb86dbecab03f694ca95d634585560a0bff45c883"
+        },
+        "local_path": "/private/var/folders/2b/z81n4myx7k765ws80j1fgvc00000gn/T/rea-clipcat-review-wvebubsa/replication-check-20261019/project-public",
+        "format": "directory",
+        "architecture": null
+      },
+      "parameters": {
+        "format": "auto",
+        "integrity_policy": "fail",
+        "max_semantic_nodes": 75000,
+        "max_semantic_nodes_per_file": 30000,
+        "source_paths": [
+          "page-c72560085e6ccc94.js",
+          "12598-3a7ffbf567371cdc.js"
+        ],
+        "max_heap_mb": 1024,
+        "analysis_timeout_ms": 180000
+      },
+      "statistics": {
+        "relevant_files": 11,
+        "nested_asar_containers": 0,
+        "text_bytes_read": 158800,
+        "invalid_utf8_files": 0,
+        "parsed_javascript_files": 2,
+        "skipped_javascript_files": 0,
+        "visited_ast_nodes": 47579,
+        "findings": 171,
+        "modules": 42,
+        "parse_failures": 0
+      },
+      "application_coverage": {
+        "status": "partial",
+        "truncated": false,
+        "omitted_count": null,
+        "limits": []
+      },
+      "semantic_coverage": {
+        "status": "partial",
+        "truncated": false,
+        "omitted_nodes": null,
+        "omitted_relations": null,
+        "limits": [],
+        "families": [
+          {
+            "family": "boundary",
+            "status": "partial",
+            "retained_relations": 17,
+            "omitted_relations": null,
+            "unknown_ids_count": 8
+          },
+          {
+            "family": "call-flow",
+            "status": "partial",
+            "retained_relations": 1115,
+            "omitted_relations": null,
+            "unknown_ids_count": 2237
+          },
+          {
+            "family": "child-process",
+            "status": "partial",
+            "retained_relations": 0,
+            "omitted_relations": null,
+            "unknown_ids_count": 8
+          },
+          {
+            "family": "closure",
+            "status": "partial",
+            "retained_relations": 2402,
+            "omitted_relations": null,
+            "unknown_ids_count": 8
+          },
+          {
+            "family": "configuration",
+            "status": "partial",
+            "retained_relations": 0,
+            "omitted_relations": null,
+            "unknown_ids_count": 8
+          },
+          {
+            "family": "data-flow",
+            "status": "partial",
+            "retained_relations": 39817,
+            "omitted_relations": null,
+            "unknown_ids_count": 2748
+          },
+          {
+            "family": "event",
+            "status": "partial",
+            "retained_relations": 27,
+            "omitted_relations": null,
+            "unknown_ids_count": 25
+          },
+          {
+            "family": "object-flow",
+            "status": "partial",
+            "retained_relations": 4101,
+            "omitted_relations": null,
+            "unknown_ids_count": 5177
+          },
+          {
+            "family": "promise-ownership",
+            "status": "partial",
+            "retained_relations": 56,
+            "omitted_relations": null,
+            "unknown_ids_count": 49
+          },
+          {
+            "family": "request",
+            "status": "partial",
+            "retained_relations": 27,
+            "omitted_relations": null,
+            "unknown_ids_count": 11
+          },
+          {
+            "family": "resource-lifecycle",
+            "status": "partial",
+            "retained_relations": 0,
+            "omitted_relations": null,
+            "unknown_ids_count": 8
+          },
+          {
+            "family": "timer",
+            "status": "partial",
+            "retained_relations": 32,
+            "omitted_relations": null,
+            "unknown_ids_count": 20
+          }
+        ]
+      },
+      "complete_output_path": "/tmp/clipcat-replication-project-rea-evidence-20261019.json",
+      "output_bytes": 65478745,
+      "complete_output_sha256": "db86be47770690fd9bedb8f2f4024a657116940cec91be09ee8b4649f59d4a92",
+      "source_selection": {
+        "requested_paths": [
+          "page-c72560085e6ccc94.js",
+          "12598-3a7ffbf567371cdc.js"
+        ],
+        "unselected_files": 9
+      }
+    }
+  ],
+  "model_configs": {
+    "path": "/var/folders/2b/z81n4myx7k765ws80j1fgvc00000gn/T/rea-clipcat-review-wvebubsa/replication-check-20261019/model-configs.json",
+    "sha256": "d11bd9bbd42b8467aeb77c6b3da4deea9eda73cd3f8a6930623c698bfecdca0c",
+    "acquisition": "Parent agent read-only POST /api/config/model-configs with locale; no generation",
+    "selected_observations": [
+      {
+        "json_pointer": "/data/models/1",
+        "value": "seedance2_mini",
+        "available": true,
+        "durations": {
+          "480p": {
+            "min": 4,
+            "max": 15
+          },
+          "720p": {
+            "min": 4,
+            "max": 15
+          }
+        },
+        "raw": {
+          "enabled": true,
+          "mentionDialect": "at_cn",
+          "imageModes": ["reference", "frames"],
+          "maxImages": 9,
+          "minImages": 0,
+          "maxVideos": 3,
+          "maxAudios": 3,
+          "maxVideoTotalSec": 15,
+          "maxAudioTotalSec": 15,
+          "maxFiles": 0,
+          "maxLinks": 0,
+          "referenceMinImagesWhenAny": 1,
+          "aspectRatios": ["9:16", "16:9"],
+          "supportsAdaptiveRatio": false,
+          "maxFrameSlots": 2
+        }
+      },
+      {
+        "json_pointer": "/data/models/8",
+        "value": "veo3.1fast",
+        "available": true,
+        "durations": {
+          "720p": [8, 16, 24]
+        },
+        "raw": {
+          "enabled": true,
+          "imageModes": ["frames"],
+          "maxImages": 2,
+          "minImages": 1,
+          "maxVideos": 0,
+          "maxAudios": 0,
+          "maxFiles": 0,
+          "maxLinks": 0,
+          "referenceMinImagesWhenAny": 1,
+          "aspectRatios": ["9:16", "16:9"],
+          "supportsAdaptiveRatio": false,
+          "maxFrameSlots": 2
+        }
+      },
+      {
+        "json_pointer": "/data/models/12",
+        "value": "seedance2",
+        "available": true,
+        "durations": {
+          "480p": {
+            "min": 4,
+            "max": 15
+          },
+          "720p": {
+            "min": 4,
+            "max": 15
+          },
+          "1080p": {
+            "min": 4,
+            "max": 15
+          }
+        },
+        "raw": {
+          "enabled": true,
+          "mentionDialect": "at_cn",
+          "imageModes": ["reference", "frames"],
+          "maxImages": 9,
+          "minImages": 0,
+          "maxVideos": 3,
+          "maxAudios": 3,
+          "maxVideoTotalSec": 15,
+          "maxAudioTotalSec": 15,
+          "maxFiles": 0,
+          "maxLinks": 0,
+          "referenceMinImagesWhenAny": 1,
+          "aspectRatios": ["9:16", "16:9"],
+          "supportsAdaptiveRatio": false,
+          "maxFrameSlots": 2
+        }
+      }
+    ]
+  },
+  "artifact_hashes": {
+    "22639-944483e554ca68a4.js": "0d076e83a99f85be5304fa876c13c89c7e78d7122d02bdbaba4ded1325dd3f5d",
+    "46623-633d29565140baba.js": "a8a406781f5a6d2c20b75e1bfcee8db72d5329933d1e428c8453a0ad0cf9045b",
+    "80350-12a591116ae87047.js": "c360fcb63b046688274c440a5710eb3cd1b574f9f0cff7d586048de1485b9682",
+    "page-c4aad586e833e1f5.js": "42ea6e911db0e2eb1452c868556677e61f0a887b0bde99644251fcbda7b2a28c",
+    "layout-f254ec1278905a8f.js": "a4bec650a622b14708ca130448412053b395712896ef0d876779f0c0860df9b6",
+    "45824-8fda6813bea7b70e.js": "a272545c325a46eba8afa35d390913a6d9cb54cc2b94fe136cfa32c0aa1016e3",
+    "31148-c2e484da6376747f.js": "e9b27097dac8b548dda6c90630aa0baf92968b4dac0e72527e948cb27c5a2519"
+  },
+  "static_cli_bytes": {
+    "path": "/var/folders/2b/z81n4myx7k765ws80j1fgvc00000gn/T/rea-clipcat-review-wvebubsa/clipcat_darwin_arm64",
+    "sha256": "9dd2cecdf0fb7fc1e5ee27ee61c0249003b8b0ebc4ed1efbd161cd872e14866c",
+    "executed": false,
+    "registry_path": "research/clipcat-rea-2026-10-19/cli-command-map.json",
+    "notes": "Raw bytes string contexts only; no native decompilation or supplier request recovered."
+  },
+  "asset_freshness": {
+    "saved_public_assets": "Same-day earlier acquisition; current refresh returned 403, no bypass/retry",
+    "refresh_verification_path": "/var/folders/2b/z81n4myx7k765ws80j1fgvc00000gn/T/rea-clipcat-review-wvebubsa/replication-check-20261019/public-refresh/verification.json",
+    "current_model_config": "Live read-only POST succeeded; this is capability metadata, not a generated task trace",
+    "update": "Initial shell/urllib refresh returned403; later normal anonymous IAB page load returned200 public scripts. No bypass: acquisition recorded with CDP response bodies. 45824 and31148 hashes verified identical to earlier snapshots.",
+    "revalidated_assets": [
+      {
+        "file": "45824-8fda6813bea7b70e.js",
+        "sha256": "a272545c325a46eba8afa35d390913a6d9cb54cc2b94fe136cfa32c0aa1016e3",
+        "same_as_saved_snapshot": true
+      },
+      {
+        "file": "31148-c2e484da6376747f.js",
+        "sha256": "e9b27097dac8b548dda6c90630aa0baf92968b4dac0e72527e948cb27c5a2519",
+        "same_as_saved_snapshot": true
+      }
+    ]
+  },
+  "record_type": "Receipt summary derived from unmodified producer Evidence; not itself an original REA Evidence record.",
+  "anonymous_project_page_acquisition": {
+    "page": "https://clipcat.ai/en/project/research-preview",
+    "method": "Normal anonymous IAB navigation, observed public Script responses captured with Network.getResponseBody; no project data access or generation",
+    "path": "/var/folders/2b/z81n4myx7k765ws80j1fgvc00000gn/T/rea-clipcat-review-wvebubsa/replication-check-20261019/project-public/acquisition.json",
+    "sha256": "b6951e77082305b9f65b392600c65f3348a6d91d471b0783f967eb899386fe19",
+    "assets": [
+      {
+        "name": "12598-3a7ffbf567371cdc.js",
+        "url": "https://clipcat.ai/_next/static/chunks/12598-3a7ffbf567371cdc.js",
+        "status": 200,
+        "requestId": "39249.145",
+        "bytes": 38543,
+        "sha256": "5e5203b83d2667ae4eedde890719ed80962220bfa8729cba07e4277e53d496be"
+      },
+      {
+        "name": "19730-fbea5afc5102e046.js",
+        "url": "https://clipcat.ai/_next/static/chunks/19730-fbea5afc5102e046.js",
+        "status": 200,
+        "requestId": "39249.146",
+        "bytes": 76762,
+        "sha256": "e874c3d1f3c9aa14062af5bd80f4de953c5ec8419ec91f90b8ad3b827586e941"
+      },
+      {
+        "name": "45824-8fda6813bea7b70e.js",
+        "url": "https://clipcat.ai/_next/static/chunks/45824-8fda6813bea7b70e.js",
+        "status": 200,
+        "requestId": "39249.148",
+        "bytes": 16912,
+        "sha256": "a272545c325a46eba8afa35d390913a6d9cb54cc2b94fe136cfa32c0aa1016e3"
+      },
+      {
+        "name": "31148-c2e484da6376747f.js",
+        "url": "https://clipcat.ai/_next/static/chunks/31148-c2e484da6376747f.js",
+        "status": 200,
+        "requestId": "39249.149",
+        "bytes": 21029,
+        "sha256": "e9b27097dac8b548dda6c90630aa0baf92968b4dac0e72527e948cb27c5a2519"
+      },
+      {
+        "name": "page-c72560085e6ccc94.js",
+        "url": "https://clipcat.ai/_next/static/chunks/app/%5Blocale%5D/project/%5Bid%5D/page-c72560085e6ccc94.js",
+        "status": 200,
+        "requestId": "39249.151",
+        "bytes": 120257,
+        "sha256": "00a6d362c043815c3d6cbf7c6d436594cae1bce0a5be8e009541afebef6a364b"
+      },
+      {
+        "name": "layout-cbfe09445f970257.js",
+        "url": "https://clipcat.ai/_next/static/chunks/app/%5Blocale%5D/project/layout-cbfe09445f970257.js",
+        "status": 200,
+        "requestId": "39249.155",
+        "bytes": 5760,
+        "sha256": "a0d080822dba6e2454850eadb388d44ae9e75dc423c8a542e00526211ca3a12e"
+      },
+      {
+        "name": "68438-3a47bb30e1b65160.js",
+        "url": "https://clipcat.ai/_next/static/chunks/68438-3a47bb30e1b65160.js",
+        "status": 200,
+        "requestId": "39249.158",
+        "bytes": 6455,
+        "sha256": "4d3b60d8653f854fdea7e7add28b93d04a84d110924f3afedc23a60740b4cb54"
+      },
+      {
+        "name": "40937-669801bc1a423199.js",
+        "url": "https://clipcat.ai/_next/static/chunks/40937-669801bc1a423199.js",
+        "status": 200,
+        "requestId": "39249.163",
+        "bytes": 12538,
+        "sha256": "786864ac4a4e286ea698e439c7c8ecc2503bce42e663cafcb5401d8963b4ec4e"
+      },
+      {
+        "name": "32210-8e26e4da37b4a942.js",
+        "url": "https://clipcat.ai/_next/static/chunks/32210-8e26e4da37b4a942.js",
+        "status": 200,
+        "requestId": "39249.167",
+        "bytes": 64708,
+        "sha256": "4d9effe0404f067a285ab1487addb5e6d5e68118e13fabdf378a52dd4a19e299"
+      },
+      {
+        "name": "91782-089f04f006de591c.js",
+        "url": "https://clipcat.ai/_next/static/chunks/91782-089f04f006de591c.js",
+        "status": 200,
+        "requestId": "39249.168",
+        "bytes": 22150,
+        "sha256": "7e81480c57596b59c89a4c7a9cd107f939e417dfcde1314eb0a8657db02fe546"
+      }
+    ]
+  }
+}

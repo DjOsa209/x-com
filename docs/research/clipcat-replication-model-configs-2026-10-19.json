@@ -1,0 +1,707 @@
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "models": [
+      {
+        "value": "sd2_promo",
+        "label": "Seedance 2 (Subsidized)",
+        "credits": 250,
+        "resolutions": ["480p", "720p"],
+        "durations": {
+          "720p": [10, 15],
+          "480p": [10, 15]
+        },
+        "creditMode": "duration",
+        "resolutionDurationCredits": {
+          "480p": {
+            "10": 130,
+            "15": 180
+          },
+          "720p": {
+            "10": 220,
+            "15": 250
+          }
+        },
+        "freeUserMaxDuration": 10,
+        "description": "480P/720P, limited-time subsidized Seedance 2 channel",
+        "available": false,
+        "raw": {
+          "enabled": false,
+          "mentionDialect": "at_cn",
+          "imageModes": ["reference"],
+          "maxImages": 4,
+          "minImages": 1,
+          "maxVideos": 0,
+          "maxAudios": 0,
+          "maxFiles": 0,
+          "maxLinks": 0,
+          "referenceMinImagesWhenAny": 1,
+          "aspectRatios": ["9:16", "16:9"],
+          "supportsAdaptiveRatio": false,
+          "maxFrameSlots": 1
+        },
+        "promptMaxLength": 2400
+      },
+      {
+        "value": "seedance2_mini",
+        "label": "Seedance 2 Mini",
+        "credits": 150,
+        "resolutions": ["480p", "720p"],
+        "durations": {
+          "480p": {
+            "min": 4,
+            "max": 15
+          },
+          "720p": {
+            "min": 4,
+            "max": 15
+          }
+        },
+        "creditMode": "duration",
+        "creditsPerSecond": {
+          "480p": 5,
+          "720p": 10
+        },
+        "freeUserAllowed": true,
+        "freeUserAllowedResolutions": ["480p"],
+        "description": "4-15s, cost-effective Seedance 2 tier, 60% off for a limited time",
+        "available": true,
+        "raw": {
+          "enabled": true,
+          "mentionDialect": "at_cn",
+          "imageModes": ["reference", "frames"],
+          "maxImages": 9,
+          "minImages": 0,
+          "maxVideos": 3,
+          "maxAudios": 3,
+          "maxVideoTotalSec": 15,
+          "maxAudioTotalSec": 15,
+          "maxFiles": 0,
+          "maxLinks": 0,
+          "referenceMinImagesWhenAny": 1,
+          "aspectRatios": ["9:16", "16:9"],
+          "supportsAdaptiveRatio": false,
+          "maxFrameSlots": 2
+        }
+      },
+      {
+        "value": "wan30_promo",
+        "label": "Wan 3.0 (Promo)",
+        "credits": 900,
+        "resolutions": ["720p", "1080p"],
+        "durations": {
+          "720p": {
+            "min": 5,
+            "max": 30
+          },
+          "1080p": {
+            "min": 5,
+            "max": 30
+          }
+        },
+        "creditMode": "duration",
+        "creditsPerSecond": {
+          "720p": 16,
+          "1080p": 30
+        },
+        "freeUserAllowed": true,
+        "freeUserMaxDuration": 10,
+        "description": "5-30s, Wan 3.0 Turbo, faster generation, limited-time promo",
+        "available": true,
+        "raw": {
+          "enabled": true,
+          "mentionDialect": "wan",
+          "imageModes": ["reference"],
+          "maxImages": 10,
+          "minImages": 0,
+          "maxVideos": 5,
+          "maxAudios": 5,
+          "maxVideoTotalSec": 15,
+          "maxAudioTotalSec": 15,
+          "maxOutputPlusVideoSec": 30,
+          "maxFiles": 0,
+          "maxLinks": 0,
+          "referenceMinImagesWhenAny": 1,
+          "aspectRatios": ["9:16", "16:9"],
+          "supportsAdaptiveRatio": false,
+          "maxFrameSlots": 1
+        }
+      },
+      {
+        "value": "sd2_fast_promo",
+        "label": "Seedance 2 Fast (Subsidized)",
+        "credits": 210,
+        "resolutions": ["480p", "720p"],
+        "durations": {
+          "720p": [10, 15],
+          "480p": [10, 15]
+        },
+        "creditMode": "duration",
+        "resolutionDurationCredits": {
+          "480p": {
+            "10": 120,
+            "15": 140
+          },
+          "720p": {
+            "10": 200,
+            "15": 230
+          }
+        },
+        "freeUserMaxDuration": 10,
+        "description": "480P/720P, limited-time subsidized Seedance 2 Fast channel",
+        "available": false
+      },
+      {
+        "value": "sd25_promo",
+        "label": "Seedance 2.5 (Subsidized)",
+        "credits": 570,
+        "resolutions": ["720p"],
+        "durations": {
+          "720p": [20]
+        },
+        "creditMode": "fixed",
+        "description": "15s 480P, full-strength Seedance 2.5, limited-time subsidy",
+        "available": false,
+        "showWhenUnavailable": false,
+        "promptMaxLength": 1950
+      },
+      {
+        "value": "grok_imagine",
+        "label": "Grok Imagine 1.5 (Trial)",
+        "credits": 160,
+        "resolutions": ["720p"],
+        "durations": {
+          "720p": [10, 15]
+        },
+        "creditMode": "duration",
+        "resolutionDurationCredits": {
+          "720p": {
+            "10": 110,
+            "15": 160
+          }
+        },
+        "durationCredits": {
+          "10": 110,
+          "15": 160
+        },
+        "description": "10/15s 480P/720P, priced by duration, by xAI",
+        "available": false,
+        "showWhenUnavailable": false,
+        "raw": {
+          "enabled": true,
+          "imageModes": ["frames"],
+          "maxImages": 1,
+          "minImages": 1,
+          "maxFrameSlots": 1,
+          "maxVideos": 0,
+          "maxAudios": 0,
+          "maxFiles": 0,
+          "maxLinks": 0,
+          "aspectRatios": ["9:16", "16:9"],
+          "supportsAdaptiveRatio": false
+        }
+      },
+      {
+        "value": "omini_flash",
+        "label": "Gemini Omni Flash (Trial)",
+        "credits": 70,
+        "resolutions": ["720p", "1080p"],
+        "durations": {
+          "720p": [10, 20],
+          "1080p": [10, 20]
+        },
+        "creditMode": "duration",
+        "durationCredits": {
+          "10": 70,
+          "20": 120
+        },
+        "description": "10/20s, per-clip pricing, Google's newest model",
+        "available": true,
+        "raw": {
+          "enabled": true,
+          "mentionDialect": "angle_ref0",
+          "imageModes": ["reference", "frames"],
+          "maxImages": 4,
+          "minImages": 0,
+          "maxFrameSlots": 1,
+          "maxVideos": 1,
+          "maxImagesWithVideo": 1,
+          "maxAudios": 0,
+          "maxFiles": 0,
+          "maxLinks": 0,
+          "referenceMinImagesWhenAny": 1,
+          "aspectRatios": ["9:16", "16:9"],
+          "supportsAdaptiveRatio": false
+        }
+      },
+      {
+        "value": "mmh3_promo",
+        "label": "MiniMax H3 (Promo)",
+        "credits": 180,
+        "resolutions": ["480p", "720p"],
+        "durations": {
+          "480p": [10, 15],
+          "720p": [10, 15]
+        },
+        "creditMode": "duration",
+        "resolutionDurationCredits": {
+          "480p": {
+            "10": 100,
+            "15": 120
+          },
+          "720p": {
+            "10": 120,
+            "15": 150
+          }
+        },
+        "durationCredits": {
+          "10": 140,
+          "15": 180
+        },
+        "description": "10/15s 480P/720P, priced by resolution and duration, comparable to Seedance 2.0",
+        "available": true,
+        "raw": {
+          "enabled": true,
+          "mentionDialect": "at_en",
+          "imageModes": ["reference", "frames"],
+          "maxImages": 9,
+          "minImages": 0,
+          "maxFrameSlots": 1,
+          "maxAudios": 3,
+          "maxAudioTotalSec": 15,
+          "maxVideos": 0,
+          "maxFiles": 0,
+          "maxLinks": 0,
+          "referenceMinImagesWhenAny": 1,
+          "aspectRatios": ["9:16", "16:9"],
+          "supportsAdaptiveRatio": false
+        }
+      },
+      {
+        "value": "veo3.1fast",
+        "label": "Veo 3.1 Fast (Trial)",
+        "credits": 110,
+        "resolutions": ["720p"],
+        "durations": {
+          "720p": [8, 16, 24]
+        },
+        "creditMode": "duration",
+        "durationCredits": {
+          "8": 50,
+          "16": 80,
+          "24": 120
+        },
+        "description": "8/16/24s, per-clip pricing, Google fast-generation model",
+        "available": true,
+        "raw": {
+          "enabled": true,
+          "imageModes": ["frames"],
+          "maxImages": 2,
+          "minImages": 1,
+          "maxVideos": 0,
+          "maxAudios": 0,
+          "maxFiles": 0,
+          "maxLinks": 0,
+          "referenceMinImagesWhenAny": 1,
+          "aspectRatios": ["9:16", "16:9"],
+          "supportsAdaptiveRatio": false,
+          "maxFrameSlots": 2
+        }
+      },
+      {
+        "value": "veo3.1pro",
+        "label": "Veo 3.1 Pro (Trial)",
+        "credits": 270,
+        "resolutions": ["720p", "1080p"],
+        "durations": {
+          "720p": [8, 16, 24],
+          "1080p": [8, 16, 24]
+        },
+        "creditMode": "duration",
+        "durationCredits": {
+          "8": 90,
+          "16": 180,
+          "24": 270
+        },
+        "description": "8/16/24s, per-clip pricing, Google high-quality model",
+        "available": false
+      },
+      {
+        "value": "seedance2_5",
+        "label": "Seedance 2.5",
+        "credits": 2190,
+        "resolutions": ["480p", "720p"],
+        "durations": {
+          "480p": {
+            "min": 4,
+            "max": 30
+          },
+          "720p": {
+            "min": 4,
+            "max": 30
+          }
+        },
+        "creditMode": "duration",
+        "creditsPerSecond": {
+          "480p": 33,
+          "720p": 73
+        },
+        "freeUserAllowed": false,
+        "description": "4-30s, per-second pricing, next-gen Seedance model",
+        "available": true,
+        "raw": {
+          "enabled": true,
+          "mentionDialect": "at_cn",
+          "imageModes": ["reference", "frames"],
+          "maxImages": 30,
+          "minImages": 0,
+          "maxVideos": 10,
+          "maxAudios": 10,
+          "maxVideoTotalSec": 30,
+          "maxAudioTotalSec": 30,
+          "maxClipSec": 30,
+          "maxFiles": 0,
+          "maxLinks": 0,
+          "referenceMinImagesWhenAny": 1,
+          "aspectRatios": ["9:16", "16:9"],
+          "supportsAdaptiveRatio": false,
+          "maxFrameSlots": 2
+        }
+      },
+      {
+        "value": "wan30",
+        "label": "Wan 3.0",
+        "credits": 1230,
+        "resolutions": ["480p", "720p", "1080p"],
+        "durations": {
+          "480p": {
+            "min": 5,
+            "max": 30
+          },
+          "720p": {
+            "min": 5,
+            "max": 30
+          },
+          "1080p": {
+            "min": 5,
+            "max": 30
+          }
+        },
+        "creditMode": "duration",
+        "creditsPerSecond": {
+          "480p": 11,
+          "720p": 21,
+          "1080p": 41
+        },
+        "freeUserAllowed": false,
+        "description": "5-30s, Alibaba's strongest model, better value than Seedance 2.0",
+        "available": true,
+        "raw": {
+          "enabled": true,
+          "mentionDialect": "wan",
+          "imageModes": ["reference", "frames"],
+          "maxImages": 10,
+          "minImages": 0,
+          "maxVideos": 5,
+          "maxAudios": 5,
+          "maxVideoTotalSec": 15,
+          "maxAudioTotalSec": 15,
+          "maxOutputPlusVideoSec": 30,
+          "maxFrameSlots": 2,
+          "maxFiles": 1,
+          "maxLinks": 1,
+          "supportsAdaptiveRatio": true,
+          "referenceMinImagesWhenAny": 1,
+          "aspectRatios": ["9:16", "16:9", "adaptive"]
+        },
+        "promptMaxLength": 19800
+      },
+      {
+        "value": "seedance2",
+        "label": "Seedance 2",
+        "credits": 308,
+        "resolutions": ["480p", "720p", "1080p"],
+        "durations": {
+          "480p": {
+            "min": 4,
+            "max": 15
+          },
+          "720p": {
+            "min": 4,
+            "max": 15
+          },
+          "1080p": {
+            "min": 4,
+            "max": 15
+          }
+        },
+        "creditMode": "duration",
+        "creditsPerSecond": {
+          "480p": 20,
+          "720p": 41,
+          "1080p": 112
+        },
+        "description": "4-15s, per-second pricing, top quality model with best results",
+        "available": true,
+        "raw": {
+          "enabled": true,
+          "mentionDialect": "at_cn",
+          "imageModes": ["reference", "frames"],
+          "maxImages": 9,
+          "minImages": 0,
+          "maxVideos": 3,
+          "maxAudios": 3,
+          "maxVideoTotalSec": 15,
+          "maxAudioTotalSec": 15,
+          "maxFiles": 0,
+          "maxLinks": 0,
+          "referenceMinImagesWhenAny": 1,
+          "aspectRatios": ["9:16", "16:9"],
+          "supportsAdaptiveRatio": false,
+          "maxFrameSlots": 2
+        }
+      },
+      {
+        "value": "seedance2_fast",
+        "label": "Seedance 2 Fast",
+        "credits": 435,
+        "resolutions": ["480p", "720p"],
+        "durations": {
+          "480p": {
+            "min": 4,
+            "max": 15
+          },
+          "720p": {
+            "min": 4,
+            "max": 15
+          }
+        },
+        "creditMode": "duration",
+        "creditsPerSecond": {
+          "480p": 14,
+          "720p": 29
+        },
+        "description": "4-15s, per-second pricing, fast variant, 25% off for a limited time",
+        "available": true,
+        "raw": {
+          "enabled": true,
+          "mentionDialect": "at_cn",
+          "imageModes": ["reference", "frames"],
+          "maxImages": 9,
+          "minImages": 0,
+          "maxVideos": 3,
+          "maxAudios": 3,
+          "maxVideoTotalSec": 15,
+          "maxAudioTotalSec": 15,
+          "maxFiles": 0,
+          "maxLinks": 0,
+          "referenceMinImagesWhenAny": 1,
+          "aspectRatios": ["9:16", "16:9"],
+          "supportsAdaptiveRatio": false,
+          "maxFrameSlots": 2
+        }
+      },
+      {
+        "value": "kling3",
+        "label": "Kling V3",
+        "credits": 155,
+        "resolutions": ["720p"],
+        "durations": {
+          "720p": [5, 10, 15]
+        },
+        "creditMode": "duration",
+        "durationCredits": {
+          "5": 80,
+          "10": 125,
+          "15": 155
+        },
+        "description": "5/10/15s, per-clip pricing, Kling V3, landscape / portrait, 5s 80 / 10s 125 / 15s 155 credits",
+        "available": false
+      },
+      {
+        "value": "minimax_h3",
+        "label": "MiniMax H3",
+        "credits": 540,
+        "resolutions": ["768p", "2K"],
+        "durations": {
+          "768p": [10, 15],
+          "2K": [10, 15]
+        },
+        "creditMode": "duration",
+        "creditsPerSecond": {
+          "768p": 22,
+          "2K": 36
+        },
+        "description": "10/15 sec, by MiniMax, quality close to Seedance 2.0.",
+        "available": true,
+        "raw": {
+          "enabled": true,
+          "mentionDialect": "at_en",
+          "imageModes": ["reference", "frames"],
+          "maxImages": 5,
+          "minImages": 0,
+          "maxVideos": 3,
+          "maxAudios": 3,
+          "maxVideoTotalSec": 15,
+          "maxFiles": 0,
+          "maxLinks": 0,
+          "referenceMinImagesWhenAny": 1,
+          "aspectRatios": ["9:16", "16:9"],
+          "supportsAdaptiveRatio": false,
+          "maxFrameSlots": 2
+        }
+      },
+      {
+        "value": "happyhorse10",
+        "label": "HappyHorse 1.1",
+        "credits": 480,
+        "resolutions": ["720p", "1080p"],
+        "durations": {
+          "720p": {
+            "min": 3,
+            "max": 15
+          },
+          "1080p": {
+            "min": 3,
+            "max": 15
+          }
+        },
+        "creditMode": "duration",
+        "creditsPerSecond": {
+          "720p": 38,
+          "1080p": 68
+        },
+        "description": "3-15s, per-second pricing, by Alibaba",
+        "available": true,
+        "raw": {
+          "enabled": true,
+          "mentionDialect": "bracket_en",
+          "imageModes": ["reference", "frames"],
+          "maxImages": 9,
+          "minImages": 0,
+          "maxFrameSlots": 1,
+          "maxVideos": 0,
+          "maxAudios": 0,
+          "maxFiles": 0,
+          "maxLinks": 0,
+          "referenceMinImagesWhenAny": 1,
+          "aspectRatios": ["9:16", "16:9"],
+          "supportsAdaptiveRatio": false
+        }
+      },
+      {
+        "value": "sora2_official_exp",
+        "label": "Sora 2",
+        "credits": 80,
+        "resolutions": ["720p"],
+        "durations": {
+          "720p": [4, 8, 12]
+        },
+        "creditMode": "fixed",
+        "durationCredits": {
+          "4": 80,
+          "8": 80,
+          "12": 80
+        },
+        "description": "4/8/12s, per-clip pricing, OpenAI official model",
+        "available": false
+      }
+    ],
+    "canCreateVideoCharacter": false,
+    "characterSupport": {
+      "veo3.1fast": {
+        "720": true,
+        "1080": false,
+        "4K": false
+      },
+      "veo3.1pro": {
+        "720": false,
+        "1080": false,
+        "4K": false
+      },
+      "omini_flash": {
+        "720": true,
+        "1080": true
+      },
+      "grok_imagine": {
+        "480": false,
+        "720": true,
+        "1080": false
+      },
+      "seedance2": {
+        "480": true,
+        "720": true,
+        "1080": true
+      },
+      "seedance2_mini": {
+        "480": true,
+        "720": true
+      },
+      "seedance2_5": {
+        "480": true,
+        "720": true
+      },
+      "seedance2_fast": {
+        "480": true,
+        "720": true,
+        "1080": false
+      },
+      "sd2_promo": {
+        "480": true,
+        "720": true
+      },
+      "sd2_fast_promo": {
+        "480": false,
+        "720": false
+      },
+      "sd25_promo": {
+        "480": true,
+        "720": false
+      },
+      "happyhorse10": {
+        "720": true,
+        "1080": true
+      },
+      "wan30": {
+        "480": true,
+        "720": true,
+        "1080": true
+      },
+      "wan30_promo": {
+        "480": false,
+        "720": true,
+        "1080": true
+      },
+      "minimax_h3": {
+        "768": true,
+        "2K": true
+      },
+      "mmh3_promo": {
+        "480": true,
+        "720": true,
+        "2K": false
+      }
+    },
+    "idleSchedule": [
+      {
+        "start": "12:00",
+        "end": "14:00",
+        "tz": "Asia/Shanghai"
+      },
+      {
+        "start": "19:00",
+        "end": "09:00",
+        "tz": "Asia/Shanghai"
+      },
+      {
+        "start": "00:00",
+        "end": "24:00",
+        "tz": "Asia/Shanghai",
+        "days": [0, 6]
+      }
+    ],
+    "idleEnabled": false,
+    "rawModeEnabled": true
+  }
+}

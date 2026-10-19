@@ -1,0 +1,86 @@
+{
+  "page": "https://clipcat.ai/en/project/research-preview",
+  "method": "Normal anonymous IAB navigation, observed public Script responses captured with Network.getResponseBody; no project data access or generation",
+  "assets": [
+    {
+      "name": "12598-3a7ffbf567371cdc.js",
+      "url": "https://clipcat.ai/_next/static/chunks/12598-3a7ffbf567371cdc.js",
+      "status": 200,
+      "requestId": "39249.145",
+      "bytes": 38543,
+      "sha256": "5e5203b83d2667ae4eedde890719ed80962220bfa8729cba07e4277e53d496be"
+    },
+    {
+      "name": "19730-fbea5afc5102e046.js",
+      "url": "https://clipcat.ai/_next/static/chunks/19730-fbea5afc5102e046.js",
+      "status": 200,
+      "requestId": "39249.146",
+      "bytes": 76762,
+      "sha256": "e874c3d1f3c9aa14062af5bd80f4de953c5ec8419ec91f90b8ad3b827586e941"
+    },
+    {
+      "name": "45824-8fda6813bea7b70e.js",
+      "url": "https://clipcat.ai/_next/static/chunks/45824-8fda6813bea7b70e.js",
+      "status": 200,
+      "requestId": "39249.148",
+      "bytes": 16912,
+      "sha256": "a272545c325a46eba8afa35d390913a6d9cb54cc2b94fe136cfa32c0aa1016e3"
+    },
+    {
+      "name": "31148-c2e484da6376747f.js",
+      "url": "https://clipcat.ai/_next/static/chunks/31148-c2e484da6376747f.js",
+      "status": 200,
+      "requestId": "39249.149",
+      "bytes": 21029,
+      "sha256": "e9b27097dac8b548dda6c90630aa0baf92968b4dac0e72527e948cb27c5a2519"
+    },
+    {
+      "name": "page-c72560085e6ccc94.js",
+      "url": "https://clipcat.ai/_next/static/chunks/app/%5Blocale%5D/project/%5Bid%5D/page-c72560085e6ccc94.js",
+      "status": 200,
+      "requestId": "39249.151",
+      "bytes": 120257,
+      "sha256": "00a6d362c043815c3d6cbf7c6d436594cae1bce0a5be8e009541afebef6a364b"
+    },
+    {
+      "name": "layout-cbfe09445f970257.js",
+      "url": "https://clipcat.ai/_next/static/chunks/app/%5Blocale%5D/project/layout-cbfe09445f970257.js",
+      "status": 200,
+      "requestId": "39249.155",
+      "bytes": 5760,
+      "sha256": "a0d080822dba6e2454850eadb388d44ae9e75dc423c8a542e00526211ca3a12e"
+    },
+    {
+      "name": "68438-3a47bb30e1b65160.js",
+      "url": "https://clipcat.ai/_next/static/chunks/68438-3a47bb30e1b65160.js",
+      "status": 200,
+      "requestId": "39249.158",
+      "bytes": 6455,
+      "sha256": "4d3b60d8653f854fdea7e7add28b93d04a84d110924f3afedc23a60740b4cb54"
+    },
+    {
+      "name": "40937-669801bc1a423199.js",
+      "url": "https://clipcat.ai/_next/static/chunks/40937-669801bc1a423199.js",
+      "status": 200,
+      "requestId": "39249.163",
+      "bytes": 12538,
+      "sha256": "786864ac4a4e286ea698e439c7c8ecc2503bce42e663cafcb5401d8963b4ec4e"
+    },
+    {
+      "name": "32210-8e26e4da37b4a942.js",
+      "url": "https://clipcat.ai/_next/static/chunks/32210-8e26e4da37b4a942.js",
+      "status": 200,
+      "requestId": "39249.167",
+      "bytes": 64708,
+      "sha256": "4d9effe0404f067a285ab1487addb5e6d5e68118e13fabdf378a52dd4a19e299"
+    },
+    {
+      "name": "91782-089f04f006de591c.js",
+      "url": "https://clipcat.ai/_next/static/chunks/91782-089f04f006de591c.js",
+      "status": 200,
+      "requestId": "39249.168",
+      "bytes": 22150,
+      "sha256": "7e81480c57596b59c89a4c7a9cd107f939e417dfcde1314eb0a8657db02fe546"
+    }
+  ]
+}

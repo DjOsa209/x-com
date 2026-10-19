@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-19",
+  "timezone": "Asia/Shanghai",
+  "collection": "live public config reads during this turn",
+  "requests": [
+    {
+      "url": "https://clipcat.ai/api/config/model-configs",
+      "method": "POST",
+      "requestBody": {
+        "locale": "en"
+      },
+      "status": 200,
+      "responseBytes": 10915,
+      "responseSha256": "d11bd9bbd42b8467aeb77c6b3da4deea9eda73cd3f8a6930623c698bfecdca0c",
+      "savedJson": "clipcat-replication-model-configs-2026-10-19.json",
+      "note": "公开配置读取；未提交生成任务、使用账号或消费额度。"
+    },
+    {
+      "url": "https://clipcat.ai/api/config/image-models",
+      "method": "POST",
+      "requestBody": {
+        "locale": "en"
+      },
+      "status": 200,
+      "responseBytes": 566,
+      "responseSha256": "b0df843809036ede55d4fac3a29652296ae880de95735d9cc7897b39f12f5b92",
+      "savedJson": "clipcat-replication-image-models-2026-10-19.json",
+      "note": "公开配置读取；未提交生成任务、使用账号或消费额度。"
+    }
+  ],
+  "chunkRefresh": [
+    {
+      "name": "80350-12a591116ae87047.js",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "name": "45824-8fda6813bea7b70e.js",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "name": "22639-944483e554ca68a4.js",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "name": "46623-633d29565140baba.js",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "name": "31148-c2e484da6376747f.js",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "name": "97637-7cd29932c309facd.js",
+      "error": "HTTP Error 403: Forbidden"
+    }
+  ],
+  "boundaries": [
+    "模型配置只证明公开能力声明，不证明Clipcat上游provider实现。",
+    "最初直接刷新6个已知JS返回403；随后内置浏览器正常匿名加载项目页，10个公开Script响应200并记录URL/hash。",
+    "本轮新增项目页公开脚本参与REA；45824及31148当前browser响应与旧快照hash一致，其余旧文件不一概声称已重新核验。"
+  ],
+  "browserProjectScriptAcquisition": "clipcat-replication-project-client-acquisition-2026-10-19.json"
+}

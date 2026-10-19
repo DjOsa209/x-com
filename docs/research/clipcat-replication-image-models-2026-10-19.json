@@ -1,0 +1,32 @@
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "models": [
+      {
+        "value": "gptimage2",
+        "label": "GPT Image 2",
+        "description": "By OpenAI, accurate text, strong prompt following",
+        "credits": 20
+      },
+      {
+        "value": "gptimage25flare",
+        "label": "GPT Image 2.5 Flare",
+        "description": "Fast tier of OpenAI's best 2.5 model, 2x faster",
+        "credits": 22
+      },
+      {
+        "value": "gptimage25sunburst",
+        "label": "GPT Image 2.5 Sunburst",
+        "description": "OpenAI's best 2.5 model, strongest overall",
+        "credits": 22
+      },
+      {
+        "value": "nanobana2",
+        "label": "Nano Banana Pro",
+        "description": "By Google, all-round image generation and editing",
+        "credits": 20
+      }
+    ]
+  }
+}
