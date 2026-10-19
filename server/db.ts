@@ -1,3 +1,4 @@
+import { pipelineView } from "./video-plan.ts";
 import "./env.ts";
 import mysql, {
   type RowDataPacket,
@@ -133,6 +134,7 @@ export function job(r: Doc): Doc {
     status: r.status,
     input: parse(r.input),
     result: parse(r.result),
+    pipeline: pipelineView(parse(r.provider)),
     error: r.error,
     runAt: r.run_at,
     createdAt: r.created_at,

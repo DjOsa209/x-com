@@ -1,3 +1,5 @@
+import { config } from "./config.ts";
+import { videoPolicy, buildRenderPlan, planFingerprint } from "./video-plan.ts";
 import { Router } from "express";
 import { randomUUID, createHash } from "node:crypto";
 import { z } from "zod";
@@ -12,7 +14,7 @@ import {
   type Doc,
 } from "./db.ts";
 import { workspace, inWorkspace } from "./context.ts";
-import { createJob, cancelJob, checkProviders } from "./jobs.ts";
+import { createJob, cancelJob, checkProviders, retryJob } from "./jobs.ts";
 import { finalizeCredits } from "./credits.ts";
 import { AppError } from "./errors.ts";
 import { audit } from "./auth.ts";
@@ -148,6 +150,20 @@ projectRoutes.post("/projects/:id/confirm", async (req, res) => {
       version: z.number().int(),
       modifiedData: z.record(z.string(), z.any()),
       videoGenerationCount: z.number().int().min(1).max(4).default(1),
+      renderOptions: z
+        .object({
+          videoModelId: z.string().optional(),
+          segmentStrategy: z
+            .enum(["balanced", "shots", "fixed", "single"])
+            .optional(),
+          segmentSeconds: z.number().int().min(1).max(30).optional(),
+          duration: z.number().min(1).max(120).optional(),
+          aspect: z.enum(["9:16", "16:9", "1:1"]).optional(),
+          resolution: z.string().optional(),
+          generateAudio: z.boolean().optional(),
+        })
+        .optional(),
+      planFingerprint: z.string().length(64).optional(),
     })
     .parse(req.body);
   const id = String(req.params.id),
@@ -177,24 +193,34 @@ projectRoutes.post("/projects/:id/confirm", async (req, res) => {
     const mainPrompt = b.modifiedData.shootingPrompt || b.modifiedData.script;
     if (typeof mainPrompt !== "string" || !mainPrompt.trim())
       throw new AppError(400, "确认内容需要 shootingPrompt 或 script");
-    const prompt =
-      mainPrompt +
-      (Array.isArray(b.modifiedData.scenes) && b.modifiedData.scenes.length
-        ? "\nConfirmed storyboard: " + JSON.stringify(b.modifiedData.scenes)
-        : "");
-    await checkProviders("video", { ...p.input, prompt });
+    const prompt = mainPrompt;
+    const renderInput = {
+      ...p.input,
+      ...b.renderOptions,
+      prompt,
+      storyboard: b.modifiedData,
+    };
+    if (Object.keys(renderInput).some((k) => k.startsWith("_")))
+      throw new AppError(400, "项目包含内部任务字段");
+    const policy = videoPolicy(await config(), renderInput);
+    const plan = buildRenderPlan(renderInput, b.modifiedData, policy);
+    if (b.planFingerprint && b.planFingerprint !== planFingerprint(plan))
+      throw new AppError(409, "生成计划或配置已变化，请重新预览后确认");
+    await checkProviders("video", renderInput);
     for (let i = 0; i < b.videoGenerationCount; i++) {
       const j = await createJob(
         "video",
         {
-          ...p.input,
-          prompt,
+          ...renderInput,
+          _videoPolicy: policy,
+          _renderPlan: plan,
           projectId: id,
           confirmationVersion: b.version,
           variant: i + 1,
         },
         `confirm:${id}:${b.version}:${i}`,
         undefined,
+        true,
         true,
       );
       held.push(j.id);
@@ -212,8 +238,13 @@ projectRoutes.post("/projects/:id/confirm", async (req, res) => {
       ],
     );
     await conn.execute(
-      "UPDATE projects SET status='processing',script=?,render_job_ids=? WHERE id=?",
-      [JSON.stringify(b.modifiedData), JSON.stringify(held), id],
+      "UPDATE projects SET status='processing',script=?,render_job_ids=?,input=? WHERE id=?",
+      [
+        JSON.stringify(b.modifiedData),
+        JSON.stringify(held),
+        JSON.stringify(renderInput),
+        id,
+      ],
     );
     for (const jid of held)
       await conn.execute(
@@ -262,7 +293,7 @@ projectRoutes.post("/projects/:id/retry", async (req, res) => {
   const p = await find(String(req.params.id));
   if (!["failed", "cancelled"].includes(p.status))
     throw new AppError(409, "请先核对项目和子任务状态");
-  if (p.status === "failed" && p.render_job_ids.length) {
+  if (p.render_job_ids.length) {
     const conn = await pool.getConnection(),
       held: string[] = [];
     try {
@@ -271,7 +302,7 @@ projectRoutes.post("/projects/:id/retry", async (req, res) => {
         "SELECT version,status FROM projects WHERE id=? AND workspace_id=? FOR UPDATE",
         [p.id, workspace()],
       );
-      if (current[0]?.version !== p.version || current[0]?.status !== "failed")
+      if (current[0]?.version !== p.version || current[0]?.status !== p.status)
         throw new AppError(409, "项目已更新，请刷新");
       const ids: string[] = [];
       for (const oldId of p.render_job_ids) {
@@ -283,11 +314,9 @@ projectRoutes.post("/projects/:id/retry", async (req, res) => {
         }
         if (!["failed", "cancelled"].includes(old.status))
           throw new AppError(409, "仍有未完成的子任务，请先核对");
-        const j = await createJob(
-          old.kind,
-          { ...parse(old.input), retryOf: oldId },
+        const j = await retryJob(
+          oldId,
           `projectretry:${p.id}:${p.version}:${oldId}`,
-          undefined,
           true,
         );
         held.push(j.id);
@@ -299,7 +328,7 @@ projectRoutes.post("/projects/:id/retry", async (req, res) => {
       );
       for (const jid of held)
         await conn.execute(
-          "UPDATE jobs SET status='queued' WHERE id=? AND workspace_id=? AND status='held'",
+          "UPDATE jobs SET status=IF(JSON_UNQUOTE(JSON_EXTRACT(provider,'$.name'))='video-pipeline','processing','queued') WHERE id=? AND workspace_id=? AND status='held'",
           [jid, workspace()],
         );
       await conn.commit();

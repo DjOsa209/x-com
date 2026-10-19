@@ -1,3 +1,4 @@
+import { VideoControls, PipelineProgress } from "../VideoPipeline";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -27,6 +28,7 @@ import {
 import {
   api,
   newJob,
+  post,
   save,
   date,
   kindNames,
@@ -50,6 +52,7 @@ export function Workspace() {
   const { toast, refresh, status } = useApp();
   const location = useLocation(),
     navigate = useNavigate();
+  const [videoOptions, setVideoOptions] = useState<Doc>({});
   const [prompt, setPrompt] = useState(""),
     [name, setName] = useState(""),
     [mode, setMode] = useState("video"),
@@ -92,6 +95,11 @@ export function Workspace() {
         setLanguage(d.language || "English");
         setCharacter(d.characterId || "");
         setVideoAsset(d.videoAsset || null);
+        setVideoOptions({
+          videoModelId: d.videoModelId,
+          segmentStrategy: d.segmentStrategy,
+          segmentSeconds: d.segmentSeconds,
+        });
       }
       navigate("/", { replace: true, state: null });
     }
@@ -112,11 +120,21 @@ export function Workspace() {
     duration: Number(duration),
     aspect,
     language,
+    ...videoOptions,
   });
   async function submit() {
     setBusy(true);
     setError("");
     try {
+      if (["video", "replicate"].includes(mode)) {
+        const project = await post("/projects", {
+          name: name || "未命名创作",
+          input: { ...payload(), mode },
+        });
+        navigate("/projects?id=" + project.id);
+        toast("项目已保存，请生成分镜并确认分段计划");
+        return;
+      }
       const j = await newJob(mode, payload());
       setCurrent(j.id);
       toast("任务已提交，可在任务管理中查看");
@@ -256,13 +274,17 @@ export function Workspace() {
                   ? "Gemini"
                   : mode === "image"
                     ? "图片生成模型"
-                    : "Kling Video"}
+                    : "可配置视频模型"}
                 <span className="tiny-dot" />
               </span>
             </div>
             <div className="composer-submit">
               <span>
-                {mode === "script" ? "从卖点到可拍摄分镜" : "从灵感到成品"}
+                {mode === "script"
+                  ? "从卖点到可拍摄分镜"
+                  : ["video", "replicate"].includes(mode)
+                    ? "下一步：审阅分镜与生成计划"
+                    : "从灵感到成品"}
               </span>
               <Button
                 className="generate-button"
@@ -311,6 +333,11 @@ export function Workspace() {
                 <option value="5">5 秒</option>
                 <option value="10">10 秒</option>
                 <option value="15">15 秒</option>
+                {[20, 30, 45, 60, 90, 120].map((n) => (
+                  <option key={n} value={n}>
+                    {n} 秒
+                  </option>
+                ))}
               </select>
             </label>
             <label>
@@ -344,6 +371,15 @@ export function Workspace() {
           </div>
         </div>
       </section>
+      {["video", "replicate"].includes(mode) && (
+        <section className="config-section">
+          <h2>视频生成设置</h2>
+          <VideoControls value={videoOptions} onChange={setVideoOptions} />
+          <p className="config-note">
+            下一步生成分镜，预览每段的模型时长与调用数量，再确认生成视频。
+          </p>
+        </section>
+      )}
       <div className="composer-links">
         <Link to="/inspiration">
           <ShoppingBag size={15} />
@@ -378,6 +414,7 @@ export function Workspace() {
             {stateNames[active.status]}
           </span>
           {active.error && <ErrorBox message={active.error} />}
+          <PipelineProgress pipeline={active.pipeline} />
           {active.result && <ResultView result={active.result} />}
         </section>
       )}

@@ -23,6 +23,14 @@ import {
 } from "./tiktok.ts";
 import { withJobLock } from "./locks.ts";
 import { AppError } from "./errors.ts";
+import { videoPolicy, buildRenderPlan } from "./video-plan.ts";
+import { mediaToolsReady } from "./video-compose.ts";
+import {
+  initializePipeline,
+  advancePipeline,
+  cancelPipeline,
+  retryPipelineState,
+} from "./video-pipeline.ts";
 
 export const kinds = [
   "script",
@@ -56,13 +64,15 @@ export async function checkProviders(kind: string, input: Doc) {
     input.sourceUrl &&
     !/tiktok\.com/.test(input.sourceUrl) &&
     !/^\d+$/.test(input.sourceUrl);
-  if (!c[need] && !directDownload)
+  const localComposeOnly =
+    ["video", "replicate"].includes(kind) && input._localComposeOnly === true;
+  if (!c[need] && !directDownload && !localComposeOnly)
     throw new AppError(
       409,
       `请先在设置中配置 ${need.startsWith("TIKTOK") ? "TikTok 应用并授权账号" : need.startsWith("ECHOTIK") ? "EchoTik" : need.startsWith("FAL") ? "fal.ai" : "Gemini"}`,
       "PROVIDER_NOT_CONFIGURED",
     );
-  if (kind === "replicate" && !c.FAL_KEY)
+  if (kind === "replicate" && !c.FAL_KEY && !localComposeOnly)
     throw new AppError(
       409,
       "一键复刻还需要配置 fal.ai 视频生成服务",
@@ -96,11 +106,19 @@ export async function checkProviders(kind: string, input: Doc) {
     (!input.accountId || !input.assetId || !input.consent)
   )
     throw new AppError(400, "请选择账号、视频并确认发布授权");
-  if (
-    ["video", "replicate"].includes(kind) &&
-    ![5, 10, 15].includes(Number(input.duration || 10))
-  )
-    throw new AppError(400, "视频时长需为 5、10 或 15 秒");
+  if (["video", "replicate"].includes(kind)) {
+    const duration = Number(input.duration || 10);
+    if (!Number.isFinite(duration) || duration < 1 || duration > 120)
+      throw new AppError(400, "视频时长需在 1–120 秒之间");
+    if (!input.storyboard && !c.GEMINI_API_KEY && !localComposeOnly)
+      throw new AppError(
+        409,
+        "请先配置 Gemini 以生成分镜，或使用已确认分镜",
+        "PROVIDER_NOT_CONFIGURED",
+      );
+    if (!input._videoPolicy) videoPolicy(c, input);
+    await mediaToolsReady();
+  }
   if (input.aspect && !["9:16", "16:9", "1:1"].includes(input.aspect))
     throw new AppError(400, "请选择支持的画幅");
 }
@@ -110,6 +128,7 @@ export async function createJob(
   dedupe: string,
   runAt?: string,
   hold = false,
+  trustedInput = false,
 ) {
   if (!kinds.includes(kind as any)) throw new AppError(400, "未知任务类型");
   if (dedupe.length > 128) throw new AppError(400, "无效请求标识");
@@ -120,7 +139,19 @@ export async function createJob(
     dedupe,
   ]);
   if (existing) return job(existing);
+  if (!trustedInput && Object.keys(input).some((k) => k.startsWith("_")))
+    throw new AppError(400, "不能提交内部任务字段");
+  input = structuredClone(input);
   await checkProviders(kind, input);
+  if (["video", "replicate"].includes(kind)) {
+    input._videoPolicy ||= videoPolicy(await config(), input);
+    if (input.storyboard)
+      input._renderPlan ||= buildRenderPlan(
+        input,
+        input.storyboard,
+        input._videoPolicy,
+      );
+  }
   let at: Date | null = null;
   if (runAt) {
     at = new Date(runAt);
@@ -302,7 +333,7 @@ async function runLocal(id: string, kind: string, input: Doc) {
   if (kind === "analysis" || kind === "replicate" || kind === "prompt") {
     const vid = await videoAsset(input);
     const result = await aiJson(
-      `分析参考视频。任务=${kind}。用户自己的商品要求：${input.prompt || "提取销售结构"}。输出 {title,summary,hook,audience,script,scenes:[{time,visual,voiceover,shot}],sellingPoints:[],music,successHypotheses:[],limitations:[],shootingPrompt,sourceUrl}。只对实际观察到的画面和声音作描述；音乐不确定时注明。${kind === "replicate" ? "用自己的商品替换产品，不复制原作者身份或承诺原视频销量。" : ""}`,
+      `分析参考视频。任务=${kind}。用户自己的商品要求：${input.prompt || "提取销售结构"}。输出 {title,summary,hook,audience,script,scenes:[{time,visual,voiceover,shot}],sellingPoints:[],music,successHypotheses:[],limitations:[],shootingPrompt,sourceUrl}。${kind === "replicate" || input.mode === "replicate" ? `分镜时间必须从 0 开始、连续且不重叠，结束于目标 ${input.duration || 10} 秒，time 格式为 0-3s；按目标时长改编，口播使用 ${input.language || "English"}。` : "按原视频真实起止时间描述分镜，不将原视频压缩到默认创作时长。"}只对实际观察到的画面和声音作描述；音乐不确定时注明。${kind === "replicate" || input.mode === "replicate" ? "用自己的商品替换产品，不复制原作者身份或承诺原视频销量。" : ""}`,
       input.assetIds || [],
       vid,
     );
@@ -326,22 +357,25 @@ async function runLocal(id: string, kind: string, input: Doc) {
       `根据下列数据分析评论痛点和选品机会，输出 {title,summary,painPoints:[{problem,evidence,commentIds,frequencyInSample}],opportunities:[],risks:[],nextSteps:[],sampleSize}。只统计提供的样本，不把样本频率称为全市场需求。原始数据：${JSON.stringify(input.evidence || {}).slice(0, 90000)}`,
     );
   return aiJson(
-    `为电商商品生成可拍摄的销售分镜和视频提示。商品要求：${input.prompt}；风格 ${input.style || "UGC"}；语言 ${input.language || "English"}；时长 ${input.duration || 10}秒；比例 ${input.aspect || "9:16"}。输出 {title,summary,hook,script,scenes:[{time,visual,voiceover,shot}],sellingPoints:[],shootingPrompt,limitations:[]}。不要编造商品未提供的功效。`,
+    `为电商商品生成可拍摄的销售分镜和视频提示。商品要求：${input.prompt}；风格 ${input.style || "UGC"}；语言 ${input.language || "English"}；时长 ${input.duration || 10}秒；比例 ${input.aspect || "9:16"}。输出 {title,summary,hook,script,scenes:[{time,visual,voiceover,shot}],sellingPoints:[],shootingPrompt,limitations:[]}。分镜时间必须从 0 开始、连续且不重叠，结束于目标时长；time 格式为 0-3s。不要编造商品未提供的功效。`,
     input.assetIds || [],
   );
 }
 async function startJob(r: Doc) {
   let input = parse(r.input);
   await checkProviders(r.kind, input);
-  if (r.kind === "replicate") {
-    const analysis = await runLocal(r.id, "replicate", input);
-    await updateJob(r.id, { result: analysis });
-    input = {
-      ...input,
-      prompt: analysis.shootingPrompt || analysis.script || input.prompt,
-    };
+  if (["video", "replicate"].includes(r.kind)) {
+    const storyboard =
+      input.storyboard ||
+      (await runLocal(
+        r.id,
+        r.kind === "replicate" ? "replicate" : "script",
+        input,
+      ));
+    await initializePipeline(r.id, input, storyboard);
+    return;
   }
-  if (falKinds.includes(r.kind) || r.kind === "replicate") {
+  if (falKinds.includes(r.kind)) {
     const { model, payload, frame } = await falInput(r.kind, input);
     const fal = await falClient();
     // Persist submission intent before sending a potentially billable request.
@@ -402,6 +436,7 @@ async function pollJob(r: Doc) {
 }
 async function pollJobUnlocked(r: Doc) {
   const p = parse(r.provider);
+  if (p?.name === "video-pipeline") return advancePipeline(r);
   if (p?.name === "fal") {
     if (!p.requestId)
       throw new AppError(
@@ -531,6 +566,11 @@ async function cancelJobUnlocked(id: string) {
   const r = await jobGet(id);
   if (!r) throw new AppError(404, "任务不存在");
   const p = parse(r.provider);
+  if (
+    p?.name === "video-pipeline" &&
+    ["processing", "review"].includes(r.status)
+  )
+    return cancelPipeline(r);
   if (p?.name === "fal" && ["processing", "review"].includes(r.status)) {
     if (!p.requestId)
       throw new AppError(
@@ -564,7 +604,14 @@ export async function refreshJob(id: string) {
   if (["completed", "inbox"].includes(current?.status))
     await finalizeCredits(id, true);
 }
-export async function retryJob(id: string) {
+export async function retryJob(
+  id: string,
+  dedupe: string = "retry:" + id,
+  hold = false,
+) {
+  return withJobLock(id, () => retryJobUnlocked(id, dedupe, hold));
+}
+async function retryJobUnlocked(id: string, dedupe: string, hold: boolean) {
   const r = await jobGet(id);
   if (!r) throw new AppError(404, "任务不存在");
   if (!["failed", "cancelled"].includes(r.status))
@@ -572,5 +619,38 @@ export async function retryJob(id: string) {
       409,
       "只有明确失败或未提交已取消的任务可以重试；待核对任务需先核对供应商",
     );
-  return createJob(r.kind, { ...parse(r.input), retryOf: id }, randomUUID());
+  const provider = parse(r.provider);
+  const state =
+    provider?.name === "video-pipeline" ? retryPipelineState(provider) : null;
+  const created = await createJob(
+    r.kind,
+    {
+      ...parse(r.input),
+      retryOf: id,
+      ...(state
+        ? {
+            storyboard: parse(r.result)?.storyboard,
+            _videoPolicy: state.plan.policy,
+            _renderPlan: state.plan,
+            _localComposeOnly: state.segments.every(
+              (s: Doc) => s.status === "completed",
+            ),
+          }
+        : {}),
+    },
+    dedupe,
+    undefined,
+    true,
+    true,
+  );
+  if (created.status !== "held") return created;
+  if (state)
+    await updateJob(created.id, {
+      provider: state,
+      result: parse(r.result),
+      error: null,
+    });
+  if (!hold)
+    await updateJob(created.id, { status: state ? "processing" : "queued" });
+  return job((await jobGet(created.id))!);
 }

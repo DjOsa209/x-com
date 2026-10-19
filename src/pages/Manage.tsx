@@ -1,3 +1,4 @@
+import { PipelineProgress, strategyNames } from "../VideoPipeline";
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -654,6 +655,22 @@ export function Tasks() {
                   查询供应商状态
                 </Button>
               )}
+              {["failed", "cancelled"].includes(current.status) && (
+                <Button
+                  onClick={async () => {
+                    try {
+                      const j = await post(`/jobs/${current.id}/retry`);
+                      setSelected(j.id);
+                      void reload();
+                      toast("重试任务已创建，成功片段会复用");
+                    } catch (e: any) {
+                      toast(e.message, true);
+                    }
+                  }}
+                >
+                  重试任务
+                </Button>
+              )}
               {current.result?.shootingPrompt && (
                 <Button
                   onClick={() => {
@@ -673,6 +690,7 @@ export function Tasks() {
             </div>
           </div>
           {current.error && <ErrorBox message={current.error} />}
+          <PipelineProgress pipeline={current.pipeline} />
           {current.result ? (
             <ResultView result={current.result} />
           ) : (
@@ -1075,7 +1093,7 @@ const configGroups = [
     link: "https://fal.ai/dashboard/keys",
     fields: [
       ["FAL_KEY", "API Key", true],
-      ["FAL_VIDEO_MODEL", "图生视频模型", false],
+
       ["FAL_IMAGE_MODEL", "文生图模型", false],
       ["FAL_IMAGE_EDIT_MODEL", "参考图生成模型", false],
       ["FAL_ENHANCE_MODEL", "超分模型", false],
@@ -1250,6 +1268,80 @@ export function Settings() {
           )}
         </section>
       ))}
+      <section className="config-section">
+        <h2>视频编排与模型</h2>
+        <p className="muted">
+          默认配置用于新任务。已确认或排队的任务使用各自的配置快照。
+        </p>
+        <div className="config-fields">
+          <label className="field">
+            默认视频模型 ID
+            <input
+              value={values.VIDEO_DEFAULT_MODEL || ""}
+              onChange={(e) =>
+                setValues({ ...values, VIDEO_DEFAULT_MODEL: e.target.value })
+              }
+            />
+          </label>
+          <label className="field">
+            默认分段策略
+            <select
+              value={values.VIDEO_SEGMENT_STRATEGY || "balanced"}
+              onChange={(e) =>
+                setValues({ ...values, VIDEO_SEGMENT_STRATEGY: e.target.value })
+              }
+            >
+              {Object.entries(strategyNames).map(([k, v]) => (
+                <option key={k} value={k}>
+                  {String(v)}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="field">
+            默认分段秒数
+            <input
+              type="number"
+              min={1}
+              max={30}
+              value={values.VIDEO_SEGMENT_SECONDS || 8}
+              onChange={(e) =>
+                setValues({ ...values, VIDEO_SEGMENT_SECONDS: e.target.value })
+              }
+            />
+          </label>
+          <label className="field">
+            最多片段数
+            <input
+              type="number"
+              min={1}
+              max={20}
+              value={values.VIDEO_MAX_SEGMENTS || 12}
+              onChange={(e) =>
+                setValues({ ...values, VIDEO_MAX_SEGMENTS: e.target.value })
+              }
+            />
+          </label>
+        </div>
+        <details>
+          <summary>高级模型目录（JSON）</summary>
+          <label className="field">
+            视频模型与能力
+            <textarea
+              rows={12}
+              spellCheck={false}
+              value={values.VIDEO_MODELS_JSON || ""}
+              onChange={(e) =>
+                setValues({ ...values, VIDEO_MODELS_JSON: e.target.value })
+              }
+            />
+            <small>
+              支持 kling-v3 与 veo31 输入适配器；端点必须符合对应
+              schema。修改前请核对供应商的时长、分辨率与可用状态。
+            </small>
+          </label>
+        </details>
+      </section>
       <div className="settings-save">
         <Button variant="primary" busy={busy} onClick={submit}>
           <Save size={15} />

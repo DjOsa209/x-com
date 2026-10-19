@@ -58,7 +58,7 @@ EchoTik 使用 API 专属 username/password 的 HTTP Basic，不是 TikTok 密�
 - `fal-ai/kling-video/v3/standard/image-to-video`：图生视频，可传角色 elements。
 - `fal-ai/topaz/upscale/video`：超分，按短边目标尺寸计算 upscale_factor。
 
-修改模型 ID 时，应同时检查该模型 schema，不能假设任意模型可替换。当前视频流程先根据商品图、角色与画幅生成首帧，再生成带声音的视频，属于两次供应商生成请求；复刻另含 Gemini 视频分析请求。实际费用由供应商决定，平台内部额度可自行配置，不代表供应商收费报价。
+修改模型 ID 时，应同时检查该模型 schema，不能假设任意模型可替换。当前视频流程先确认分镜，再按可配置策略分段；每段包含商品首帧和视频两次生成请求，最后本地 FFmpeg 裁切并拼接。复刻另含 Gemini 视频分析请求。实际费用由供应商决定，平台内部额度可自行配置，不代表供应商收费报价。
 
 独立解析器的约定为 `POST <DOWNLOAD_RESOLVER_URL>`，JSON 输入 `{ "url": "公开视频分享链接" }`，可选 `Authorization: Bearer <KEY>`，JSON 返回 `{ "video_url": "https://.../video.mp4" }`。该配置指向你自己的适配服务；本项目未预置、购买或验证第三方抖音数据服务。
 
@@ -72,7 +72,7 @@ EchoTik 使用 API 专属 username/password 的 HTTP Basic，不是 TikTok 密�
 | 竞品       | 保存达人/店铺清单，同步一页关联带货视频                        | EchoTik；当前为手动同步                    |
 | 提示词库   | 从真实视频分析入库、保留来源、搜索、复用；原创模板单独标识     | Gemini；TikTok 链接解析另需 EchoTik        |
 | 视频分析   | 本地视频或链接，脚本、分镜、钩子、音乐与销售原因推断           | Gemini；分享链接另需解析                   |
-| 一键复刻   | 分析参考视频 → 用自有产品改写 → 首帧 → 视频                    | Gemini + fal.ai；TikTok 参考链接需 EchoTik |
+| 一键复刻   | 分析参考视频 → 自有产品分镜确认 → 分段首帧/视频 → 拼接                    | Gemini + fal.ai；TikTok 参考链接需 EchoTik |
 | 商品转视频 | 多张商品图、UGC/演示/访谈风格、首帧构图、图生视频              | fal.ai                                     |
 | 图片生成   | 文生图与最多 5 张参考图编辑                                    | fal.ai                                     |
 | 视频超分   | 720p、1080p、2K 短边目标，读取素材尺寸计算放大倍数             | fal.ai / Topaz                             |
@@ -85,11 +85,11 @@ EchoTik 使用 API 专属 username/password 的 HTTP Basic，不是 TikTok 密�
 
 **本版没有复制 Clipcat 的专有提示词数据库、后台算法、模型账户或视频素材。** 提示词库从实际视频逐步积累；没有虚构高 GMV 案例或模拟生成成功。销售原因属于推断，不是因果或业绩保证。
 
-2026-10-19 对视频复刻再次进行了 REA 核查：[证据报告](docs/research/clipcat-replication-evidence-2026-10-19.md)。Clipcat 公开项目页明确区分需求理解、分镜脚本与视频生成，并消费 `concatStatus` 拼接状态；raw 可按模型能力提交视频与图片混合参考。仍未取得其服务端模型派发、逐镜任务映射和拼接算法。当前 X-Ecommerce 的 Gemini 分析 → 商品首帧 → Kling 图生视频是本项目独立实现，不能称为已经确认与 Clipcat 的生成算法一致。本轮只更新研究证据，未据猜测改变生成链路。
+2026-10-19 对视频复刻再次进行了 REA 核查：[证据报告](docs/research/clipcat-replication-evidence-2026-10-19.md)。Clipcat 公开项目页已证实分镜确认与拼接状态；其服务端切分和模型派发算法未公开。本项目据此实现独立的分镜编排、可配置模型/分段策略、逐段生成、失败恢复和 FFmpeg 拼接，详见[使用与实现说明](docs/video-pipeline.md)。这不代表恢复了 Clipcat 私有生成算法。
 
 ## 新增后台与使用入口
 
-- **项目与分镜**：草稿 → 脚本生成 → 等待确认 → 编辑分镜 → 确认 1–4 条视频 → 子任务。确认保存版本快照，相同确认请求不会重复生成；部分成功时仅重试失败子项。复刻项目可通过 API 设置 `input.mode=replicate` 并提供参考视频，从分析开始。
+- **项目与分镜**：草稿 → 脚本生成 → 等待确认 → 编辑分镜 → 确认分段计划 → 生成 1–4 条视频 → 分段任务 → 拼接。确认保存版本快照，相同确认请求不会重复生成；部分成功时仅重试失败子项。复刻项目可通过 API 设置 `input.mode=replicate` 并提供参考视频，从分析开始。
 - **自动采集与机会**：按 15 分钟到 30 天的间隔采集 EchoTik AI 带货视频榜单，或组合商品榜单、详情、评论及 Gemini 分析；采集证据进入观察/机会库。可选择提取前 2 条视频的提示词。服务运行时才执行计划。
 - **模型与高级生成**：已适配模型目录及原始 JSON 输入；模型限制在配置的四个适配器及平台环境 `FAL_EXTRA_MODELS_JSON` 白名单内。更换模型要检查 schema。
 - **账号与团队**：首位管理员初始化、密码散列、服务端会话、邀请注册、已有账号接受邀请、空间切换、成员角色修改/移除、退出空间、账号停用、操作审计。角色为 owner/admin/operator/viewer，viewer 为本项目扩展。
@@ -163,6 +163,7 @@ npm test
 npm run test:integration  # 先保持 MySQL 和本机开发应用运行
 npm run test:backend      # 真实 MySQL，临时 HTTP 服务及测试账号
 npm run test:storage      # 真实 MySQL + 本地 S3 协议服务，不连接云账户
+npm run test:video        # 真实 MySQL / FFmpeg，离线模型队列，不调用付费服务
 npm run build
 ```
 

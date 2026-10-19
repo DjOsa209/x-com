@@ -1,3 +1,4 @@
+import { VideoControls, PlanPreview, PipelineProgress } from "../VideoPipeline";
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -494,6 +495,8 @@ const projectState: Doc = {
 export function Projects() {
   const { data, reload, error } = useData("/projects", 6000);
   const { toast } = useApp();
+  const [videoOptions, setVideoOptions] = useState<Doc>({ duration: 10 }),
+    [plan, setPlan] = useState<Doc | null>(null);
   const [adding, setAdding] = useState(false),
     [name, setName] = useState(""),
     [prompt, setPrompt] = useState(""),
@@ -511,6 +514,31 @@ export function Projects() {
       toast(e.message, true);
     }
   }
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("id");
+    if (id) void open(id);
+  }, []);
+  useEffect(() => {
+    if (!selected || !["processing", "review"].includes(selected.status))
+      return;
+    let active = true;
+    const id = selected.id;
+    const timer = setInterval(() => {
+      api("/projects/" + id)
+        .then((p) => {
+          if (active) {
+            setSelected(p);
+            if (p.status === "waiting_confirmation")
+              setModified(p.script || {});
+          }
+        })
+        .catch(() => {});
+    }, 6000);
+    return () => {
+      active = false;
+      clearInterval(timer);
+    };
+  }, [selected?.id, selected?.status]);
   async function action(endpoint: string, body: Doc = {}) {
     if (!selected) return;
     setBusy(true);
@@ -592,6 +620,11 @@ export function Projects() {
             </label>
             <FilePicker onPick={setAsset} />
             {asset && <p>{asset.name}</p>}
+            <VideoControls
+              value={videoOptions}
+              onChange={setVideoOptions}
+              duration
+            />
             <Button
               variant="primary"
               disabled={!name || !prompt || !asset}
@@ -606,6 +639,7 @@ export function Projects() {
                       duration: 10,
                       language: "English",
                       style: "UGC",
+                      ...videoOptions,
                     },
                   });
                   setAdding(false);
@@ -648,9 +682,16 @@ export function Projects() {
               <Button onClick={() => open(selected.id)}>刷新</Button>
             </div>
           </div>
-          {selected.script && <ResultView result={selected.script} />}
+          {selected.script && selected.status !== "waiting_confirmation" && (
+            <ResultView result={selected.script} />
+          )}
           {selected.status === "waiting_confirmation" && (
             <div className="form-stack">
+              <VideoControls
+                value={selected.input}
+                onChange={(input) => setSelected({ ...selected, input })}
+                duration
+              />
               <label className="field">
                 编辑最终销售提示词
                 <textarea
@@ -661,26 +702,85 @@ export function Projects() {
                   }
                 />
               </label>
-              {Array.isArray(modified.scenes) &&
-                modified.scenes.map((s: Doc, i: number) => (
-                  <div key={i} className="scene">
-                    <span>{s.time || `镜头${i + 1}`}</span>
-                    <label className="field">
-                      画面
-                      <textarea
-                        value={s.visual || ""}
-                        onChange={(e) =>
-                          setModified({
-                            ...modified,
-                            scenes: modified.scenes.map((v: Doc, n: number) =>
-                              n === i ? { ...v, visual: e.target.value } : v,
-                            ),
-                          })
-                        }
-                      />
-                    </label>
-                  </div>
-                ))}
+              <details>
+                <summary>编辑每个镜头的时间、画面和口播</summary>
+                {Array.isArray(modified.scenes) &&
+                  modified.scenes.map((s: Doc, i: number) => (
+                    <div key={i} className="scene">
+                      <label className="field">
+                        镜头 {i + 1} 时间（秒，例如 0-3s）
+                        <input
+                          value={
+                            s.time ||
+                            s.timestamp ||
+                            (s.start !== undefined
+                              ? `${s.start}-${s.end}s`
+                              : "")
+                          }
+                          onChange={(e) =>
+                            setModified({
+                              ...modified,
+                              scenes: modified.scenes.map(
+                                (v: Doc, n: number) =>
+                                  n === i
+                                    ? {
+                                        ...v,
+                                        time: e.target.value,
+                                        timestamp: undefined,
+                                        start: undefined,
+                                        end: undefined,
+                                      }
+                                    : v,
+                              ),
+                            })
+                          }
+                        />
+                      </label>
+                      <label className="field">
+                        画面
+                        <textarea
+                          value={s.visual || ""}
+                          onChange={(e) =>
+                            setModified({
+                              ...modified,
+                              scenes: modified.scenes.map(
+                                (v: Doc, n: number) =>
+                                  n === i
+                                    ? { ...v, visual: e.target.value }
+                                    : v,
+                              ),
+                            })
+                          }
+                        />
+                      </label>
+                      <label className="field">
+                        口播
+                        <textarea
+                          value={s.voiceover || ""}
+                          onChange={(e) =>
+                            setModified({
+                              ...modified,
+                              scenes: modified.scenes.map(
+                                (v: Doc, n: number) =>
+                                  n === i
+                                    ? { ...v, voiceover: e.target.value }
+                                    : v,
+                              ),
+                            })
+                          }
+                        />
+                      </label>
+                    </div>
+                  ))}
+              </details>
+              <PlanPreview
+                input={{
+                  ...selected.input,
+                  prompt: modified.shootingPrompt || modified.script,
+                }}
+                storyboard={modified}
+                onReady={setPlan}
+              />
               <label className="field">
                 生成视频数量
                 <select
@@ -703,6 +803,7 @@ export function Projects() {
                         body: JSON.stringify({
                           version: selected.version,
                           modifiedData: modified,
+                          input: selected.input,
                         }),
                       });
                       setSelected(p);
@@ -717,11 +818,26 @@ export function Projects() {
                 <Button
                   variant="primary"
                   busy={busy}
+                  disabled={!plan}
                   onClick={() =>
                     action("confirm", {
                       version: selected.version,
                       modifiedData: modified,
                       videoGenerationCount: Number(count),
+                      renderOptions: Object.fromEntries(
+                        Object.entries(selected.input).filter(([k]) =>
+                          [
+                            "videoModelId",
+                            "segmentStrategy",
+                            "segmentSeconds",
+                            "duration",
+                            "aspect",
+                            "resolution",
+                            "generateAudio",
+                          ].includes(k),
+                        ),
+                      ),
+                      planFingerprint: plan?.fingerprint,
                     })
                   }
                 >
@@ -730,13 +846,19 @@ export function Projects() {
               </div>
             </div>
           )}
-          {selected.tasks?.map((t: Doc) => (
-            <section className="config-section" key={t.id}>
-              <h3>子任务 · {t.status}</h3>
-              {t.error && <ErrorBox message={t.error} />}
-              {t.result && <ResultView result={t.result} />}
-            </section>
-          ))}
+          {selected.tasks
+            ?.filter(
+              (t: Doc) =>
+                !["script", "analysis"].includes(t.kind) || !selected.script,
+            )
+            .map((t: Doc) => (
+              <section className="config-section" key={t.id}>
+                <h3>子任务 · {t.status}</h3>
+                {t.error && <ErrorBox message={t.error} />}
+                <PipelineProgress pipeline={t.pipeline} />
+                {t.result?.asset && <ResultView result={t.result} />}
+              </section>
+            ))}
         </Modal>
       )}
     </div>

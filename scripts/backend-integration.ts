@@ -8,7 +8,8 @@ process.env.AUTH_REQUIRED = "true";
 process.env.STRIPE_SECRET_KEY = "sk_test_local_contract_fixture";
 process.env.STRIPE_WEBHOOK_SECRET = randomBytes(24).toString("hex");
 const { app, apiErrors } = await import("../server/app.ts");
-const { pool, rows, execute, migrate, parse } = await import("../server/db.ts");
+const { pool, rows, execute, migrate, parse, jobGet } =
+  await import("../server/db.ts");
 const { passwordHash } = await import("../server/auth.ts");
 const { inWorkspace } = await import("../server/context.ts");
 const { reserveCredits, finalizeCredits, reconcileCredits } =
@@ -410,7 +411,7 @@ try {
     shootingPrompt: "Show product",
     scenes: [
       {
-        time: "0-3",
+        time: "0-10",
         visual: "product close up",
         voiceover: "Actual product",
         shot: "close",
@@ -443,10 +444,38 @@ try {
     modifiedData: { ...script, shootingPrompt: "Updated storyboard" },
   });
   ready = updated.data;
+  const renderOptions = { segmentStrategy: "fixed", segmentSeconds: 4 };
+  const preview = await owner.req("/api/video/plan", "POST", {
+    input: {
+      ...ready.input,
+      ...renderOptions,
+      prompt: ready.script.shootingPrompt,
+    },
+    storyboard: ready.script,
+  });
+  check(
+    preview.status === 200 &&
+      preview.data.segments.length === 3 &&
+      preview.data.providerCalls === 6,
+    "plan preview exposes segment counts and native durations without generation",
+  );
+  check(
+    (
+      await owner.req("/api/projects/" + pid + "/confirm", "POST", {
+        version: ready.version,
+        modifiedData: ready.script,
+        renderOptions,
+        planFingerprint: "0".repeat(64),
+      })
+    ).status === 409,
+    "stale plan fingerprint cannot start paid jobs",
+  );
   const confirmation = {
     version: ready.version,
     modifiedData: ready.script,
     videoGenerationCount: 2,
+    renderOptions,
+    planFingerprint: preview.data.fingerprint,
   };
   const confirmations = await Promise.all(
     [1, 2].map(() =>
@@ -475,6 +504,14 @@ try {
     parse(snapshot.snapshot).shootingPrompt === "Updated storyboard",
     "immutable confirmed storyboard persisted",
   );
+  const pinned = await inWorkspace(wa, () =>
+    jobGet(confirmations[0].data.jobIds[0]),
+  );
+  check(
+    parse(pinned!.input)._renderPlan.segments.length === 3 &&
+      parse(pinned!.input).storyboard.shootingPrompt === "Updated storyboard",
+    "confirmed jobs retain full storyboard and execution policy snapshots",
+  );
   check(
     (
       await owner.req("/api/projects/" + pid, "PATCH", {
@@ -492,8 +529,8 @@ try {
   await reconcileCredits();
   check(
     (await owner.req("/api/projects/" + pid + "/retry", "POST", {})).data
-      .status === "draft",
-    "cancelled project can return to a new draft version",
+      .status === "processing",
+    "cancelled render project resumes through new retry tasks",
   );
   // A partially successful batch retries only failed children.
   const childIds = parse(snapshot.job_ids);

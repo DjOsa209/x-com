@@ -3498,3 +3498,41 @@ details .param-grid {
 .auth-card > .button {
   margin-top: 15px;
 }
+
+.render-plan {
+  margin-block: 20px;
+  padding: 20px;
+  border: 1px solid var(--line, #dededc);
+  border-radius: 12px;
+  background: var(--surface, #fff);
+}
+.render-plan h3 {
+  margin-top: 0;
+}
+.pipeline-segments {
+  padding-left: 22px;
+}
+.pipeline-segments li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line, #dededc);
+}
+.pipeline-segments strong {
+  margin-left: 16px;
+  font-size: 13px;
+}
+.pipeline-segments a {
+  margin-left: 12px;
+}
+.video-controls input,
+.video-controls select {
+  min-width: 0;
+}
+@media (max-width: 600px) {
+  .render-plan {
+    padding: 14px;
+  }
+  .pipeline-segments strong {
+    display: block;
+    margin: 6px 0;
+  }
+}

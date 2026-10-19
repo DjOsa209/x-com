@@ -1,3 +1,11 @@
+import { withJobLock } from "./locks.ts";
+import { acknowledgePipelineFailure } from "./video-pipeline.ts";
+import {
+  parseModels,
+  videoPolicy,
+  buildRenderPlan,
+  planFingerprint,
+} from "./video-plan.ts";
 import express from "express";
 import multer from "multer";
 import { z } from "zod";
@@ -14,6 +22,8 @@ import {
   jobList,
   jobGet,
   job,
+  parse,
+  updateJob,
   type Doc,
 } from "./db.ts";
 import { publicConfig, saveConfig, config } from "./config.ts";
@@ -123,13 +133,13 @@ app.get("/api/catalog", (_req, res) => res.json(catalog));
 app.get("/api/models", async (_req, res) => {
   const c = await config();
   res.json([
-    {
-      id: c.FAL_VIDEO_MODEL,
+    ...parseModels(c.VIDEO_MODELS_JSON, c.FAL_VIDEO_MODEL).map((m) => ({
+      ...m,
+      id: m.endpoint,
+      modelId: m.id,
       type: "video",
-      adapter: "kling-v3",
-      durations: [5, 10, 15],
-      roles: true,
-    },
+      roles: m.characters,
+    })),
     {
       id: c.FAL_IMAGE_MODEL,
       type: "image",
@@ -149,6 +159,31 @@ app.get("/api/models", async (_req, res) => {
       factors: [1, 4],
     },
   ]);
+});
+app.get("/api/video/models", async (_req, res) => {
+  const c = await config();
+  res.json({
+    models: parseModels(c.VIDEO_MODELS_JSON, c.FAL_VIDEO_MODEL),
+    defaults: {
+      videoModelId: c.VIDEO_DEFAULT_MODEL,
+      segmentStrategy: c.VIDEO_SEGMENT_STRATEGY,
+      segmentSeconds: Number(c.VIDEO_SEGMENT_SECONDS),
+    },
+  });
+});
+app.post("/api/video/plan", async (req, res) => {
+  const b = z
+    .object({
+      input: z.record(z.string(), z.any()),
+      storyboard: z.record(z.string(), z.any()),
+    })
+    .parse(req.body);
+  const plan = buildRenderPlan(
+    b.input,
+    b.storyboard,
+    videoPolicy(await config(), b.input),
+  );
+  res.json({ ...plan, fingerprint: planFingerprint(plan) });
 });
 app.get("/api/worker", async (_req, res) => {
   const [w] = await rows(
@@ -175,10 +210,19 @@ app.post("/api/jobs/:id/resolve", async (req, res) => {
     if (!["completed", "inbox"].includes(verified?.status))
       throw new AppError(409, "供应商尚未确认完成，不能人工标记成功");
   } else {
-    await execute(
-      "UPDATE jobs SET status='failed',error=? WHERE id=? AND workspace_id=? AND status='review'",
-      ["人工核对：" + note, id, workspace()],
-    );
+    await withJobLock(id, async () => {
+      const current = await jobGet(id);
+      if (current?.status !== "review")
+        throw new AppError(409, "任务状态已更新，请刷新后核对");
+      const provider = parse(current.provider);
+      await updateJob(id, {
+        status: "failed",
+        error: "人工核对：" + note,
+        ...(provider?.name === "video-pipeline"
+          ? { provider: acknowledgePipelineFailure(provider, note) }
+          : {}),
+      });
+    });
     await finalizeCredits(id, false);
   }
   await audit("job.review_resolved", { jobId: id, decision, note });

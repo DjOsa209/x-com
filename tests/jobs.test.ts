@@ -110,7 +110,17 @@ vi.mock("../server/providers.ts", () => ({
     },
   })),
 }));
+vi.mock("../server/video-compose.ts", () => ({
+  mediaToolsReady: vi.fn(async () => {}),
+  composeVideo: vi.fn(async () => ({
+    bytes: Buffer.from("composed"),
+    duration: 5,
+    width: 720,
+    height: 1280,
+  })),
+}));
 vi.mock("../server/media.ts", () => ({
+  assetFile: vi.fn(async () => ({ path: "/fixture.mp4" })),
   fetchMedia: vi.fn(async () => ({
     bytes: Buffer.from("contract-fixture"),
     mime: "video/mp4",
@@ -164,12 +174,13 @@ describe("durable generation transitions", () => {
     state.failSubmit = true;
     const j = await createJob(
       "video",
-      { prompt: "coffee", assetIds: ["product-image"] },
+      { prompt: "coffee", assetIds: ["product-image"], duration: 5 },
       "ambiguous-first",
     );
     await tick();
+    await tick();
     expect(state.records.get(j.id).status).toBe("review");
-    expect(state.records.get(j.id).provider.stage).toBe("submitting");
+    expect(state.records.get(j.id).provider.segments[0].status).toBe("review");
     await expect(refreshJob(j.id)).rejects.toThrow("没有请求 ID");
     expect(state.submits).toHaveLength(1);
   });
@@ -202,23 +213,29 @@ describe("durable generation transitions", () => {
   it("keeps a two-stage product video pending until a video output exists", async () => {
     const j = await createJob(
       "video",
-      { prompt: "coffee", assetIds: ["product-image"], aspect: "9:16" },
+      {
+        prompt: "coffee",
+        assetIds: ["product-image"],
+        duration: 5,
+        aspect: "9:16",
+      },
       "video-request",
     );
-    await tick();
+    await tick(); // durable plan
+    await tick(); // submit frame
     let r = state.records.get(j.id);
     expect(r.status).toBe("processing");
-    expect(r.provider.stage).toBe("frame");
-    expect(r.result).toBeUndefined();
-    await tick();
-    r = state.records.get(j.id);
-    expect(r.status).toBe("processing");
-    expect(r.provider.stage).toBe("output");
+    expect(r.provider.segments[0].status).toBe("frame");
+    expect(r.result.asset).toBeUndefined();
+    await tick(); // frame saved
+    await tick(); // submit video
     expect(state.submits[1].input.start_image_url).toBe(
       "https://cdn.example/frame.png",
     );
-    expect(r.result).toBeUndefined();
-    await tick();
+    await tick(); // video clip saved; not yet a completed video
+    expect(r.status).toBe("processing");
+    expect(r.result.asset).toBeUndefined();
+    await tick(); // compose
     expect(r.status).toBe("completed");
     expect(r.result.asset.id).toBe("generated-asset");
     expect(state.submits).toHaveLength(2);
@@ -229,6 +246,7 @@ describe("durable generation transitions", () => {
       {
         prompt: "our product",
         assetIds: ["product-image"],
+        duration: 5,
         videoAssetId: "reference-video",
       },
       "replicate-request",
@@ -237,8 +255,7 @@ describe("durable generation transitions", () => {
     expect(state.records.get(j.id).result.shootingPrompt).toContain(
       "actual product",
     );
-    await tick();
-    await tick();
+    for (let i = 0; i < 5; i++) await tick();
     expect(state.records.get(j.id).result.shootingPrompt).toContain(
       "actual product",
     );
@@ -247,17 +264,19 @@ describe("durable generation transitions", () => {
   it("does not automatically resubmit an ambiguous second-stage request", async () => {
     const j = await createJob(
       "video",
-      { prompt: "coffee", assetIds: ["product-image"] },
+      { prompt: "coffee", assetIds: ["product-image"], duration: 5 },
       "ambiguous-request",
     );
+    await tick();
+    await tick();
     await tick();
     state.failSubmit = true;
     await tick();
     const r = state.records.get(j.id);
     expect(r.status).toBe("review");
-    expect(r.provider.stage).toBe("submitting_video");
+    expect(r.provider.segments[0].status).toBe("review");
     expect(state.submits).toHaveLength(2);
-    await expect(refreshJob(j.id)).rejects.toThrow("不会重新提交");
+    await expect(refreshJob(j.id)).rejects.toThrow("不会重复提交");
     expect(state.submits).toHaveLength(2);
   });
   it("does not call a running model complete", async () => {

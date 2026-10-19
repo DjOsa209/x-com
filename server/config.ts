@@ -3,6 +3,7 @@ import { mkdirSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { rows, execute, type Doc } from "./db.ts";
 import { AppError } from "./errors.ts";
+import { defaultVideoModels, parseModels, strategies } from "./video-plan.ts";
 import { workspace } from "./context.ts";
 import { createHash } from "node:crypto";
 const settingsId = () =>
@@ -49,6 +50,12 @@ export const defaults: Doc = {
   FAL_IMAGE_MODEL: "fal-ai/flux/schnell",
   FAL_IMAGE_EDIT_MODEL: "fal-ai/nano-banana-2/edit",
   FAL_ENHANCE_MODEL: "fal-ai/topaz/upscale/video",
+  VIDEO_MODELS_JSON: JSON.stringify(defaultVideoModels),
+  VIDEO_DEFAULT_MODEL: "kling-standard",
+  VIDEO_SEGMENT_STRATEGY: "balanced",
+  VIDEO_SEGMENT_SECONDS: "8",
+  VIDEO_MAX_SEGMENTS: "12",
+
   TIKTOK_CLIENT_KEY: "",
   TIKTOK_CLIENT_SECRET: "",
   TIKTOK_REDIRECT_URI: "http://localhost:4317/api/tiktok/callback",
@@ -85,6 +92,8 @@ export async function saveConfig(patch: Doc) {
     ["ECHOTIK_MONTHLY_LIMIT", 1, 100000000],
     ["ECHOTIK_CACHE_SECONDS", 0, 86400],
     ["STORAGE_LIMIT_MB", 1, 104857600],
+    ["VIDEO_SEGMENT_SECONDS", 1, 30],
+    ["VIDEO_MAX_SEGMENTS", 1, 20],
   ] as const) {
     if (
       patch[k] !== undefined &&
@@ -94,6 +103,13 @@ export async function saveConfig(patch: Doc) {
     )
       throw new AppError(400, `${k} 必须为 ${min}–${max} 之间的整数`);
   }
+  if (patch.VIDEO_MODELS_JSON !== undefined)
+    parseModels(patch.VIDEO_MODELS_JSON);
+  if (
+    patch.VIDEO_SEGMENT_STRATEGY !== undefined &&
+    !strategies.includes(patch.VIDEO_SEGMENT_STRATEGY)
+  )
+    throw new AppError(400, "未知分段策略");
   if (patch.CREDIT_COSTS_JSON !== undefined) {
     let costs;
     try {
@@ -130,6 +146,12 @@ export async function saveConfig(patch: Doc) {
       old[k] = String(patch[k]);
   for (const k of patch.clearSecrets || [])
     if (secretKeys.includes(k)) old[k] = "";
+  if (
+    !parseModels(old.VIDEO_MODELS_JSON, old.FAL_VIDEO_MODEL).some(
+      (m) => m.id === old.VIDEO_DEFAULT_MODEL,
+    )
+  )
+    throw new AppError(400, "默认视频模型不在模型目录中");
   await execute("REPLACE INTO settings(id,payload) VALUES(?,?)", [
     settingsId(),
     seal(JSON.stringify(old)),
