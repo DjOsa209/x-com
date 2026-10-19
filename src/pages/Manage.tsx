@@ -1100,6 +1100,13 @@ const configGroups = [
     ],
   },
   {
+    name: "Kie.ai",
+    provider: "kie",
+    description: "Veo Fast 与 Seedance Mini 视频生成；可直接使用商品图首帧",
+    link: "https://kie.ai/api-key",
+    fields: [["KIE_API_KEY", "API Key", true]],
+  },
+  {
     name: "TikTok",
     provider: "tiktok",
     description: "账号授权、直接发布、定时发送与草稿箱",
@@ -1119,6 +1126,7 @@ configGroups.sort(
 export function Settings() {
   const { status, refresh, toast } = useApp();
   const { data, reload, error } = useData<Doc>("/settings");
+  const { data: videoCatalog } = useData<Doc>("/video/models");
   const [values, setValues] = useState<Doc>({}),
     [busy, setBusy] = useState(false),
     [revealed, setRevealed] = useState(false),
@@ -1276,12 +1284,18 @@ export function Settings() {
         <div className="config-fields">
           <label className="field">
             默认视频模型 ID
-            <input
+            <select
               value={values.VIDEO_DEFAULT_MODEL || ""}
               onChange={(e) =>
                 setValues({ ...values, VIDEO_DEFAULT_MODEL: e.target.value })
               }
-            />
+            >
+              {videoCatalog?.models.map((m: Doc) => (
+                <option key={m.id} value={m.id}>
+                  {m.provider === "kie" ? "Kie.ai" : "fal.ai"} · {m.name}
+                </option>
+              ))}
+            </select>
           </label>
           <label className="field">
             默认分段策略
@@ -1336,7 +1350,8 @@ export function Settings() {
               }
             />
             <small>
-              支持 kling-v3 与 veo31 输入适配器；端点必须符合对应
+              支持 fal 的 kling-v3 / veo31，以及 Kie 的 kie-veo-fast /
+              kie-seedance-mini；端点必须符合对应
               schema。修改前请核对供应商的时长、分辨率与可用状态。
             </small>
           </label>
@@ -1807,7 +1822,8 @@ export function Help() {
             <strong>生成内容</strong>
             <p>
               上传商品图，选择 UGC、产品演示或访谈风格。Gemini
-              用于脚本与分析；fal.ai 用于图片、视频和超分。
+              用于脚本与分析；视频可选择 Kie.ai 或 fal.ai，图片和超分使用
+              fal.ai。
             </p>
             <Link to="/">
               开始创作 <ArrowRight size={14} />

@@ -6,18 +6,19 @@ export const strategies = ["balanced", "shots", "fixed", "single"] as const;
 export const modelSchema = z.object({
   id: z.string().regex(/^[a-z0-9-]{1,50}$/),
   name: z.string().min(1).max(100),
-  endpoint: z.string().regex(/^fal-ai\/[a-zA-Z0-9_/-]+$/),
-  adapter: z.enum(["kling-v3", "veo31"]),
+  provider: z.enum(["fal", "kie"]).default("fal"),
+  endpoint: z.string().min(1).max(150),
+  adapter: z.enum(["kling-v3", "veo31", "kie-veo-fast", "kie-seedance-mini"]),
   durations: z.array(z.number().int().min(1).max(30)).min(1).max(30),
   aspects: z.array(z.enum(["9:16", "16:9", "1:1"])).min(1),
   resolutions: z
-    .array(z.enum(["720p", "1080p", "4k"]))
+    .array(z.enum(["480p", "720p", "1080p", "4k"]))
     .min(1)
     .default(["720p"]),
   characters: z.boolean().default(false),
 });
 export type VideoModel = z.infer<typeof modelSchema>;
-export const defaultVideoModels: VideoModel[] = [
+const legacyVideoModels = [
   {
     id: "kling-standard",
     name: "Kling v3 Standard",
@@ -39,6 +40,34 @@ export const defaultVideoModels: VideoModel[] = [
     characters: true,
   },
 ];
+export const kieVideoModels: VideoModel[] = [
+  {
+    id: "kie-veo-fast",
+    name: "Veo 3.1 Fast",
+    provider: "kie",
+    endpoint: "veo-3-1",
+    adapter: "kie-veo-fast",
+    durations: [4, 6, 8],
+    aspects: ["9:16", "16:9"],
+    resolutions: ["720p", "1080p"],
+    characters: false,
+  },
+  {
+    id: "kie-seedance-mini",
+    name: "Seedance 2 Mini",
+    provider: "kie",
+    endpoint: "bytedance/seedance-2-mini",
+    adapter: "kie-seedance-mini",
+    durations: Array.from({ length: 12 }, (_, i) => i + 4),
+    aspects: ["9:16", "16:9", "1:1"],
+    resolutions: ["480p", "720p"],
+    characters: false,
+  },
+];
+export const defaultVideoModels: VideoModel[] = [
+  ...legacyVideoModels.map((m) => modelSchema.parse(m)),
+  ...kieVideoModels,
+];
 export function parseModels(
   raw: string,
   legacyEndpoint?: string,
@@ -49,20 +78,49 @@ export function parseModels(
   } catch {
     throw new AppError(400, "视频模型目录必须为合法 JSON");
   }
+  // Upgrade untouched pre-Kie catalogs; customized catalogs remain authoritative.
+  if (raw === JSON.stringify(legacyVideoModels))
+    value = [...value, ...kieVideoModels];
   const models = z.array(modelSchema).min(1).max(20).parse(value);
   if (new Set(models.map((m) => m.id)).size !== models.length)
     throw new AppError(400, "视频模型 ID 不能重复");
   for (const m of models) {
+    if (
+      m.provider === "fal"
+        ? !/^fal-ai\/[a-zA-Z0-9_/-]+$/.test(m.endpoint) ||
+          !["kling-v3", "veo31"].includes(m.adapter)
+        : !kieVideoModels.some(
+            (k) => k.endpoint === m.endpoint && k.adapter === m.adapter,
+          )
+    )
+      throw new AppError(400, `${m.name} 的渠道、端点与适配器不兼容`);
     const allowed =
       m.adapter === "kling-v3"
         ? Array.from({ length: 13 }, (_, i) => i + 3)
-        : [4, 6, 8];
+        : m.adapter === "kie-seedance-mini"
+          ? Array.from({ length: 12 }, (_, i) => i + 4)
+          : [4, 6, 8];
     if (m.durations.some((d) => !allowed.includes(d)))
       throw new AppError(400, `${m.name} 的时长与适配器不兼容`);
     m.durations = [...new Set(m.durations)].sort((a, b) => a - b);
+    if (m.provider === "kie") {
+      const supported = kieVideoModels.find((k) => k.adapter === m.adapter)!;
+      if (
+        m.resolutions.some((r) => !supported.resolutions.includes(r)) ||
+        m.aspects.some((a) => !supported.aspects.includes(a)) ||
+        m.characters
+      )
+        throw new AppError(400, `${m.name} 的分辨率、画幅或角色能力不兼容`);
+    }
   }
   // Retain the existing configurable standard endpoint for default installations.
-  if (legacyEndpoint && raw === JSON.stringify(defaultVideoModels))
+  if (
+    legacyEndpoint &&
+    [
+      JSON.stringify(defaultVideoModels),
+      JSON.stringify(legacyVideoModels),
+    ].includes(raw)
+  )
     models[0].endpoint = legacyEndpoint;
   return models;
 }
@@ -75,6 +133,7 @@ export type VideoPolicy = {
   aspect: string;
   resolution: string;
   generateAudio: boolean;
+  frameSource?: "generated" | "product";
 };
 export function videoPolicy(cfg: Doc, input: Doc = {}): VideoPolicy {
   const models = parseModels(
@@ -104,6 +163,15 @@ export function videoPolicy(cfg: Doc, input: Doc = {}): VideoPolicy {
     throw new AppError(400, `${model.name} 不支持此分辨率`);
   if (input.characterId && !model.characters)
     throw new AppError(400, "所选模型尚未适配独立角色元素，请更换模型");
+  const frameSource = z
+    .enum(["generated", "product"])
+    .parse(
+      input.frameSource || (model.provider === "kie" ? "product" : "generated"),
+    );
+  if (model.provider !== "kie" && frameSource === "product")
+    throw new AppError(400, "直接商品图首帧目前仅支持 Kie 渠道");
+  if (model.adapter === "kie-veo-fast" && input.generateAudio === false)
+    throw new AppError(400, "Kie Veo Fast 默认生成音频，尚不支持关闭音频");
   return {
     model,
     strategy,
@@ -118,6 +186,7 @@ export function videoPolicy(cfg: Doc, input: Doc = {}): VideoPolicy {
     aspect,
     resolution,
     generateAudio: input.generateAudio !== false,
+    frameSource,
   };
 }
 export type Shot = {
@@ -316,7 +385,7 @@ export function buildRenderPlan(
     shots,
     segments,
     warnings: [...new Set(warnings)],
-    providerCalls: segments.length * 2,
+    providerCalls: segments.length * (policy.frameSource === "product" ? 1 : 2),
   };
 }
 

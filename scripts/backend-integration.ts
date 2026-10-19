@@ -557,6 +557,67 @@ try {
   );
   await owner.req("/api/projects/" + pid + "/cancel", "POST", {});
 
+  await owner.req("/api/settings", "PUT", {
+    KIE_API_KEY: "offline-kie-fixture",
+  });
+  const kieProject = await owner.req("/api/projects", "POST", {
+    name: prefix + "-kie",
+    input: {
+      prompt: "Kie storyboard",
+      duration: 10,
+      assetIds: [uploaded.data.id],
+    },
+  });
+  await execute(
+    "UPDATE projects SET status='waiting_confirmation',script=? WHERE id=?",
+    [JSON.stringify(script), kieProject.data.id],
+  );
+  const kieOptions = {
+    videoModelId: "kie-seedance-mini",
+    resolution: "480p",
+    frameSource: "generated",
+    segmentStrategy: "fixed",
+    segmentSeconds: 5,
+  };
+  const kiePreview = await owner.req("/api/video/plan", "POST", {
+    input: {
+      ...kieProject.data.input,
+      ...kieOptions,
+      prompt: script.shootingPrompt,
+    },
+    storyboard: script,
+  });
+  check(
+    kiePreview.status === 200 &&
+      kiePreview.data.providerCalls === 4 &&
+      kiePreview.data.policy.model.provider === "kie",
+    "Kie HTTP plan preserves generated-frame choice and selected channel",
+  );
+  const kieConfirmed = await owner.req(
+    `/api/projects/${kieProject.data.id}/confirm`,
+    "POST",
+    {
+      version: kieProject.data.version,
+      modifiedData: script,
+      renderOptions: kieOptions,
+      planFingerprint: kiePreview.data.fingerprint,
+    },
+  );
+  check(
+    kieConfirmed.status === 200 && kieConfirmed.data.jobIds.length === 1,
+    "Kie confirmation schema preserves frameSource and accepts the matching fingerprint",
+  );
+  const kiePinned = await inWorkspace(wa, () =>
+    jobGet(kieConfirmed.data.jobIds[0]),
+  );
+  check(
+    parse(kiePinned!.input)._videoPolicy.frameSource === "generated" &&
+      parse(kiePinned!.input)._videoPolicy.model.provider === "kie" &&
+      parse(kiePinned!.input)._videoPolicy.resolution === "480p",
+    "Kie confirmation persists immutable channel/frame/resolution execution snapshots",
+  );
+  await owner.req(`/api/projects/${kieProject.data.id}/cancel`, "POST", {});
+
   const automation = await owner.req("/api/automations", "POST", {
     name: prefix,
     kind: "collect",

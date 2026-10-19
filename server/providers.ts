@@ -126,9 +126,9 @@ export async function falInput(
   const c = await config();
   if (kind === "raw") {
     const allowed = [
-      ...parseModels(c.VIDEO_MODELS_JSON, c.FAL_VIDEO_MODEL).map(
-        (m) => m.endpoint,
-      ),
+      ...parseModels(c.VIDEO_MODELS_JSON, c.FAL_VIDEO_MODEL)
+        .filter((m) => m.provider === "fal")
+        .map((m) => m.endpoint),
       c.FAL_IMAGE_MODEL,
       c.FAL_IMAGE_EDIT_MODEL,
       c.FAL_ENHANCE_MODEL,

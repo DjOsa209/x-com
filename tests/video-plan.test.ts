@@ -25,6 +25,54 @@ const plan = (strategy: string, seconds = 8) =>
     videoPolicy(cfg, { segmentStrategy: strategy, segmentSeconds: seconds }),
   );
 describe("video segment planning", () => {
+  it("plans Kie without extra frame calls and supports Mini 480p and 15-second segments", () => {
+    const p = buildRenderPlan(
+      { duration: 30 },
+      { script: "sell" },
+      videoPolicy(cfg, {
+        videoModelId: "kie-seedance-mini",
+        resolution: "480p",
+        segmentStrategy: "fixed",
+        segmentSeconds: 15,
+      }),
+    );
+    expect(p.segments.map((s) => s.nativeDuration)).toEqual([15, 15]);
+    expect(p.providerCalls).toBe(2);
+    expect(p.policy.frameSource).toBe("product");
+    const generated = buildRenderPlan(
+      { duration: 8 },
+      { script: "sell" },
+      videoPolicy(cfg, {
+        videoModelId: "kie-veo-fast",
+        frameSource: "generated",
+      }),
+    );
+    expect(generated.providerCalls).toBe(2);
+  });
+  it("rejects provider/adapter mismatches and impossible Kie capabilities", () => {
+    const mini = defaultVideoModels.find((m) => m.id === "kie-seedance-mini")!;
+    for (const patch of [
+      { provider: "fal" },
+      { endpoint: "https://evil.example" },
+      { durations: [16] },
+      { resolutions: ["1080p"] },
+      { characters: true },
+    ])
+      expect(() =>
+        parseModels(JSON.stringify([{ ...mini, ...patch }])),
+      ).toThrow();
+    expect(() =>
+      videoPolicy(cfg, { videoModelId: "kie-veo-fast", generateAudio: false }),
+    ).toThrow("音频");
+  });
+  it("upgrades untouched legacy catalogs and retains custom fal registries", () => {
+    const legacy = defaultVideoModels
+      .slice(0, 2)
+      .map(({ provider, ...rest }) => rest);
+    expect(parseModels(JSON.stringify(legacy))).toHaveLength(4);
+    const custom = [{ ...legacy[0], id: "custom" }];
+    expect(parseModels(JSON.stringify(custom))).toHaveLength(1);
+  });
   it("packs complete shots and rounds native durations up", () => {
     const p = plan("balanced");
     expect(p.segments.map((s) => [s.start, s.end])).toEqual([

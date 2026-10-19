@@ -22,6 +22,7 @@ import {
   advancePipeline,
   retryPipelineState,
   acknowledgePipelineFailure,
+  cancelPipeline,
   type PipelineDependencies,
 } from "../server/video-pipeline.ts";
 import { videoPolicy } from "../server/video-plan.ts";
@@ -106,6 +107,109 @@ async function finish() {
     await step();
 }
 describe("durable segment execution", () => {
+  async function useKie(frameSource = "product") {
+    const policy = videoPolicy(
+      { FAL_IMAGE_EDIT_MODEL: "frame" },
+      {
+        videoModelId: "kie-seedance-mini",
+        segmentStrategy: "fixed",
+        segmentSeconds: 3,
+        frameSource,
+      },
+    );
+    await initializePipeline(
+      "pipeline",
+      { ...state.row.input, _videoPolicy: policy },
+      { scenes: [{ time: "0-6s", visual: "sell" }] },
+    );
+    deps.kieAsset = vi.fn(async () => "https://images.example/product.png");
+    deps.kieClient = async () =>
+      ({
+        queue: {
+          submit: async (model: string) => {
+            submits.push(model);
+            if (failAt === submits.length) throw new Error("timeout");
+            return { request_id: String(submits.length) };
+          },
+          status: async () => ({ status: mode }),
+          result: async () => ({
+            data: { video: { url: "https://video.example/out.mp4" } },
+          }),
+        },
+      }) as any;
+  }
+  it("runs Kie product frames through composition without touching fal", async () => {
+    await useKie();
+    deps.falClient = async () => {
+      throw new Error("fal must not be used");
+    };
+    await finish();
+    expect(state.row.status).toBe("completed");
+    expect(submits).toEqual([
+      "bytedance/seedance-2-mini",
+      "bytedance/seedance-2-mini",
+    ]);
+    expect(deps.kieAsset).toHaveBeenCalledTimes(2);
+  });
+  it("uses fal only for generated frames and Kie for the video stage", async () => {
+    await useKie("generated");
+    const original = deps.kieClient!;
+    deps.kieClient = vi.fn(original);
+    const falInput = deps.falInput;
+    deps.falInput = async (...args) => ({
+      ...(await falInput(...args)),
+      frame: { model: "frame", payload: {} },
+      model: "bytedance/seedance-2-mini",
+    });
+    // The fixture's fal frame result must be an HTTPS URL, just like the live storage result.
+    const fal = await deps.falClient();
+    const result = fal.queue.result;
+    fal.queue.result = async (model: any, options: any) => {
+      const r: any = await result(model, options);
+      if (r.data.images)
+        r.data.images[0].url = "https://images.example/generated.png";
+      return r;
+    };
+    deps.falClient = async () => fal;
+    await finish();
+    expect(state.row.status).toBe("completed");
+    expect(submits).toEqual([
+      "frame",
+      "bytedance/seedance-2-mini",
+      "frame",
+      "bytedance/seedance-2-mini",
+    ]);
+    expect(deps.kieAsset).not.toHaveBeenCalled();
+  });
+  it("never resubmits an ambiguous Kie charge and requires audited resolution", async () => {
+    await useKie();
+    await step();
+    failAt = 1;
+    await step();
+    expect(state.row.status).toBe("review");
+    await expect(step()).rejects.toThrow("不会重复提交");
+    expect(submits).toHaveLength(1);
+    expect(() => retryPipelineState(state.row.provider)).toThrow();
+  });
+  it("stops new Kie tasks on cancel and still settles the already submitted task", async () => {
+    await useKie();
+    await step();
+    await step();
+    await cancelPipeline(state.row);
+    await step();
+    await step();
+    expect(state.row.status).toBe("cancelled");
+    expect(submits).toHaveLength(1);
+    expect(state.row.provider.segments[0].status).toBe("completed");
+  });
+  it("refreshes expired product uploads before a new paid submission", async () => {
+    await useKie();
+    await step();
+    state.row.provider.segments[0].productUploadedAt = 1;
+    await step();
+    expect(deps.kieAsset).toHaveBeenCalledTimes(2);
+    expect(submits).toHaveLength(1);
+  });
   it("submits each stage once and only completes after composition", async () => {
     await finish();
     expect(submits).toEqual(["frame", "video", "frame", "video"]);

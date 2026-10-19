@@ -18,29 +18,87 @@ export function VideoControls({
 }) {
   const { data, error } = useData<Doc>("/video/models");
   const selected = value.videoModelId || data?.defaults.videoModelId || "";
+  const model = data?.models.find((m: Doc) => m.id === selected);
+  const provider = model?.provider || "fal";
+  const changeModel = (id: string) => {
+    const next = data?.models.find((m: Doc) => m.id === id);
+    onChange({
+      ...value,
+      videoModelId: id,
+      resolution: next?.resolutions[0],
+      frameSource: next?.provider === "kie" ? "product" : "generated",
+    });
+  };
   return (
     <div className="config-fields video-controls">
       {error && <ErrorBox message={error} />}
       <label className="field">
-        视频模型
+        视频生成渠道
         <select
-          value={selected}
-          onChange={(e) =>
-            onChange({
-              ...value,
-              videoModelId: e.target.value,
-              resolution: undefined,
-            })
-          }
+          value={provider}
+          disabled={!data}
+          onChange={(e) => {
+            const next = data?.models.find(
+              (m: Doc) => (m.provider || "fal") === e.target.value,
+            );
+            if (next) changeModel(next.id);
+          }}
         >
-          {!data && <option value="">正在读取模型…</option>}
-          {data?.models.map((m: Doc) => (
-            <option key={m.id} value={m.id}>
-              {m.name} · {m.resolutions.join("/")}
+          {[
+            ...new Set<string>(
+              data?.models.map((m: Doc) => m.provider || "fal") || ["fal"],
+            ),
+          ].map((p) => (
+            <option key={p} value={p}>
+              {p === "kie" ? "Kie.ai" : "fal.ai"}
             </option>
           ))}
         </select>
       </label>
+      <label className="field">
+        视频模型
+        <select value={selected} onChange={(e) => changeModel(e.target.value)}>
+          {!data && <option value="">正在读取模型…</option>}
+          {data?.models
+            .filter((m: Doc) => (m.provider || "fal") === provider)
+            .map((m: Doc) => (
+              <option key={m.id} value={m.id}>
+                {m.name} · {m.resolutions.join("/")}
+              </option>
+            ))}
+        </select>
+      </label>
+      <label className="field">
+        视频分辨率
+        <select
+          value={value.resolution || model?.resolutions[0] || "720p"}
+          disabled={!model}
+          onChange={(e) => onChange({ ...value, resolution: e.target.value })}
+        >
+          {(model?.resolutions || ["720p"]).map((r: string) => (
+            <option key={r} value={r}>
+              {r}
+            </option>
+          ))}
+        </select>
+      </label>
+      {provider === "kie" && (
+        <label className="field">
+          首帧方式
+          <select
+            value={value.frameSource || "product"}
+            onChange={(e) =>
+              onChange({ ...value, frameSource: e.target.value })
+            }
+          >
+            <option value="product">直接使用第一张商品图</option>
+            <option value="generated">AI 场景首帧（fal.ai）</option>
+          </select>
+          <small>
+            直接商品图无需 fal Key；AI 首帧会额外调用 fal 图像服务。
+          </small>
+        </label>
+      )}
       <label className="field">
         分段策略
         <select
@@ -147,7 +205,11 @@ export function PlanPreview({
           </p>
           <p className="muted">
             每条视频 {plan.segments.length} 段，预计 {plan.providerCalls}{" "}
-            次生成调用（含每段首帧）。供应商按实际请求收费，重试另计。
+            次生成调用
+            {plan.policy.frameSource === "product"
+              ? "（直接使用商品图首帧）"
+              : "（含每段 AI 首帧）"}
+            。供应商按实际请求收费，重试另计。
           </p>
           <div className="table-wrap">
             <table>

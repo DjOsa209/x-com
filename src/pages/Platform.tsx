@@ -834,6 +834,7 @@ export function Projects() {
                             "aspect",
                             "resolution",
                             "generateAudio",
+                            "frameSource",
                           ].includes(k),
                         ),
                       ),
@@ -1405,13 +1406,19 @@ export function Models() {
           模型
           <select value={model} onChange={(e) => setModel(e.target.value)}>
             <option value="">请选择</option>
-            {data?.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.id}
-              </option>
-            ))}
+            {data
+              ?.filter((m) => m.provider !== "kie")
+              .map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.id}
+                </option>
+              ))}
           </select>
         </label>
+        <p className="muted">
+          此原始输入入口使用 fal.ai；Kie
+          视频请在创作工作台或项目分镜中选择渠道与模型。
+        </p>
         <label className="field">
           输入 JSON
           <textarea

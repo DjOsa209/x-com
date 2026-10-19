@@ -161,6 +161,7 @@ projectRoutes.post("/projects/:id/confirm", async (req, res) => {
           aspect: z.enum(["9:16", "16:9", "1:1"]).optional(),
           resolution: z.string().optional(),
           generateAudio: z.boolean().optional(),
+          frameSource: z.enum(["generated", "product"]).optional(),
         })
         .optional(),
       planFingerprint: z.string().length(64).optional(),

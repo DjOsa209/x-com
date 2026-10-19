@@ -59,9 +59,11 @@ export async function composeVideo(
       ? 2160
       : resolution === "1080p"
         ? 1080
-        : resolution === "360p"
-          ? 360
-          : 720;
+        : resolution === "480p"
+          ? 480
+          : resolution === "360p"
+            ? 360
+            : 720;
   const [w, h] =
     aspect === "16:9"
       ? [Math.round((height * 16) / 9 / 2) * 2, height]

@@ -56,9 +56,14 @@ export async function checkProviders(kind: string, input: Doc) {
       ? "TIKTOK_CLIENT_KEY"
       : ["download", "research", "collect", "opportunity_scan"].includes(kind)
         ? "ECHOTIK_USERNAME"
-        : falKinds.includes(kind)
-          ? "FAL_KEY"
-          : "GEMINI_API_KEY";
+        : ["video", "replicate"].includes(kind)
+          ? (input._videoPolicy || videoPolicy(c, input)).model.provider ===
+            "kie"
+            ? "KIE_API_KEY"
+            : "FAL_KEY"
+          : falKinds.includes(kind)
+            ? "FAL_KEY"
+            : "GEMINI_API_KEY";
   const directDownload =
     kind === "download" &&
     input.sourceUrl &&
@@ -69,13 +74,18 @@ export async function checkProviders(kind: string, input: Doc) {
   if (!c[need] && !directDownload && !localComposeOnly)
     throw new AppError(
       409,
-      `请先在设置中配置 ${need.startsWith("TIKTOK") ? "TikTok 应用并授权账号" : need.startsWith("ECHOTIK") ? "EchoTik" : need.startsWith("FAL") ? "fal.ai" : "Gemini"}`,
+      `请先在设置中配置 ${need.startsWith("TIKTOK") ? "TikTok 应用并授权账号" : need.startsWith("ECHOTIK") ? "EchoTik" : need.startsWith("KIE") ? "Kie.ai" : need.startsWith("FAL") ? "fal.ai" : "Gemini"}`,
       "PROVIDER_NOT_CONFIGURED",
     );
-  if (kind === "replicate" && !c.FAL_KEY && !localComposeOnly)
+  if (
+    ["video", "replicate"].includes(kind) &&
+    !c.FAL_KEY &&
+    !localComposeOnly &&
+    (input._videoPolicy || videoPolicy(c, input)).frameSource !== "product"
+  )
     throw new AppError(
       409,
-      "一键复刻还需要配置 fal.ai 视频生成服务",
+      "AI 场景首帧需要配置 fal.ai，或在 Kie 渠道选择直接商品图首帧",
       "PROVIDER_NOT_CONFIGURED",
     );
   if (kind === "opportunity_scan" && !c.GEMINI_API_KEY)

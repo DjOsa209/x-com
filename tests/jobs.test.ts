@@ -153,12 +153,14 @@ vi.mock("../server/credits.ts", () => ({
 }));
 import { falInput } from "../server/providers.ts";
 import { AppError } from "../server/errors.ts";
+import { config } from "../server/config.ts";
 import {
   createJob,
   tick,
   cancelJob,
   refreshJob,
   recoverJobs,
+  checkProviders,
 } from "../server/jobs.ts";
 beforeEach(() => {
   state.records.clear();
@@ -170,6 +172,23 @@ beforeEach(() => {
   vi.clearAllMocks();
 });
 describe("durable generation transitions", () => {
+  it("validates Kie independently of fal and requires fal only for generated frames", async () => {
+    const input = {
+      videoModelId: "kie-seedance-mini",
+      prompt: "sell",
+      duration: 10,
+      assetIds: ["product"],
+      storyboard: { script: "confirmed" },
+    };
+    vi.mocked(config).mockResolvedValueOnce({ KIE_API_KEY: "key" });
+    await expect(checkProviders("video", input)).resolves.toBeUndefined();
+    vi.mocked(config).mockResolvedValueOnce({ KIE_API_KEY: "key" });
+    await expect(
+      checkProviders("video", { ...input, frameSource: "generated" }),
+    ).rejects.toThrow("首帧");
+    vi.mocked(config).mockResolvedValueOnce({ FAL_KEY: "key" });
+    await expect(checkProviders("video", input)).rejects.toThrow("Kie.ai");
+  });
   it("records an ambiguous first submission without automatically resubmitting", async () => {
     state.failSubmit = true;
     const j = await createJob(

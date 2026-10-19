@@ -17,7 +17,8 @@ import {
   type Doc,
 } from "../server/db.ts";
 import { inWorkspace } from "../server/context.ts";
-import { saveConfig } from "../server/config.ts";
+import { saveConfig, config, publicConfig } from "../server/config.ts";
+import { createKieClient } from "../server/kie.ts";
 import { createJob, retryJob, refreshJob } from "../server/jobs.ts";
 import {
   initializePipeline,
@@ -303,6 +304,112 @@ try {
     );
     count++;
     console.log("PASS client-supplied execution snapshots are rejected");
+    // The real adapter and durable pipeline run against offline HTTP fixtures,
+    // with only a Kie credential configured and actual 480p FFmpeg composition.
+    await saveConfig({
+      KIE_API_KEY: "offline-kie-fixture",
+      clearSecrets: ["FAL_KEY", "GEMINI_API_KEY"],
+    });
+    const settings = await publicConfig();
+    check(
+      settings.secrets.KIE_API_KEY &&
+        settings.connections.kie &&
+        !JSON.stringify(settings).includes("offline-kie-fixture"),
+      "Kie secret is encrypted and masked in public settings",
+    );
+    await saveConfig({ KIE_API_KEY: "" });
+    check(
+      (await config()).KIE_API_KEY === "offline-kie-fixture",
+      "blank Kie key preserves the configured credential",
+    );
+    for (const videoModelId of ["kie-seedance-mini", "kie-veo-fast"]) {
+      const calls: Doc[] = [];
+      const http: typeof fetch = async (url, options) => {
+        if (options?.method === "POST") {
+          const body = JSON.parse(String(options.body));
+          calls.push(body);
+          return new Response(
+            JSON.stringify({
+              code: 200,
+              data: { taskId: `kie-${calls.length}` },
+            }),
+          );
+        }
+        const id = new URL(String(url)).searchParams.get("taskId");
+        return new Response(
+          JSON.stringify({
+            code: 200,
+            data: {
+              taskId: id,
+              state: "success",
+              resultJson: JSON.stringify({
+                resultUrls: [`https://fixture.example/${id}.mp4`],
+              }),
+            },
+          }),
+        );
+      };
+      const kieJob = await createJob(
+        "video",
+        {
+          ...input,
+          videoModelId,
+          resolution: videoModelId === "kie-seedance-mini" ? "480p" : "720p",
+        },
+        "kie-" + randomUUID(),
+        undefined,
+        true,
+      );
+      let row = (await jobGet(kieJob.id))!;
+      await initializePipeline(kieJob.id, parse(row.input), board);
+      const kieDeps: PipelineDependencies = {
+        ...deps,
+        falClient: async () => {
+          throw new Error("Kie product mode must not need fal");
+        },
+        kieAsset: async () => "https://fixture.example/product.png",
+        kieClient: async () => createKieClient("offline-kie-fixture", http),
+        fetchMedia: async () => ({
+          bytes: await readFile(a),
+          mime: "video/mp4",
+        }),
+        composeVideo,
+      };
+      for (let step = 0; step < 15; step++) {
+        row = (await jobGet(kieJob.id))!;
+        if (["failed", "completed", "review"].includes(row.status)) break;
+        await advancePipeline(row, kieDeps);
+      }
+      row = (await jobGet(kieJob.id))!;
+      check(
+        row.status === "completed",
+        `${videoModelId} completes from persisted requests to real composition without fal/Gemini credentials`,
+      );
+      check(
+        calls.length === 2 &&
+          calls.every(
+            (c) =>
+              c.model ===
+              (videoModelId === "kie-seedance-mini"
+                ? "bytedance/seedance-2-mini"
+                : "veo-3-1"),
+          ),
+        `${videoModelId} submits one Kie call per segment without AI-frame calls`,
+      );
+      const file = await assetFile(parse(row.result).asset.id);
+      const info = await probe(file.path);
+      const video = info.streams.find((s: Doc) => s.codec_type === "video");
+      check(
+        video.width === (videoModelId === "kie-seedance-mini" ? 480 : 720) &&
+          Math.abs(Number(info.format.duration) - 2) < 0.2,
+        `${videoModelId} retains selected output resolution and storyboard duration`,
+      );
+    }
+    await saveConfig({ clearSecrets: ["KIE_API_KEY"] });
+    check(
+      !(await publicConfig()).secrets.KIE_API_KEY,
+      "Kie credential can be explicitly cleared",
+    );
     console.log(
       `Video integration complete: ${count} checks. Real MySQL and FFmpeg, injected offline provider fixtures; no paid generation.`,
     );

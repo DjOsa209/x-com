@@ -7,15 +7,19 @@ import { assetFile, fetchMedia, saveMedia } from "./media.ts";
 import { buildRenderPlan, videoPolicy, type RenderPlan } from "./video-plan.ts";
 import { composeVideo } from "./video-compose.ts";
 import { AppError } from "./errors.ts";
+import { kieClient, kieAsset, kieVideoInput } from "./kie.ts";
 const live = {
   falClient,
+  kieClient,
+  kieAsset,
   falInput,
   fetchMedia,
   saveMedia,
   assetFile,
   composeVideo,
 };
-export type PipelineDependencies = typeof live;
+export type PipelineDependencies = Omit<typeof live, "kieClient" | "kieAsset"> &
+  Partial<Pick<typeof live, "kieClient" | "kieAsset">>;
 const clone = <T>(o: T): T => JSON.parse(JSON.stringify(o));
 export async function initializePipeline(
   id: string,
@@ -98,12 +102,26 @@ export async function advancePipeline(
     (s: Doc) => !["completed", "failed", "cancelled"].includes(s.status),
   );
   if (segment) {
-    const fal = await deps.falClient();
     let operation = "prepare";
     try {
       if (segment.status === "queued" || segment.status === "preparing") {
         segment.status = "preparing";
         await save();
+        if (
+          p.plan.policy.model.provider === "kie" &&
+          p.plan.policy.frameSource === "product"
+        ) {
+          segment.model = p.plan.policy.model.endpoint;
+          segment.frameUrl = await (deps.kieAsset || kieAsset)(
+            input.assetIds[0],
+          );
+          segment.productUploadedAt = Date.now();
+          segment.videoPayload = {};
+          segment.status = "ready_video";
+          await save();
+          return;
+        }
+        const fal = await deps.falClient();
         const built = await deps.falInput(
           "video",
           {
@@ -145,16 +163,39 @@ export async function advancePipeline(
           await save();
           return;
         }
+        const isKie = p.plan.policy.model.provider === "kie";
+        if (
+          isKie &&
+          p.plan.policy.frameSource === "product" &&
+          Date.now() - (segment.productUploadedAt || 0) > 20 * 3600000
+        ) {
+          segment.frameUrl = await (deps.kieAsset || kieAsset)(
+            input.assetIds[0],
+          );
+          segment.productUploadedAt = Date.now();
+          await save();
+        }
+        const client = isKie
+          ? await (deps.kieClient || kieClient)()
+          : await deps.falClient();
+        const payload = isKie
+          ? kieVideoInput(
+              p.plan.policy,
+              segment.prompt,
+              segment.nativeDuration,
+              segment.frameUrl,
+            )
+          : { ...segment.videoPayload };
+        if (!isKie)
+          payload[
+            p.plan.policy.model.adapter === "veo31"
+              ? "image_url"
+              : "start_image_url"
+          ] = segment.frameUrl;
         segment.status = "submitting_video";
         segment.requestId = null;
         await save();
-        const payload = { ...segment.videoPayload };
-        payload[
-          p.plan.policy.model.adapter === "veo31"
-            ? "image_url"
-            : "start_image_url"
-        ] = segment.frameUrl;
-        const started = await fal.queue.submit(segment.model, {
+        const started = await client.queue.submit(segment.model, {
           input: payload,
           headers: { "X-Fal-No-Retry": "1" },
         });
@@ -171,8 +212,12 @@ export async function advancePipeline(
         );
       const model =
         segment.status === "frame" ? segment.frameModel : segment.model;
+      const client =
+        segment.status === "video" && p.plan.policy.model.provider === "kie"
+          ? await (deps.kieClient || kieClient)()
+          : await deps.falClient();
       operation = "poll";
-      const status: any = await fal.queue.status(model, {
+      const status: any = await client.queue.status(model, {
         requestId: segment.requestId,
       });
       if (status.status === "FAILED")
@@ -183,7 +228,7 @@ export async function advancePipeline(
         );
       if (status.status !== "COMPLETED") return;
       operation = "result";
-      const result: any = await fal.queue.result(model, {
+      const result: any = await client.queue.result(model, {
         requestId: segment.requestId,
       });
       if (segment.status === "frame") {
@@ -218,7 +263,9 @@ export async function advancePipeline(
       await save();
       return;
     } catch (e: any) {
-      const beforeSubmission = segment.status === "preparing";
+      const beforeSubmission = ["preparing", "ready_video"].includes(
+        segment.status,
+      );
       const definitive =
         beforeSubmission ||
         e.code === "PROVIDER_TASK_FAILED" ||
@@ -350,14 +397,17 @@ export function retryPipelineState(provider: Doc) {
   return p;
 }
 export async function cancelPipeline(row: Doc) {
-  const p = clone(parse(row.provider)),
-    fal = await falClient();
+  const p = clone(parse(row.provider));
   p.cancelRequested = true;
   for (const s of p.segments) {
     if (["queued", "preparing", "ready_video"].includes(s.status))
       s.status = "cancelled";
     else if (["frame", "video"].includes(s.status) && s.requestId) {
+      // Kie has no documented task cancellation endpoint. Stop new work and poll the existing task.
+      if (s.status === "video" && p.plan.policy.model.provider === "kie")
+        continue;
       try {
+        const fal = await falClient();
         await fal.queue.cancel(s.status === "frame" ? s.frameModel : s.model, {
           requestId: s.requestId,
         });

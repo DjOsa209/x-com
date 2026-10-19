@@ -69,6 +69,7 @@ export function Workspace() {
     [current, setCurrent] = useState(""),
     [error, setError] = useState("");
   const { data: characters } = useData("/records/character"),
+    { data: videoCatalog } = useData<Doc>("/video/models"),
     { data: drafts, reload: reloadDrafts } = useData("/records/draft"),
     { data: jobs } = useData("/jobs", 4000);
   const active = jobs?.find((j) => j.id === current);
@@ -99,6 +100,8 @@ export function Workspace() {
           videoModelId: d.videoModelId,
           segmentStrategy: d.segmentStrategy,
           segmentSeconds: d.segmentSeconds,
+          resolution: d.resolution,
+          frameSource: d.frameSource,
         });
       }
       navigate("/", { replace: true, state: null });
@@ -399,8 +402,25 @@ export function Workspace() {
       </div>
       {error && <ErrorBox message={error} />}
       <Connection
-        provider={mode === "script" ? "gemini" : "fal"}
-        label={mode === "script" ? "Gemini 脚本服务" : "图片 / 视频生成服务"}
+        provider={
+          mode === "script"
+            ? "gemini"
+            : mode === "image"
+              ? "fal"
+              : videoCatalog?.models.find(
+                  (m: Doc) =>
+                    m.id ===
+                    (videoOptions.videoModelId ||
+                      videoCatalog.defaults.videoModelId),
+                )?.provider || "fal"
+        }
+        label={
+          mode === "script"
+            ? "Gemini 脚本服务"
+            : mode === "image"
+              ? "fal.ai 图片服务"
+              : "视频生成服务"
+        }
       />
       {active && (
         <section className="active-result">
