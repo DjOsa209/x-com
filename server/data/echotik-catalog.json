@@ -1,0 +1,3145 @@
+{
+  "fetchedAt": "2026-10-19T02:59:08.011Z",
+  "source": "https://opendocs.echotik.live/llms.txt",
+  "endpoints": [
+    {
+      "path": "/echotik/batch/cover/download",
+      "method": "GET",
+      "title": "封面图片批量下载",
+      "description": "由于TK图片资源会有过期时间，所以我们会把已采集到的图片进行下载。\n目前EchoTik相关所有接口返回的图片地址都无法直接访问，可以通过该接口获取临时访问的图片地址（24小时有效）。\n特别注意，该接口不消耗调用次数，传入接口的 cover_url 字段中的网址地址必须是Hosts为 “echosell-images.tos-ap-southeast-1.volces.com” 的封面，才能获取临时访问地址！\n如存在非“echosell-images.tos-ap-southeast-1.volces.com” 域名的图片地址，这证明我们还未下载该图片，那么调用该接口将无效， 在未来的1-3天内会对图片异步下载完成。",
+      "group": "batch",
+      "source": "https://opendocs.echotik.live/echotik/batch/cover/download",
+      "parameters": [
+        {
+          "name": "cover_urls",
+          "required": true,
+          "description": "单次最多传入10个封面地址， 多个使用逗号进行分隔，例如：https://echosell-images.tos-ap-southeast-1.volces.com/user-avatar/459/MS4wLjABAAAAQ5_vlo4B-TluK2ztaAK9avrqmfULn4rfXS0D4ImQ01mo3FLDvlwUxINywY0CGIVS.webp,https://echosell-images.tos-ap-southeast-1.volces.com/user-avatar/459/MS4wLjABAAAAQ5_vlo4B-TluK2ztaAK9avrqmfULn4rfXS0D4ImQ01mo3FLDvlwUxINywY0CGIVS.webp,https://echosell-images.tos-ap-southeast-1.volces.com/user-avatar/459/MS4wLjABAAAAQ5_vlo4B-TluK2ztaAK9avrqmfULn4rfXS0D4ImQ01mo3FLDvlwUxINywY0CGIVS.webp",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/category/l1",
+      "method": "GET",
+      "title": "商品一级分类列表",
+      "description": "**接口整体描述**\n这是商品一级分类字典接口，只需要 `language` 就能返回分类 ID、分类级别、分类名称、语言和父级 ID。它本身不输出经营指标，核心作用是把后续商品、店铺、榜单、类目大盘等接口需要的类目 ID 先解析出来。\n\n**接口用途推荐**\n- 适合做类目映射表\n- 前端下拉框\n- 把自然语言品类转成 EchoTik 可用的 `category_id`、给商品列表或榜单接口做一级类目过滤前置准备",
+      "group": "店铺/商品分类维度数据",
+      "source": "https://opendocs.echotik.live/echotik/seller/category/l1",
+      "parameters": [
+        {
+          "name": "language",
+          "required": true,
+          "description": "具体的语言，可选：th-TH、en-US、id-ID、zh-CN、ms-MY、vi-VN其中之一",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/category/l2",
+      "method": "GET",
+      "title": "商品二级分类列表",
+      "description": "**接口整体描述**\n这是商品二级分类字典接口，需要 `language` 和一级类目的 `parent_id`。返回值仍然是分类 ID、层级、名称、语言和父级 ID，但粒度比一级类目更细，主要用来继续向下拆品类结构。\n\n**接口用途推荐**\n- 适合做二级类目联动选择\n- 把一级类目继续拆成更细分赛道、提高商品筛选精度，也适合做类目树维护",
+      "group": "店铺/商品分类维度数据",
+      "source": "https://opendocs.echotik.live/echotik/seller/category/l2",
+      "parameters": [
+        {
+          "name": "language",
+          "required": true,
+          "description": "具体的语言，可选：th-TH、en-US、id-ID、zh-CN、ms-MY、vi-VN其中之一",
+          "type": "string"
+        },
+        {
+          "name": "parent_id",
+          "required": false,
+          "description": "父节点ID：一级分类ID",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/category/l3",
+      "method": "GET",
+      "title": "商品三级分类列表",
+      "description": "**接口整体描述**\n这是商品三级分类字典接口，需要 `language` 和二级类目的 `parent_id`。返回的是最细一级的标准类目字典，适合把一个大类一路钻到最可执行的 SKU 赛道。\n\n**接口用途推荐**\n- 适合做精细化选品\n- 精细榜单过滤、类目树最底层映射，以及给策略和BI系统统一类目口径",
+      "group": "店铺/商品分类维度数据",
+      "source": "https://opendocs.echotik.live/echotik/seller/category/l3",
+      "parameters": [
+        {
+          "name": "language",
+          "required": true,
+          "description": "具体的语言，可选：th-TH、en-US、id-ID、zh-CN、ms-MY、vi-VN其中之一",
+          "type": "string"
+        },
+        {
+          "name": "parent_id",
+          "required": false,
+          "description": "父节点ID：二级分类ID",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/category/product/detail",
+      "method": "GET",
+      "title": "类目详情 - EchoTik",
+      "description": "**接口整体描述**\n这是类目大盘详情接口，按商品一级 `category_id` 和 `region` 返回该类目的聚合经营结果。返回里会直接给出类目趋势、价格趋势、近1/7/30天与总GMV、近1/7/30天与总达人数、近1/7/30天与总商品数、近1/7/30天与总销量、近1/7/30天与当前商品均价，以及直播销量相关数据，所以它其实是在看一个赛道的盘子大小和热度变化。\n\n**接口用途推荐**\n- 适合做赛道评估\n- 判断某个一级类目值不值得做\n- 看类目整体价格带和销售规模、给选品或招商团队做市场大盘分析，也适合做月度行业洞察\n\n**注意事项**\n- T+1 更新\n- 付费接口，暂不提供免费试用调用",
+      "group": "商品大盘",
+      "source": "https://opendocs.echotik.live/echotik/category/product/detail",
+      "parameters": [
+        {
+          "name": "category_id",
+          "required": true,
+          "description": "商品一级分类ID",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/category/trend",
+      "method": "GET",
+      "title": "类目趋势 - EchoTik",
+      "description": "**接口整体描述**\n这是类目趋势接口，支持通过国家地区以及 1/2/3 级类目 ID 获取该赛道的时间序列趋势。返回主要是类目在某个时间点的近1日销量和近1日销售额，并带 `category_id` 与地区，用于观察赛道在时间维度上的销售变化。\n\n**接口用途推荐**\n- 适合做类目趋势监控\n- 对比不同细分类目近期表现\n- 判断某个类目是否在升温、做赛道周报和月报，也适合给选品团队做“先看赛道，再看商品”的前置分析\n\n**注意事项**\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟\n- 付费接口，暂不提供免费试用调用",
+      "group": "商品大盘",
+      "source": "https://opendocs.echotik.live/echotik/category/trend",
+      "parameters": [
+        {
+          "name": "category_id",
+          "required": false,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "category_l2_id",
+          "required": false,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "category_l3_id",
+          "required": false,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "start_date",
+          "required": true,
+          "description": "yyyy-MM-dd格式，时间范围筛选",
+          "type": "string"
+        },
+        {
+          "name": "end_date",
+          "required": true,
+          "description": "yyyy-MM-dd格式，时间范围筛选",
+          "type": "string"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/hashtag/ranklist",
+      "method": "GET",
+      "title": "hashtag榜单列表 - EchoTik",
+      "description": "**接口整体描述**\n这是 hashtag 榜单接口，按日期、地区、周期和排序字段返回热门标签。返回重点是标签在当前周期内的新增评论、点赞、收藏、分享、新增视频数、新增播放量，以及各项总量，所以它呈现的是一个话题在周期内的活跃度和扩散速度。\n\n**接口用途推荐**\n- 适合做热点话题追踪\n- 内容选题\n- 看某个市场最近什么标签正在升温、给内容团队准备蹭热点清单，也适合做话题流量周报\n\n**注意事项**\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据\n- 榜单中返回的值是当前周期中的增量数据\n- date字段是yyyy-MM-dd格式， 榜单分为天/周/月 三个榜单， 周榜：每周周一， 月榜：每月一号。\n- hashtag_rank_field说明： \n1=total_video_cnt，2=total_views_cnt，3=total_comments_cnt，4=total_digg_cnt，5=total_shares_cnt，6=total_favorites_cnt\n- 该榜单数据仅代表EchoTik中已收录的hashtag计算得出来的榜单，非官方数据，仅供参考",
+      "group": "视频",
+      "source": "https://opendocs.echotik.live/echotik/hashtag/ranklist",
+      "parameters": [
+        {
+          "name": "date",
+          "required": true,
+          "description": "yyyy-MM-dd格式 榜单具体时间",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "区域代码，地区，例如US",
+          "type": "string"
+        },
+        {
+          "name": "rank_type",
+          "required": true,
+          "description": "榜单类型 1=day 2=week 3=month",
+          "type": "integer"
+        },
+        {
+          "name": "hashtag_rank_field",
+          "required": true,
+          "description": "榜单排序字段 1=total_video_cnt，2=total_views_cnt，3=total_comments_cnt，4=total_digg_cnt，5=total_shares_cnt，6=total_favorites_cnt",
+          "type": "integer"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/hashtag/trend",
+      "method": "GET",
+      "title": "hashtag趋势(快照) - EchoTik",
+      "description": "**接口整体描述**\n这是 hashtag 历史趋势快照接口，按 `hashtag_id + region` 返回最多 180 天的时间序列。返回是评论、点赞、收藏、分享、视频数、播放量等维度的日级增量快照，适合看一个标签是持续发酵还是已经过峰值。\n\n**接口用途推荐**\n- 适合做标签生命周期分析\n- 判断某个话题是否值得继续跟进、复盘某个热点从起势到衰退的过程，也适合给内容排期做趋势判断\n\n**注意事项**\n- 趋势/快照类接口最多支持近 180 天历史\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "视频",
+      "source": "https://opendocs.echotik.live/echotik/hashtag/trend",
+      "parameters": [
+        {
+          "name": "hashtag_id",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "start_date",
+          "required": true,
+          "description": "yyyy-MM-dd格式，时间范围筛选",
+          "type": "string"
+        },
+        {
+          "name": "end_date",
+          "required": true,
+          "description": "yyyy-MM-dd格式，时间范围筛选",
+          "type": "string"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/influencer/detail",
+      "method": "GET",
+      "title": "批量获取达人详情 - EchoTik",
+      "description": "**接口整体描述**\n这是批量达人详情接口，支持用 `user_ids` 或 `unique_ids` 一次查询最多 10 个达人。返回字段说明继承达人列表的核心画像与经营字段，通常会覆盖达人基础身份、地区、粉丝与互动、带货能力、内容表现、关联店铺等关键信息，所以它本质上是把单个或少量达人看深看全，而不是大规模检索。\n\n**接口用途推荐**\n- 适合做达人尽调\n- 把搜索或榜单结果补全成完整档案\n- 合作前核验账号基本面、核对某个 `unique_id` 对应的稳定 `user_id`，以及把达人列表里筛出来的人做二次精查\n对于做 CRM 建档、达人白名单管理和复购合作评估也很合适\n\n**注意事项**\n- 批量查询时单次最多支持 10 个 ID，多个值需要用英文逗号分隔\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "达人",
+      "source": "https://opendocs.echotik.live/echotik/influencer/detail",
+      "parameters": [
+        {
+          "name": "user_ids",
+          "required": false,
+          "description": "多个使用英文逗号分隔，例如100034034780479488,100037587565707264,100049707246170112",
+          "type": "string"
+        },
+        {
+          "name": "unique_ids",
+          "required": false,
+          "description": "",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/influencer/list",
+      "method": "GET",
+      "title": "达人列表 - EchoTik",
+      "description": "**接口整体描述**\n这是 EchoTik 的离线达人检索库。参数上支持按商品一级类目、达人分类、关联店铺、粉丝量、点赞量、互动率、总播放量、近7日播放增量、带货视频平均播放、性别、语言、是否开橱窗、带货方式、地区等多维筛选，并通过 `influencer_sort_field_v2` 与 `sort_type` 排序；返回上会给出达人头像、分类、邮箱、评分、粉丝/点赞/播放、互动率、商品数以及直播/视频带货相关表现字段，核心用途就是批量找达人\n\n**接口用途推荐**\n- 适合做达人库搭建\n- 招商找人\n- 按粉丝量和带货能力筛达人\n- 找某个类目下的带货达人\n- 找某家店铺关联达人\n- 以及做市场级达人盘点。因为返回里有粉丝、互动、播放和带货相关指标，也很适合先粗筛再把候选达人送去详情接口做二次评估\n\n**注意事项**\n- 该接口为 T+1 更新\n- 返回的封面、头像或图片地址如果不能直接访问，通常需要再走 EchoTik 图片下载相关接口\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "达人",
+      "source": "https://opendocs.echotik.live/echotik/influencer/list",
+      "parameters": [
+        {
+          "name": "product_category_id",
+          "required": false,
+          "description": "达人带货的商品一级分类ID",
+          "type": "string"
+        },
+        {
+          "name": "influencer_category_name",
+          "required": false,
+          "description": "达人分类名称",
+          "type": "string"
+        },
+        {
+          "name": "influencer_sort_field_v2",
+          "required": false,
+          "description": "列表排序字段，1=total_followers_cnt 2=total_followers_30d_cnt 3=total_post_video_cnt 4=per_views_avg_cnt 5=interaction_rate 6=total_product_cnt",
+          "type": "integer"
+        },
+        {
+          "name": "sort_type",
+          "required": false,
+          "description": "排序顺序，排序顺序 0=asc 1=desc",
+          "type": "integer"
+        },
+        {
+          "name": "seller_id",
+          "required": false,
+          "description": "店铺ID",
+          "type": "string"
+        },
+        {
+          "name": "min_total_followers_cnt",
+          "required": false,
+          "description": "粉丝量范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "max_total_followers_cnt",
+          "required": false,
+          "description": "粉丝量范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "min_total_digg_cnt",
+          "required": false,
+          "description": "点赞量范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "max_total_digg_cnt",
+          "required": false,
+          "description": "点赞量范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "min_interaction_rate",
+          "required": false,
+          "description": "互动量范围筛选",
+          "type": "number"
+        },
+        {
+          "name": "max_interaction_rate",
+          "required": false,
+          "description": "互动量范围筛选",
+          "type": "number"
+        },
+        {
+          "name": "min_total_views_cnt",
+          "required": false,
+          "description": "总播放量范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "max_total_views_cnt",
+          "required": false,
+          "description": "总播放量范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "min_total_views_7d_cnt",
+          "required": false,
+          "description": "最近7日播放量（增量）范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "max_total_views_7d_cnt",
+          "required": false,
+          "description": "最近7日播放量（增量）范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "min_per_video_product_views_avg_cnt",
+          "required": false,
+          "description": "平均带货视频播放量范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "max_per_video_product_views_avg_cnt",
+          "required": false,
+          "description": "平均带货视频播放量范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "min_per_video_product_views_avg_7d_cnt",
+          "required": false,
+          "description": "平均带货视频近7日播放量（增量）范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "max_per_video_product_views_avg_7d_cnt",
+          "required": false,
+          "description": "平均带货视频近7日播放量（增量）范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "gender",
+          "required": false,
+          "description": "性别，基于头像和视频内容， 仅美区生效",
+          "type": "string"
+        },
+        {
+          "name": "language",
+          "required": false,
+          "description": "达人语言",
+          "type": "string"
+        },
+        {
+          "name": "show_case_flag",
+          "required": false,
+          "description": "是否开通橱窗，1=是 0=否",
+          "type": "integer"
+        },
+        {
+          "name": "sales_flag",
+          "required": false,
+          "description": "是否带货，>0时代表带货， 1=视频带货 2=直播带货 3=直播+视频都带 4=开通橱窗",
+          "type": "integer"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "区域代码，地区，例如US",
+          "type": "string"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大10000",
+          "type": "string"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/influencer/live/list",
+      "method": "GET",
+      "title": "达人直播列表 - EchoTik",
+      "description": "**接口整体描述**\n这是达人直播历史列表接口，按 `user_id` 返回该达人的直播场次。返回字段聚焦直播经营结果，包括直播封面、开始和结束时间、直播时长、标题、总评论、总点赞、总加入人数、总观看人次、带货商品数、总销量和总GMV，并携带达人昵称、粉丝量、地区和 `room_id`，所以能同时看直播排期和直播表现。\n\n**接口用途推荐**\n- 适合做达人直播能力评估\n- 统计达人开播频率\n- 找该达人历史高GMV直播间、分析达人到底更擅长视频带货还是直播带货，以及给直播招商和投流团队准备样本直播间\n对于复盘“这个达人直播卖得怎么样、有没有稳定开播习惯”也非常直接\n\n**注意事项**\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "达人",
+      "source": "https://opendocs.echotik.live/echotik/influencer/live/list",
+      "parameters": [
+        {
+          "name": "user_id",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/influencer/product/list",
+      "method": "GET",
+      "title": "达人带货商品列表 - EchoTik",
+      "description": "**接口整体描述**\n这是达人带货商品清单接口，按 `user_id` 获取该达人带过的商品，并支持 `category_id` 过滤一级类目、按销量或销售额等枚举字段排序。返回里会给出商品 ID、商品名、封面、SKU 均价、商品总销量、商品总销售额，以及该商品关联的直播场次、直播销量/GMV、关联视频数、视频销量/GMV，因此它不是单纯列 SKU，而是把达人与商品的带货关系一起呈现。\n\n**接口用途推荐**\n- 适合做达人选品偏好分析\n- 看达人历史上卖得最好的品\n- 寻找某个类目里真正带出过销量的达人、合作前判断达人是否适合你的价格带，也适合从商品角度反向理解达人是靠直播卖货还是靠视频卖货\n\n**注意事项**\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "达人",
+      "source": "https://opendocs.echotik.live/echotik/influencer/product/list",
+      "parameters": [
+        {
+          "name": "user_id",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "category_id",
+          "required": false,
+          "description": "商品一级分类ID过滤",
+          "type": "string"
+        },
+        {
+          "name": "influencer_product_sort_field",
+          "required": false,
+          "description": "列表排序字段 1=total_sale_cnt 2=total_sale_gmv_amt 3=spu_avg_price 4=total_video_sale_cnt 5=total_video_sale_gmv_amt",
+          "type": "integer"
+        },
+        {
+          "name": "sort_type",
+          "required": false,
+          "description": "排序顺序，排序顺序 0=asc 1=desc",
+          "type": "integer"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/influencer/ranklist",
+      "method": "GET",
+      "title": "达人榜单列表 - EchoTik",
+      "description": "**接口整体描述**\n这是达人榜单接口，支持按 `date`、`region`、达人分类、商品类目、榜单周期 `rank_type` 以及排序字段来取天榜、周榜、月榜。榜单返回不仅有达人身份信息，还会带粉丝、互动、播放、销量、GMV等结果型指标，它是“周期性头部达人快照”而不是常规搜索结果。\n\n**接口用途推荐**\n- 适合做头部达人发现\n- 看某个市场某个类目近一周或近一月谁最强\n- 做榜单监控、输出市场周报，也适合给商务团队做达人池扩张和给投放团队做竞品达人观察\n相比达人列表，它更适合先抓头部，再做精细筛选\n\n**注意事项**\n- 返回的封面、头像或图片地址如果不能直接访问，通常需要再走 EchoTik 图片下载相关接口\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据\n- 榜单中返回的值是当前周期中的增量数据\n- date字段是yyyy-MM-dd格式， 榜单分为天/周/月 三个榜单， 周榜：每周周一， 月榜：每月一号\n- influencer_rank_field说明： influencer_rank_field=1代表粉丝榜， influencer_rank_field=2代表带货达人榜",
+      "group": "达人",
+      "source": "https://opendocs.echotik.live/echotik/influencer/ranklist",
+      "parameters": [
+        {
+          "name": "date",
+          "required": true,
+          "description": "yyyy-MM-dd格式， 榜单分为天/周/月 三个榜单， 周榜：每周周一， 月榜：每月一号。",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "区域代码，地区，例如US",
+          "type": "string"
+        },
+        {
+          "name": "influencer_category_name",
+          "required": false,
+          "description": "达人分类过滤",
+          "type": "string"
+        },
+        {
+          "name": "product_category_id",
+          "required": false,
+          "description": "可对任意商品1/2/3级类目id进行筛选",
+          "type": "string"
+        },
+        {
+          "name": "rank_type",
+          "required": true,
+          "description": "榜单类型 1=day 2=week 3=month",
+          "type": "integer"
+        },
+        {
+          "name": "influencer_rank_field",
+          "required": true,
+          "description": "榜单排序类型， 1=total_followers_cnt 2=total_sale_cnt",
+          "type": "integer"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/influencer/trend",
+      "method": "GET",
+      "title": "达人趋势(快照) - EchoTik",
+      "description": "**接口整体描述**\n这是达人历史趋势快照接口，围绕 `user_id` 按时间范围返回最近最多 180 天的日级快照。返回字段不仅有总粉丝、总点赞、总评论、总播放、总分享，还给出近1天粉丝增量、近1天点赞增量、近1天销量和近1天GMV，以及总直播场次和总发视频数，适合看达人增长轨迹而不是只看当前静态值。\n\n**接口用途推荐**\n- 适合做达人成长复盘\n- 判断达人是在持续上涨还是已经放缓\n- 识别某个账号爆发节点、核对达人近阶段带货起量时间，也适合给商务或投放团队做合作前趋势尽调\n尤其当你需要回答“这个达人是一直强，还是最近突然涨起来”时，这个接口比详情接口更有价值\n\n**注意事项**\n- 趋势/快照类接口最多支持近 180 天历史\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "达人",
+      "source": "https://opendocs.echotik.live/echotik/influencer/trend",
+      "parameters": [
+        {
+          "name": "user_id",
+          "required": true,
+          "description": "达人ID",
+          "type": "string"
+        },
+        {
+          "name": "start_date",
+          "required": true,
+          "description": "筛选时间范围，yyyy-MM-dd格式",
+          "type": "string"
+        },
+        {
+          "name": "end_date",
+          "required": true,
+          "description": "筛选时间范围，yyyy-MM-dd格式",
+          "type": "string"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/influencer/video/list",
+      "method": "GET",
+      "title": "达人视频列表 - EchoTik",
+      "description": "**接口整体描述**\n这是达人视频清单接口，可以用 `user_id` 或 `unique_id` 指定达人，并且支持按 `product_id` 过滤某个商品相关视频，还能按播放量或视频销量排序。返回里不仅有发布时间、标题、时长、是否 AI、是否带货、评论/点赞/收藏/分享、总播放，还带有近1/7/30天播放和点赞增量，以及视频销量和视频销售额，适合看达人内容侧和带货侧的双重表现。\n\n**接口用途推荐**\n- 适合做达人内容风格分析\n- 查看达人近阶段发什么视频\n- 拆某个达人哪些视频最能卖货、看某个商品在该达人内容里的表现，以及选合作达人时判断他更擅长流量视频还是转化视频\n也适合反向找出达人曾经带过某个产品的具体视频素材\n\n**注意事项**\n- 返回的封面、头像或图片地址如果不能直接访问，通常需要再走 EchoTik 图片下载相关接口\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "达人",
+      "source": "https://opendocs.echotik.live/echotik/influencer/video/list",
+      "parameters": [
+        {
+          "name": "user_id",
+          "required": false,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "unique_id",
+          "required": false,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "product_id",
+          "required": false,
+          "description": "带货商品筛选",
+          "type": "string"
+        },
+        {
+          "name": "influencer_video_sort_field",
+          "required": false,
+          "description": "视频列表排序字段 1=total_views_cnt 2=total_video_sale_cnt 3=total_video_sale_gmv_amt 4=create_time",
+          "type": "integer"
+        },
+        {
+          "name": "sort_type",
+          "required": false,
+          "description": "排序顺序，排序顺序 0=asc 1=desc",
+          "type": "integer"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/live/detail",
+      "method": "GET",
+      "title": "直播详情 - EchoTik",
+      "description": "**接口整体描述**\n这是直播详情接口，支持批量传 `room_ids`，一次查询多个已被 EchoTik 收录的直播间。返回结构与直播列表类似，但更适合做单场或少量直播的精查，因为会把直播经营结果、达人画像、商品结构、地区和 `room_id` 直接展开。\n\n**接口用途推荐**\n- 适合做单场直播复盘\n- 重点直播建档\n- 核对某场直播的总销量\n- 总GMV、观看与动销商品数，也适合把直播列表里发现的样本做深度分析\n\n**注意事项**\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "直播",
+      "source": "https://opendocs.echotik.live/echotik/live/detail",
+      "parameters": [
+        {
+          "name": "room_ids",
+          "required": true,
+          "description": "多个room_id使用逗号分隔，例如7552598204001405710,7641975807703485205",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/live/list",
+      "method": "GET",
+      "title": "直播列表 - EchoTik",
+      "description": "**接口整体描述**\n这是离线直播检索接口，支持按地区、达人ID、达人 `unique_id`、直播类型、直播状态、是否带货、开播时间范围、达人分类、排序字段、销量、时长、观看人次等条件筛选。返回非常偏经营分析，既有直播间封面、标题、开播/结束时间、时长、在线峰值、观看人次、动销商品数、总销量、总GMV，也有达人头像、分类、近30天直播销量/GMV、粉丝数和视频数等账号信息。\n\n**接口用途推荐**\n- 适合批量找高表现直播间\n- 筛某个市场最近强势直播\n- 区分店铺播和个人播\n- 找非带货直播或带货直播样本、看不同达人分类的直播表现，也适合直播情报监控\n\n**注意事项**\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "直播",
+      "source": "https://opendocs.echotik.live/echotik/live/list",
+      "parameters": [
+        {
+          "name": "region",
+          "required": true,
+          "description": "区域代码，地区，例如US",
+          "type": "string"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        },
+        {
+          "name": "user_id",
+          "required": false,
+          "description": "达人ID筛选",
+          "type": "string"
+        },
+        {
+          "name": "unique_id",
+          "required": false,
+          "description": "达人ID筛选",
+          "type": "string"
+        },
+        {
+          "name": "live_type",
+          "required": false,
+          "description": "直播类型， 1=店铺播 2=个人播",
+          "type": "integer"
+        },
+        {
+          "name": "live_status",
+          "required": false,
+          "description": "直播状态，2=进行中，4=已结束",
+          "type": "integer"
+        },
+        {
+          "name": "sales_flag",
+          "required": false,
+          "description": "是否带货， 0=非带货 1=带货",
+          "type": "integer"
+        },
+        {
+          "name": "min_create_time",
+          "required": false,
+          "description": "直播创建时间筛选",
+          "type": "integer"
+        },
+        {
+          "name": "max_create_time",
+          "required": false,
+          "description": "直播创建时间筛选",
+          "type": "integer"
+        },
+        {
+          "name": "category",
+          "required": false,
+          "description": "达人分类筛选",
+          "type": "string"
+        },
+        {
+          "name": "live_sort_field",
+          "required": false,
+          "description": "列表排序字段，1=create_time， 2=total_sale_cnt， 3=total_user_cnt，4=max_user_count_cnt",
+          "type": "integer"
+        },
+        {
+          "name": "sort_type",
+          "required": false,
+          "description": "排序顺序，排序顺序 0=asc 1=desc",
+          "type": "integer"
+        },
+        {
+          "name": "min_total_sale_cnt",
+          "required": false,
+          "description": "直播销量筛选",
+          "type": "integer"
+        },
+        {
+          "name": "max_total_sale_cnt",
+          "required": false,
+          "description": "直播销量筛选",
+          "type": "integer"
+        },
+        {
+          "name": "min_duration",
+          "required": false,
+          "description": "直播时长筛选",
+          "type": "integer"
+        },
+        {
+          "name": "max_duration",
+          "required": false,
+          "description": "直播时长筛选",
+          "type": "integer"
+        },
+        {
+          "name": "min_total_views_cnt",
+          "required": false,
+          "description": "直播观看人次筛选",
+          "type": "integer"
+        },
+        {
+          "name": "max_total_views_cnt",
+          "required": false,
+          "description": "直播观看人次筛选",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/live/product/list",
+      "method": "GET",
+      "title": "直播商品列表 - EchoTik",
+      "description": "**接口整体描述**\n这是直播间商品列表接口，按 `room_id` 返回该场直播出现的商品。返回里除了商品三级类目、佣金率、商品ID、商品名、商品销量和商品GMV，还会给出直播间封面、开播时间、直播类型、在线峰值、地区、店铺 `seller_id`、店铺销量、直播总销量、直播总GMV、直播商品数、观看人次和 `user_id`，因此既能看单品表现，也能放回整场直播看。\n\n**接口用途推荐**\n- 适合分析直播间货盘结构\n- 找直播主推款和辅助款\n- 判断一场直播是靠少数爆品还是多SKU铺量、给直播运营做选品复盘，也适合提取直播商品清单\n\n**注意事项**\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "直播",
+      "source": "https://opendocs.echotik.live/echotik/live/product/list",
+      "parameters": [
+        {
+          "name": "room_id",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/live/trend",
+      "method": "GET",
+      "title": "直播趋势列表 - EchoTik",
+      "description": "**接口整体描述**\n这是直播趋势接口，按 `room_id` 返回直播间采集过程中的快照序列。返回字段包括快照时间、在线人数、总粉丝数、新增粉丝数、总销量、总GMV、新增GMV、新增销量和累计观看人次，重点是直播进行过程中的变化，而不是直播结束后的单一结果。\n\n**接口用途推荐**\n- 适合复盘直播节奏\n- 看哪一段时间成交最高\n- 判断直播间是靠中前段还是后半段起量、做直播运营优化，也适合研究加热视频或投流是否拉动了在线和成交\n\n**注意事项**\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "直播",
+      "source": "https://opendocs.echotik.live/echotik/live/trend",
+      "parameters": [
+        {
+          "name": "room_id",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/product/comment",
+      "method": "GET",
+      "title": "商品评论列表 - EchoTik",
+      "description": "**接口整体描述**\n这是商品评论接口，按商品 ID 拉 EchoTik 已收录的离线商品评论。文档重点不在复杂筛选参数，它的业务价值来自返回的评论文本、评论时间、用户反馈内容以及评论侧基础信息，能补足销量类接口看不到的用户声音。\n\n**接口用途推荐**\n- 适合做商品口碑分析\n- 提炼用户抱怨点和好评卖点\n- 做评论词云、客服 FAQ 和详情页卖点优化，也适合竞品评论研究\n对于选品团队来说，它能帮助判断一个商品卖得好是因为什么、被吐槽又集中在哪些问题\n\n**注意事项**\n- 该接口仅能采集EchoTik已收录的评论列表数据",
+      "group": "商品",
+      "source": "https://opendocs.echotik.live/echotik/product/comment",
+      "parameters": [
+        {
+          "name": "product_id",
+          "required": true,
+          "description": "商品ID",
+          "type": "string"
+        },
+        {
+          "name": "min_rating",
+          "required": false,
+          "description": "评分筛选，评论分是整数，取值范围0-5",
+          "type": "integer"
+        },
+        {
+          "name": "max_rating",
+          "required": false,
+          "description": "评分筛选，评论分是整数，取值范围0-5",
+          "type": "integer"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/product/detail",
+      "method": "GET",
+      "title": "批量获取商品详情 - EchoTik",
+      "description": "**接口整体描述**\n这是批量商品详情接口，支持一次传最多 10 个 `product_ids`。返回字段非常全，除了分类、封面、标题、描述、价格区间、佣金率、评分、评论数、`seller_id` 这类基础信息外，还覆盖 1/7/15/30/60/90 天维度的直播/视频/达人关联数量、销量和 GMV，以及总销量、总GMV、总直播数、总视频数等汇总指标，它本质上是商品经营全景接口。\n\n**接口用途推荐**\n- 适合做单品深度研究\n- 竞品拆解\n- 爆品归因、给商品列表结果补全完整经营画像，也适合做商品档案库\n尤其当你想知道一个商品到底是靠直播、靠视频，还是靠很多达人一起推起来时，这个接口非常有用\n\n**注意事项**\n- 批量查询时单次最多支持 10 个 ID，多个值需要用英文逗号分隔\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "商品",
+      "source": "https://opendocs.echotik.live/echotik/product/detail",
+      "parameters": [
+        {
+          "name": "product_ids",
+          "required": true,
+          "description": "多个商品ID使用英文逗号分隔",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/product/influencer/list",
+      "method": "GET",
+      "title": "商品关联带货达人列表 - EchoTik",
+      "description": "**接口整体描述**\n这是商品关联达人列表接口，围绕 `product_id` 返回正在或曾经带这个商品的达人集合。返回通常会带达人基础身份、粉丝规模、互动和与该商品相关的销售表现，用来把“商品”这一对象和“谁在卖它”连接起来。\n\n**接口用途推荐**\n- 适合找某个商品的带货达人池\n- 研究爆品是被哪些层级达人推起来的、给联盟招商团队找潜在合作达人，也适合做竞品达人分发结构分析\n\n**注意事项**\n- 返回的封面、头像或图片地址如果不能直接访问，通常需要再走 EchoTik 图片下载相关接口\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "商品",
+      "source": "https://opendocs.echotik.live/echotik/product/influencer/list",
+      "parameters": [
+        {
+          "name": "product_id",
+          "required": true,
+          "description": "商品ID",
+          "type": "string"
+        },
+        {
+          "name": "product_influencer_sort_field",
+          "required": false,
+          "description": "列表排序枚举。1=total_followers_cnt 2=total_digg_cnt 3=per_product_ifl_sale_cnt 4=per_product_ifl_gmv_amt 5=total_post_video_cnt 6=total_views_cnt 7=total_live_views_cnt",
+          "type": "integer"
+        },
+        {
+          "name": "sort_type",
+          "required": false,
+          "description": "排序顺序，排序顺序 0=asc 1=desc",
+          "type": "integer"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/product/list",
+      "method": "GET",
+      "title": "商品列表 - EchoTik",
+      "description": "**接口整体描述**\n这是 EchoTik 的离线商品检索库，参数维度非常完整。它支持按一级/二级/三级类目、近7天销售趋势、总销量、近30天销量、SKU均价、佣金率、带货达人数、带货视频数、带货视频播放量、评分、评论数、是否全托管、是否包邮、总GMV、近30天GMV、首次抓取时间、带货方式、是否在售、店铺类型、是否爆款、是否品牌店、地区等筛选，并通过 `product_sort_field` 和 `sort_type` 排序；返回里则覆盖商品价格、评分、评论量、销量、GMV、直播/视频/达人关联规模等关键经营字段。\n\n**接口用途推荐**\n- 适合做大规模选品\n- 竞品池构建\n- 按价格带和佣金率找可投品\n- 发现高销量高GMV商品\n- 找某个类目里最近上涨的商品，也适合给达人招商、联盟投放和店铺运营团队做选品中台\n这个接口的价值在于筛选维度多，适合先广撒网，再用详情或趋势接口看深\n\n**注意事项**\n- T+1 更新\n- 返回的封面、头像或图片地址如果不能直接访问，通常需要再走 EchoTik 图片下载相关接口\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "商品",
+      "source": "https://opendocs.echotik.live/echotik/product/list",
+      "parameters": [
+        {
+          "name": "category_id",
+          "required": false,
+          "description": "商品一级分类ID",
+          "type": "string"
+        },
+        {
+          "name": "category_l2_id",
+          "required": false,
+          "description": "商品二级分类ID",
+          "type": "string"
+        },
+        {
+          "name": "category_l3_id",
+          "required": false,
+          "description": "商品三级分类ID",
+          "type": "string"
+        },
+        {
+          "name": "sales_trend_flag",
+          "required": false,
+          "description": "近7天销售趋势， 0=平稳 1=上升 2=下降",
+          "type": "integer"
+        },
+        {
+          "name": "min_total_sale_cnt",
+          "required": false,
+          "description": "总销量范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "max_total_sale_cnt",
+          "required": false,
+          "description": "总销量范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "min_total_sale_30d_cnt",
+          "required": false,
+          "description": "最近30天销量范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "max_total_sale_30d_cnt",
+          "required": false,
+          "description": "最近30天销量范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "min_spu_avg_price",
+          "required": false,
+          "description": "商品sku均价范围筛选",
+          "type": "number"
+        },
+        {
+          "name": "max_spu_avg_price",
+          "required": false,
+          "description": "商品sku均价范围筛选",
+          "type": "number"
+        },
+        {
+          "name": "min_product_commission_rate",
+          "required": false,
+          "description": "商品佣金率范围筛选",
+          "type": "number"
+        },
+        {
+          "name": "max_product_commission_rate",
+          "required": false,
+          "description": "商品佣金率范围筛选",
+          "type": "number"
+        },
+        {
+          "name": "min_total_ifl_cnt",
+          "required": false,
+          "description": "带货达人数范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "max_total_ifl_cnt",
+          "required": false,
+          "description": "带货达人数范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "min_total_video_cnt",
+          "required": false,
+          "description": "带货视频数范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "max_total_video_cnt",
+          "required": false,
+          "description": "带货视频数范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "min_total_views_cnt",
+          "required": false,
+          "description": "带货视频的播放量范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "max_total_views_cnt",
+          "required": false,
+          "description": "带货视频的播放量范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "min_product_rating",
+          "required": false,
+          "description": "商品评价分范围筛选",
+          "type": "number"
+        },
+        {
+          "name": "max_product_rating",
+          "required": false,
+          "description": "商品评价分范围筛选",
+          "type": "number"
+        },
+        {
+          "name": "min_review_count",
+          "required": false,
+          "description": "商品评论数范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "max_review_count",
+          "required": false,
+          "description": "商品评论数范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "is_s_shop",
+          "required": false,
+          "description": "是否全托管，0=否 1=全托管",
+          "type": "integer"
+        },
+        {
+          "name": "free_shipping",
+          "required": false,
+          "description": "是否包邮，0=否 1=是",
+          "type": "integer"
+        },
+        {
+          "name": "min_total_sale_gmv_amt",
+          "required": false,
+          "description": "总GMV范围筛选",
+          "type": "number"
+        },
+        {
+          "name": "max_total_sale_gmv_amt",
+          "required": false,
+          "description": "总GMV范围筛选",
+          "type": "number"
+        },
+        {
+          "name": "min_total_sale_gmv_30d_amt",
+          "required": false,
+          "description": "最近30天GMV范围筛选",
+          "type": "number"
+        },
+        {
+          "name": "max_total_sale_gmv_30d_amt",
+          "required": false,
+          "description": "最近30天GMV范围筛选",
+          "type": "number"
+        },
+        {
+          "name": "min_first_crawl_dt",
+          "required": false,
+          "description": "商品首次抓取时间范围时间，格式yyyyMMdd",
+          "type": "integer"
+        },
+        {
+          "name": "max_first_crawl_dt",
+          "required": false,
+          "description": "商品首次抓取时间范围时间，格式yyyyMMdd",
+          "type": "integer"
+        },
+        {
+          "name": "sales_flag",
+          "required": false,
+          "description": "带货方式，1=视频带货 2=直播带货",
+          "type": "integer"
+        },
+        {
+          "name": "product_sort_field",
+          "required": false,
+          "description": "列表排序枚举，1=total_sale_cnt 2=total_sale_gmv_amt 3=spu_avg_price 4=total_sale_7d_cnt 5=total_sale_30d_cnt 6=total_sale_gmv_7d_amt 7=total_sale_gmv_30d_amt",
+          "type": "integer"
+        },
+        {
+          "name": "sort_type",
+          "required": false,
+          "description": "排序顺序，排序顺序 0=asc 1=desc",
+          "type": "integer"
+        },
+        {
+          "name": "off_mark",
+          "required": false,
+          "description": "off_mark=0代表在售商品，可过滤掉已下架商品",
+          "type": "integer"
+        },
+        {
+          "name": "from_flag",
+          "required": false,
+          "description": "店铺类型，本土店=1，跨境店=2",
+          "type": "integer"
+        },
+        {
+          "name": "is_hot",
+          "required": false,
+          "description": "是否爆款商品， 0=否， 1=是",
+          "type": "integer"
+        },
+        {
+          "name": "shop_type",
+          "required": false,
+          "description": "是否品牌店， 0=否， 1=是",
+          "type": "integer"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "区域代码，地区，例如US",
+          "type": "string"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/product/live/list",
+      "method": "GET",
+      "title": "商品关联直播列表 - EchoTik",
+      "description": "**接口整体描述**\n这是商品关联直播列表接口，按 `product_id` 返回卖过该商品的直播场次。返回会包含直播间标识、主播信息、直播销量、直播GMV、观看与互动等直播经营字段，因此它可以把商品销量和直播渠道关联起来。\n\n**接口用途推荐**\n- 适合看一个商品主要靠哪些直播间卖出\n- 筛选高转化直播案例、研究商品在直播场景下的销售能力，以及给直播运营团队找对标样本\n\n**注意事项**\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "商品",
+      "source": "https://opendocs.echotik.live/echotik/product/live/list",
+      "parameters": [
+        {
+          "name": "product_id",
+          "required": true,
+          "description": "商品ID",
+          "type": "string"
+        },
+        {
+          "name": "min_create_time",
+          "required": false,
+          "description": "",
+          "type": "integer"
+        },
+        {
+          "name": "max_create_time",
+          "required": false,
+          "description": "",
+          "type": "integer"
+        },
+        {
+          "name": "product_live_sort_field",
+          "required": false,
+          "description": "列表排序枚举。1=max_views_cnt 2=total_product_cnt 3=total_sale_cnt 4=total_sale_gmv_amt 5=total_views_cnt",
+          "type": "integer"
+        },
+        {
+          "name": "sort_type",
+          "required": false,
+          "description": "排序顺序，排序顺序 0=asc 1=desc",
+          "type": "integer"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/product/ranklist",
+      "method": "GET",
+      "title": "商品榜单列表 - EchoTik",
+      "description": "**接口整体描述**\n这是商品榜单接口，支持按日期、地区、本土/跨境、一级到三级类目、榜单周期和榜单排序字段取周期榜单。返回除了商品名、商品ID、价格带、佣金率、地区外，还会给榜单周期内销量增量、销售额增量、总带货达人数、总直播场次、总视频数等数据，重点不是看静态详情，而是看周期内谁冲得最快。\n\n**接口用途推荐**\n- 适合做日榜/周榜/月榜监控\n- 找市场黑马商品\n- 分析某个类目近期爆品、给选品周报输出“本周值得关注的商品”，也适合对比本土店和跨境店在同一类目下的头部商品差异\n\n**注意事项**\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据\n- 榜单中返回的值是当前周期中的增量数据\n- date字段是yyyy-MM-dd格式， 榜单分为天/周/月 三个榜单， 周榜：每周周一， 月榜：每月一号。\n- product_rank_field=1代表热销榜，product_rank_field=2代表热推榜",
+      "group": "商品",
+      "source": "https://opendocs.echotik.live/echotik/product/ranklist",
+      "parameters": [
+        {
+          "name": "date",
+          "required": true,
+          "description": "榜单日期，yyyy-MM-dd格式",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "区域代码，地区，例如US",
+          "type": "string"
+        },
+        {
+          "name": "from_flag",
+          "required": false,
+          "description": "店铺类型：1=本土店铺 2=跨境店铺",
+          "type": "integer"
+        },
+        {
+          "name": "category_id",
+          "required": false,
+          "description": "商品一级类目ID",
+          "type": "string"
+        },
+        {
+          "name": "category_l2_id",
+          "required": false,
+          "description": "商品二级类目ID",
+          "type": "string"
+        },
+        {
+          "name": "category_l3_id",
+          "required": false,
+          "description": "商品三级类目ID",
+          "type": "string"
+        },
+        {
+          "name": "product_rank_field",
+          "required": true,
+          "description": "榜单排序字段，1=total_sale_cnt 2=total_ifl_cnt",
+          "type": "integer"
+        },
+        {
+          "name": "rank_type",
+          "required": true,
+          "description": "榜单周期，1=天榜 2=周榜 3=月榜",
+          "type": "integer"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/product/trend",
+      "method": "GET",
+      "title": "商品趋势(快照) - EchoTik",
+      "description": "**接口整体描述**\n这是商品历史趋势快照接口，按 `product_id` 返回最多 180 天的日级记录。返回里既有商品 SKU 均价，也有总带货达人数、总直播场次、总视频数、总销量、总销售额，以及最近1天销量增量和最近1天销售额增量，所以它能回答商品是在稳卖、放量还是下滑。\n\n**接口用途推荐**\n- 适合做单品增长分析\n- 判断商品是不是最近起量\n- 看大促或投流前后销量与GMV变化、监控新品爬坡期，也适合做爆品复盘和预警\n相比商品详情，它更适合解释变化过程\n\n**注意事项**\n- 趋势/快照类接口最多支持近 180 天历史\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "商品",
+      "source": "https://opendocs.echotik.live/echotik/product/trend",
+      "parameters": [
+        {
+          "name": "product_id",
+          "required": true,
+          "description": "商品ID",
+          "type": "string"
+        },
+        {
+          "name": "start_date",
+          "required": true,
+          "description": "日期范围筛选，yyyy-MM-dd格式",
+          "type": "string"
+        },
+        {
+          "name": "end_date",
+          "required": true,
+          "description": "日期范围筛选，yyyy-MM-dd格式",
+          "type": "string"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/product/video/list",
+      "method": "GET",
+      "title": "商品关联视频列表 - EchoTik",
+      "description": "**接口整体描述**\n这是商品关联视频列表接口，按 `product_id` 返回带这个商品的视频集合。返回里通常会包含视频发布时间、标题、播放、点赞、评论、收藏、分享，以及视频销量和视频GMV等字段，因此它能把商品销量和具体内容素材对应起来。\n\n**接口用途推荐**\n- 适合找某个商品最有效的视频素材\n- 看同款商品在内容层面是怎么卖的\n- 拆爆款带货视频、给素材团队做参考库，也适合做内容投放前的案例研究\n\n**注意事项**\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "商品",
+      "source": "https://opendocs.echotik.live/echotik/product/video/list",
+      "parameters": [
+        {
+          "name": "product_id",
+          "required": true,
+          "description": "商品ID",
+          "type": "string"
+        },
+        {
+          "name": "user_id",
+          "required": false,
+          "description": "达人ID筛选",
+          "type": "string"
+        },
+        {
+          "name": "min_create_time",
+          "required": false,
+          "description": "",
+          "type": "integer"
+        },
+        {
+          "name": "max_create_time",
+          "required": false,
+          "description": "",
+          "type": "integer"
+        },
+        {
+          "name": "product_video_sort_field",
+          "required": false,
+          "description": "列表排序字段枚举。1=total_views_cnt 2=total_digg_cnt 3=total_shares_cnt 4=total_video_sale_cnt 5=total_video_sale_gmv_amt 6=create_time",
+          "type": "integer"
+        },
+        {
+          "name": "sort_type",
+          "required": false,
+          "description": "排序顺序，排序顺序 0=asc 1=desc",
+          "type": "integer"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/search/items",
+      "method": "GET",
+      "title": "搜索通用接口 - EchoTik",
+      "description": "提供EchoTik搜索框的搜索功能，包含达人、商品、小店、视频、直播等搜索，接口支持分词、模糊以及精准搜索等特性。\n注：该接口最多只会返回30条数据，并且该接口不会像列表接口一样返回很多指标、字段等， 如需等多数据请再调用相关的详情接口。\n\n模糊搜索：需要2个及以上的词进行匹配\n精准搜索：需要全部词进行匹配",
+      "group": "搜索",
+      "source": "https://opendocs.echotik.live/echotik/search/items",
+      "parameters": [
+        {
+          "name": "sk",
+          "required": true,
+          "description": "搜索词",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": false,
+          "description": "地区代码，可不填， 不填则不进行过滤",
+          "type": "string"
+        },
+        {
+          "name": "type",
+          "required": true,
+          "description": "搜索类型。1=influencer 2=product 3=seller 4=video 5=live",
+          "type": "integer"
+        },
+        {
+          "name": "size",
+          "required": true,
+          "description": "最多返回30条数据",
+          "type": "integer"
+        },
+        {
+          "name": "searchType",
+          "required": false,
+          "description": "0=模糊搜索 1=精准搜索，默认模糊搜索",
+          "type": "integer"
+        },
+        {
+          "name": "sortType",
+          "required": false,
+          "description": "仅当type=2时有效。 默认值等于2。\nsortType=0:按照相关性排序\nsortType=1:按照spu_avg_price排序\nsortType=2:按照total_sale_7d_cnt排序\nsortType=3:按照total_sale_gmv_7d_amt排序\nsortType=4:按照total_sale_cnt排序\nsortType=5:按照total_sale_gmv_amt排序\nsortType=6:按照total_ifl_cnt排序\nsortType=7:按照total_video_cnt排序",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/seller/detail",
+      "method": "GET",
+      "title": "店铺详情 - EchoTik",
+      "description": "**接口整体描述**\n这是单店详情接口，按 `seller_id` 返回店铺完整画像。字段基本覆盖店铺列表中的所有核心指标，包括类目、评分、好评率、回复率、店铺链接、是否品牌店、SKU均价、在店商品数、带货达人和直播规模、总销量、总GMV、近阶段销量和GMV增量等，它是看单店基本面最完整的入口。\n\n**接口用途推荐**\n- 适合做单店尽调\n- 合作前店铺评估\n- 竞店深度拆解、建立重点卖家档案，也适合把店铺列表里选出来的候选店进一步看透\n\n**注意事项**\n- 返回的封面、头像或图片地址如果不能直接访问，通常需要再走 EchoTik 图片下载相关接口\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "店铺",
+      "source": "https://opendocs.echotik.live/echotik/seller/detail",
+      "parameters": [
+        {
+          "name": "seller_id",
+          "required": true,
+          "description": "店铺ID",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/seller/influencer/list",
+      "method": "GET",
+      "title": "店铺关联带货达人列表 - EchoTik",
+      "description": "**接口整体描述**\n这是店铺关联带货达人列表接口，按 `seller_id` 返回帮这家店卖货的达人集合，并支持按达人粉丝数、销量或销售额排序。返回里会给出达人头像、昵称、地区、总点赞、总粉丝、总关注、总销量、总销售额、TikTok ID 和 `user_id`，它强调的是“店和达人”的合作规模关系，而不是达人完整明细。\n\n**接口用途推荐**\n- 适合看店铺依赖哪些达人出货\n- 招商团队反向找合作达人\n- 研究竞店达人投放结构、判断某家店是靠少量头部达人还是大量中腰部达人带动销售\n\n**注意事项**\n- 返回的封面、头像或图片地址如果不能直接访问，通常需要再走 EchoTik 图片下载相关接口\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "店铺",
+      "source": "https://opendocs.echotik.live/echotik/seller/influencer/list",
+      "parameters": [
+        {
+          "name": "seller_id",
+          "required": true,
+          "description": "店铺ID",
+          "type": "string"
+        },
+        {
+          "name": "seller_influencer_sort_field",
+          "required": false,
+          "description": "列表排序枚举。1=total_followers_cnt 2=total_sale_cnt 3=total_sale_gmv_amt",
+          "type": "integer"
+        },
+        {
+          "name": "sort_type",
+          "required": false,
+          "description": "排序顺序，排序顺序 0=asc 1=desc",
+          "type": "integer"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/seller/list",
+      "method": "GET",
+      "title": "店铺列表 - EchoTik",
+      "description": "**接口整体描述**\n这是 EchoTik 的离线店铺检索库，支持按一级到三级类目、本土/跨境、主要带货方式、近7日销售趋势、排序字段、地区分页等条件筛选。返回里覆盖店铺分类、封面、评分、好评率、回复率、粉丝数、店铺链接、店铺名称、是否品牌店、SKU均价、在店商品数、总带货达人数、总直播数、总销量、总销售额、总带货视频数，以及 1/7/30/90 天的销量和销售额增量，是一个偏经营视角的店铺大盘接口。\n\n**接口用途推荐**\n- 适合做竞店搜索\n- 平台招商\n- 筛优质店\n- 按类目找头部店铺、比较本土店与跨境店表现，也适合做店铺池构建\n因为返回里有质量分、经营规模和增长指标，它很适合先粗选，再用详情接口看单店\n\n**注意事项**\n- T+1 更新\n- 返回的封面、头像或图片地址如果不能直接访问，通常需要再走 EchoTik 图片下载相关接口\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "店铺",
+      "source": "https://opendocs.echotik.live/echotik/seller/list",
+      "parameters": [
+        {
+          "name": "category_id",
+          "required": false,
+          "description": "店铺一级分类ID",
+          "type": "string"
+        },
+        {
+          "name": "category_l2_id",
+          "required": false,
+          "description": "店铺二级分类ID",
+          "type": "string"
+        },
+        {
+          "name": "category_l3_id",
+          "required": false,
+          "description": "店铺三级分类ID",
+          "type": "string"
+        },
+        {
+          "name": "min_total_sale_gmv_30d_amt",
+          "required": false,
+          "description": "近30日GMV筛选",
+          "type": "number"
+        },
+        {
+          "name": "max_total_sale_gmv_30d_amt",
+          "required": false,
+          "description": "近30日GMV筛选",
+          "type": "number"
+        },
+        {
+          "name": "min_first_crawl_dt",
+          "required": false,
+          "description": "预估上架时间筛选，yyyyMMdd格式",
+          "type": "integer"
+        },
+        {
+          "name": "max_first_crawl_dt",
+          "required": false,
+          "description": "预估上架时间筛选，yyyyMMdd格式",
+          "type": "integer"
+        },
+        {
+          "name": "from_flag",
+          "required": false,
+          "description": "1=本土店铺 2=跨境店铺",
+          "type": "integer"
+        },
+        {
+          "name": "sales_flag",
+          "required": false,
+          "description": "主要带货方式 1=视频 2=直播",
+          "type": "integer"
+        },
+        {
+          "name": "sales_trend_flag",
+          "required": false,
+          "description": "近7日销售趋势， 0=平稳 1=上升 2=下降",
+          "type": "integer"
+        },
+        {
+          "name": "seller_sort_field",
+          "required": false,
+          "description": "列表排序枚举。1=total_sale_cnt 2=total_sale_gmv_amt 3=spu_avg_price",
+          "type": "integer"
+        },
+        {
+          "name": "sort_type",
+          "required": false,
+          "description": "排序顺序，排序顺序 0=asc 1=desc",
+          "type": "integer"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "区域代码，地区，例如US",
+          "type": "string"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/seller/live/list",
+      "method": "GET",
+      "title": "店铺关联直播列表 - EchoTik",
+      "description": "**接口整体描述**\n这是店铺关联直播列表接口，按 `seller_id` 返回相关直播场次。返回通常会包含直播间ID、主播信息、开播时间、观看、互动、销量、GMV 等直播经营字段，因此它更适合看店铺通过直播渠道的出货情况。\n\n**接口用途推荐**\n- 适合筛这家店最强的直播间\n- 看店铺直播密度和直播销售贡献、研究店铺更偏自播还是达人播，也适合给直播团队做竞店参考\n\n**注意事项**\n- 返回的封面、头像或图片地址如果不能直接访问，通常需要再走 EchoTik 图片下载相关接口\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "店铺",
+      "source": "https://opendocs.echotik.live/echotik/seller/live/list",
+      "parameters": [
+        {
+          "name": "seller_id",
+          "required": true,
+          "description": "小店ID",
+          "type": "string"
+        },
+        {
+          "name": "seller_live_sort_field",
+          "required": false,
+          "description": "列表排序枚举。1=total_views_cnt 2=total_sale_cnt 3=total_sale_gmv_amt",
+          "type": "integer"
+        },
+        {
+          "name": "sort_type",
+          "required": false,
+          "description": "排序顺序，排序顺序 0=asc 1=desc",
+          "type": "integer"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/seller/product/list",
+      "method": "GET",
+      "title": "店铺商品列表 - EchoTik",
+      "description": "**接口整体描述**\n这是店铺商品清单接口，按 `seller_id` 返回 EchoTik 已收录的该店铺商品。返回一般会覆盖商品分类、商品ID、价格、评分、评论、销量、GMV、趋势标识、上下架状态以及店铺关联字段，帮助你看清这个卖家在卖什么、卖得怎么样。\n\n**接口用途推荐**\n- 适合做店铺盘货\n- 看SKU结构\n- 分析店铺价格带\n- 筛店铺主力款、查某家店是铺货型还是集中爆款型，也适合给运营团队做竞店商品清单\n\n**注意事项**\n- 这不是实时店铺货盘，离线收录数量可能与店铺前台实际商品数存在差距\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "店铺",
+      "source": "https://opendocs.echotik.live/echotik/seller/product/list",
+      "parameters": [
+        {
+          "name": "seller_id",
+          "required": true,
+          "description": "店铺ID",
+          "type": "string"
+        },
+        {
+          "name": "seller_product_sort_field",
+          "required": false,
+          "description": "列表排序枚举。1=total_sale_cnt 2=total_sale_gmv_amt 3=spu_avg_price 4=total_sale_7d_cnt 5=total_sale_gmv_7d_amt",
+          "type": "integer"
+        },
+        {
+          "name": "sort_type",
+          "required": false,
+          "description": "排序顺序，排序顺序 0=asc 1=desc",
+          "type": "integer"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/seller/ranklist",
+      "method": "GET",
+      "title": "店铺榜单列表 - EchoTik",
+      "description": "**接口整体描述**\n这是店铺榜单接口，支持按日期、地区、一级到三级类目、本土/跨境、榜单周期以及排序字段获取店铺日榜/周榜/月榜。返回里会包含店铺分类、封面、评分、地区、seller_id、seller_name、带货达人数、直播场次、商品数、销量、销售额、总视频数等核心结果指标，适合做店铺头部格局快照。\n\n**接口用途推荐**\n- 适合做店铺榜单监控\n- 找各市场头部卖家\n- 看某类目近期谁排名靠前、做平台招商和竞争格局分析，也适合区分本土店与跨境店的头部差异\n\n**注意事项**\n- 返回的封面、头像或图片地址如果不能直接访问，通常需要再走 EchoTik 图片下载相关接口\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据\n- 榜单中返回的值是当前周期中的增量数据\n- date字段是yyyy-MM-dd格式， 榜单分为天/周/月 三个榜单， 周榜：每周周一， 月榜：每月一号\n- seller_rank_field =1代表热销榜，product_rank_field=2代表热推榜",
+      "group": "店铺",
+      "source": "https://opendocs.echotik.live/echotik/seller/ranklist",
+      "parameters": [
+        {
+          "name": "date",
+          "required": true,
+          "description": "yyyy-MM-dd格式",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "地区代码",
+          "type": "string"
+        },
+        {
+          "name": "category_id",
+          "required": false,
+          "description": "一级类目ID",
+          "type": "string"
+        },
+        {
+          "name": "category_l2_id",
+          "required": false,
+          "description": "二级类目ID",
+          "type": "string"
+        },
+        {
+          "name": "category_l3_id",
+          "required": false,
+          "description": "三级类目ID",
+          "type": "string"
+        },
+        {
+          "name": "from_flag",
+          "required": false,
+          "description": "跨境或本土店铺表示，from_flag=1代表本土，from_flag=2代表跨境",
+          "type": "integer"
+        },
+        {
+          "name": "seller_rank_field",
+          "required": true,
+          "description": "榜单排序字段，1=total_sale_cnt 2=total_ifl_cnt",
+          "type": "integer"
+        },
+        {
+          "name": "rank_type",
+          "required": true,
+          "description": "榜单周期，1=天榜 2=周榜 3=月榜",
+          "type": "integer"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/seller/trend",
+      "method": "GET",
+      "title": "店铺趋势(快照) - EchoTik",
+      "description": "**接口整体描述**\n这是店铺历史趋势快照接口，按 `seller_id` 返回最多 180 天的店铺日级数据。返回重点包括在店商品数、总直播数、直播达人数、历史商品数、近1天销量、总销量、近1天销售额、总销售额、总视频数、总视频带货达人数等，能看出店铺是在扩SKU、扩达人、还是扩GMV。\n\n**接口用途推荐**\n- 适合做店铺增长复盘\n- 看某个店铺最近是否起量\n- 监控店铺经营健康度、识别活动节点对销量GMV的影响，也适合做竞店周报\n\n**注意事项**\n- 趋势/快照类接口最多支持近 180 天历史\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "店铺",
+      "source": "https://opendocs.echotik.live/echotik/seller/trend",
+      "parameters": [
+        {
+          "name": "seller_id",
+          "required": true,
+          "description": "店铺ID",
+          "type": "string"
+        },
+        {
+          "name": "start_date",
+          "required": true,
+          "description": "时间范围筛选，yyyy-MM-dd格式",
+          "type": "string"
+        },
+        {
+          "name": "end_date",
+          "required": true,
+          "description": "时间范围筛选，yyyy-MM-dd格式",
+          "type": "string"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/seller/video/list",
+      "method": "GET",
+      "title": "店铺关联视频列表 - EchoTik",
+      "description": "**接口整体描述**\n这是店铺关联视频列表接口，按 `seller_id` 返回关联的带货视频。返回字段包括达人头像与昵称、视频发布时间、封面、地区、评论/点赞/分享、总播放量、视频销量、视频GMV，以及 `user_id` 和 `video_id`，本质上是把店铺货盘和视频素材池打通。\n\n**接口用途推荐**\n- 适合找某店铺的高表现带货视频\n- 看店铺主要依赖什么内容在转化\n- 给素材团队收集同店案例、分析店铺视频带货路径\n\n**注意事项**\n- 返回的封面、头像或图片地址如果不能直接访问，通常需要再走 EchoTik 图片下载相关接口\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "店铺",
+      "source": "https://opendocs.echotik.live/echotik/seller/video/list",
+      "parameters": [
+        {
+          "name": "seller_id",
+          "required": true,
+          "description": "小店ID",
+          "type": "string"
+        },
+        {
+          "name": "seller_video_sort_field",
+          "required": false,
+          "description": "列表排序枚举。1=total_views_cnt 2=total_video_sale_cnt 3=total_video_sale_gmv_amt",
+          "type": "integer"
+        },
+        {
+          "name": "sort_type",
+          "required": false,
+          "description": "排序顺序，排序顺序 0=asc 1=desc",
+          "type": "integer"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/video/detail",
+      "method": "GET",
+      "title": "批量获取视频详情 - EchoTik",
+      "description": "**接口整体描述**\n这是批量视频详情接口，支持一次传最多 10 个 `video_ids`。返回字段很全，包含发布时间、时长、是否AI、封面、地区、带货方式、评论/点赞/收藏/分享、总播放量、近1/7/30天播放和点赞增量、视频销量、视频销售额、达人 `user_id`、`unique_id`、视频描述和 `video_id`，适合把一条视频看细看全。\n\n**接口用途推荐**\n- 适合做单视频拆解\n- 核验爆款视频当前和阶段性表现\n- 判断视频是偏流量型还是偏转化型、给榜单和列表结果补细节，也适合沉淀视频案例库\n\n**注意事项**\n- 批量查询时单次最多支持 10 个 ID，多个值需要用英文逗号分隔\n- 返回的封面、头像或图片地址如果不能直接访问，通常需要再走 EchoTik 图片下载相关接口\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "视频",
+      "source": "https://opendocs.echotik.live/echotik/video/detail",
+      "parameters": [
+        {
+          "name": "video_ids",
+          "required": true,
+          "description": "可批量传入video_id，使用英文逗号分隔，最多传入10个",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/video/list",
+      "method": "GET",
+      "title": "视频列表 - EchoTik",
+      "description": "**接口整体描述**\n这是离线视频检索接口，可以按地区、达人ID、是否带货、是否AI视频、发布时间范围、时长范围、播放量范围、带货商品类目、是否投流、具体商品ID来筛选视频，并通过 `video_sort_field` 和 `sort_type` 排序。返回字段既有发布时间、时长、标题、封面、播放、评论、点赞、收藏、分享，也有 1/7/30 天播放和点赞增量，以及视频销量和视频销售额，因此它能同时服务内容分析和带货分析。\n\n**接口用途推荐**\n- 适合做视频素材库\n- 按流量或带货能力筛视频\n- 找某商品或某达人相关视频\n- 找 AI 视频或广告视频、研究某个市场当前什么类型内容表现最好\n\n**注意事项**\n- T+1 更新\n- 返回的封面、头像或图片地址如果不能直接访问，通常需要再走 EchoTik 图片下载相关接口\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "视频",
+      "source": "https://opendocs.echotik.live/echotik/video/list",
+      "parameters": [
+        {
+          "name": "region",
+          "required": true,
+          "description": "区域代码，地区，例如US",
+          "type": "string"
+        },
+        {
+          "name": "user_id",
+          "required": false,
+          "description": "达人id筛选",
+          "type": "string"
+        },
+        {
+          "name": "sales_flag",
+          "required": false,
+          "description": "是否带货视频，0=非带货视频，1=带货视频",
+          "type": "integer"
+        },
+        {
+          "name": "created_by_ai",
+          "required": false,
+          "description": "true / false， 是否AI视频",
+          "type": "string"
+        },
+        {
+          "name": "min_create_time",
+          "required": false,
+          "description": "发布时间范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "max_create_time",
+          "required": false,
+          "description": "发布时间范围筛选",
+          "type": "integer"
+        },
+        {
+          "name": "min_duration",
+          "required": false,
+          "description": "发布时长范围时间",
+          "type": "integer"
+        },
+        {
+          "name": "max_duration",
+          "required": false,
+          "description": "发布时长范围时间",
+          "type": "integer"
+        },
+        {
+          "name": "min_total_views_cnt",
+          "required": false,
+          "description": "视频播放量筛选",
+          "type": "integer"
+        },
+        {
+          "name": "max_total_views_cnt",
+          "required": false,
+          "description": "视频播放量筛选",
+          "type": "string"
+        },
+        {
+          "name": "video_sort_field",
+          "required": false,
+          "description": "列表排序枚举，1=total_digg_cnt 2=create_time 3= total_views_cnt",
+          "type": "integer"
+        },
+        {
+          "name": "sort_type",
+          "required": false,
+          "description": "与video_sort_field配合使用， 0=升序， 1=降序",
+          "type": "integer"
+        },
+        {
+          "name": "product_category_id",
+          "required": false,
+          "description": "带货的商品类目一级分类ID",
+          "type": "string"
+        },
+        {
+          "name": "product_category_l2_id",
+          "required": false,
+          "description": "视频带货的商品二级分类ID",
+          "type": "string"
+        },
+        {
+          "name": "product_category_l3_id",
+          "required": false,
+          "description": "视频带货的商品三级分类ID",
+          "type": "string"
+        },
+        {
+          "name": "is_ad",
+          "required": false,
+          "description": "是否投流视频， 1=投流视频， 0=非投流视频",
+          "type": "integer"
+        },
+        {
+          "name": "product_id",
+          "required": false,
+          "description": "视频带货的商品ID",
+          "type": "string"
+        },
+        {
+          "name": "aweme_type",
+          "required": false,
+          "description": "内容类型， 150代表图文",
+          "type": "integer"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/video/product/list",
+      "method": "GET",
+      "title": "视频带货商品列表 - EchoTik",
+      "description": "**接口整体描述**\n这是视频挂车商品列表接口，按 `video_ids` 返回视频关联的商品结果。返回会把视频维度信息和商品维度信息揉在一起，包括发布时间、时长、标签、播放地址、视频封面、互动指标、视频销量/GMV，以及商品 ID，因此它能直接回答“这条视频挂了什么货、带出了多少结果”。\n\n**接口用途推荐**\n- 适合看视频挂车结构\n- 分析一条视频带了哪些商品\n- 找某条爆款视频真正转化的SKU、做视频-商品映射库，也适合内容团队复盘带货策略\n\n**注意事项**\n- 返回的封面、头像或图片地址如果不能直接访问，通常需要再走 EchoTik 图片下载相关接口\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "视频",
+      "source": "https://opendocs.echotik.live/echotik/video/product/list",
+      "parameters": [
+        {
+          "name": "video_ids",
+          "required": true,
+          "description": "视频ID，可填多个，多个使用英文逗号分隔",
+          "type": "string"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/video/ranklist",
+      "method": "GET",
+      "title": "视频榜单列表 - EchoTik",
+      "description": "**接口整体描述**\n这是视频榜单接口，支持按日期、地区、商品一级类目、是否AI视频、榜单排序字段和榜单周期取排行榜。返回不仅有达人身份和视频基础信息，还会带带货商品分类、视频带货商品信息、评论点赞收藏分享、总播放、视频销量、视频销售额等结果，因此是看头部视频格局的周期榜。\n\n**接口用途推荐**\n- 适合找热门带货视频\n- 按周/月观察内容风向\n- 研究 AI 视频在榜单里的占比、筛某个类目近期最强素材，也适合输出视频榜单周报\n\n**注意事项**\n- 返回的封面、头像或图片地址如果不能直接访问，通常需要再走 EchoTik 图片下载相关接口\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据\n- 榜单中返回的值是当前周期中的增量数据\n- date字段是yyyy-MM-dd格式， 榜单分为天/周/月 三个榜单， 周榜：每周周一， 月榜：每月一号。\n- video_rank_field说明： video_rank_field=1代表热门榜， video_rank_field=2代表带货榜",
+      "group": "视频",
+      "source": "https://opendocs.echotik.live/echotik/video/ranklist",
+      "parameters": [
+        {
+          "name": "date",
+          "required": true,
+          "description": "yyyy-MM-dd格式 榜单具体时间",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "区域代码，地区，例如US",
+          "type": "string"
+        },
+        {
+          "name": "product_category_id",
+          "required": false,
+          "description": "商品一级类目id筛选，用于带货视频榜单的商品分类筛选",
+          "type": "string"
+        },
+        {
+          "name": "product_category_l2_id",
+          "required": false,
+          "description": "商品二级类目id筛选",
+          "type": "string"
+        },
+        {
+          "name": "product_category_l3_id",
+          "required": false,
+          "description": "商品三级类目id筛选",
+          "type": "string"
+        },
+        {
+          "name": "created_by_ai",
+          "required": false,
+          "description": "true / false， 是否AI视频",
+          "type": "string"
+        },
+        {
+          "name": "aweme_type",
+          "required": false,
+          "description": "内容类型， 150代表图文",
+          "type": "integer"
+        },
+        {
+          "name": "video_rank_field",
+          "required": true,
+          "description": "榜单排序字段 1=total_views_cnt 2=total_video_sale_cnt",
+          "type": "integer"
+        },
+        {
+          "name": "rank_type",
+          "required": true,
+          "description": "榜单类型 1=day 2=week 3=month",
+          "type": "integer"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/echotik/video/trend",
+      "method": "GET",
+      "title": "视频趋势(快照) - EchoTik",
+      "description": "**接口整体描述**\n这是视频历史趋势快照接口，按 `video_id` 返回最多 180 天的记录。返回里有总评论、总点赞、总收藏、总分享、总播放，以及销量和销售额等累计表现，用来回答一条视频的热度曲线和带货曲线是怎么走的。\n\n**接口用途推荐**\n- 适合做视频生命周期复盘\n- 判断视频是短爆还是长尾持续卖\n- 评估投流或活动对视频表现的影响、给内容团队做爆款经验沉淀\n\n**注意事项**\n- 趋势/快照类接口最多支持近 180 天历史\n- 数据出自EchoTik，所以该数据均属于离线数据，会有延迟，如果接口返回没有数据证明EchoTik并未收录该数据",
+      "group": "视频",
+      "source": "https://opendocs.echotik.live/echotik/video/trend",
+      "parameters": [
+        {
+          "name": "video_id",
+          "required": true,
+          "description": "视频ID",
+          "type": "string"
+        },
+        {
+          "name": "start_date",
+          "required": true,
+          "description": "yyyy-MM-dd格式，时间范围筛选",
+          "type": "string"
+        },
+        {
+          "name": "end_date",
+          "required": true,
+          "description": "yyyy-MM-dd格式，时间范围筛选",
+          "type": "string"
+        },
+        {
+          "name": "page_num",
+          "required": true,
+          "description": "分页页码，从1开始，最大100000",
+          "type": "integer"
+        },
+        {
+          "name": "page_size",
+          "required": true,
+          "description": "分页页数，最大等于10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/extract_product_id",
+      "method": "GET",
+      "title": "通过商品分享链接获取商品ID - 实时接口",
+      "description": "**接口整体描述**\n这是商品分享链接解析接口，当前通过 `share_url` 把一个 TikTok 商品分享短链转换成标准商品主键，属于典型的前置解析步骤。这次返回的核心价值就是把分享链路还原成标准商品主键，它更像一个“解析器”，是后续所有商品分析动作的前置入口。\n\n**接口用途推荐**\n- 适合把运营同事给的分享链接标准化成 `product_id`\n- 作为商品详情/评论/搜索等后续接口的入口、清洗商品链接数据\n\n**注意事项**\n- 分享短链如果过期、跳转异常或商品已下架，解析 `product_id` 可能失败\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "商品",
+      "source": "https://opendocs.echotik.live/realtime/extract_product_id",
+      "parameters": [
+        {
+          "name": "share_url",
+          "required": true,
+          "description": "",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/hashtag/search",
+      "method": "GET",
+      "title": "视频标签hashtag搜索 - 实时接口",
+      "description": "**接口整体描述**\n这是 hashtag 搜索接口，通过 `keyword` 和`region`找相关话题实体，主要用途是把一个模糊词解析成具体的 hashtag 实体。返回“标签实体定位”结果，除了标签名本身，还能看到它的使用规模和总播放量，很适合先判断这个词是不是一个值得追的正式话题。\n\n**接口用途推荐**\n- 适合做标签发现\n- 标签 ID 解析、相关标签扩展，以及给标签视频列表接口做前置定位\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "搜索",
+      "source": "https://opendocs.echotik.live/realtime/hashtag/search",
+      "parameters": [
+        {
+          "name": "keyword",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "offset",
+          "required": false,
+          "description": "当has_more=1时，下一次分页使用cursor",
+          "type": "string"
+        },
+        {
+          "name": "count",
+          "required": false,
+          "description": "",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/hashtag/video/list",
+      "method": "GET",
+      "title": "视频标签hashtag关联的视频列表 - 实时接口",
+      "description": "**接口整体描述**\n这是 hashtag 关联视频接口，当前按 `hashtag_id`、`region`和`offset`分页参数获取该话题下的视频样本，适合看某个标签的内容生态。结果说明它不是单纯给 hashtag 信息，而是直接把该话题下的代表视频拉出来，因此更适合看这个话题正在被什么内容承接。\n\n**接口用途推荐**\n- 适合做话题样本采集\n- 标签下内容风格观察\n- 找热门标签案例、监控某个话题下的竞品内容\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "视频",
+      "source": "https://opendocs.echotik.live/realtime/hashtag/video/list",
+      "parameters": [
+        {
+          "name": "hashtag_id",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "offset",
+          "required": false,
+          "description": "当has_more=1时，使用cursor值进行下一次分页",
+          "type": "string"
+        },
+        {
+          "name": "count",
+          "required": false,
+          "description": "",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/influencer/detail",
+      "method": "GET",
+      "title": "达人详情 - 实时接口",
+      "description": "**接口整体描述**\n这是实时达人详情接口，通过`unique_id` 获取一个具体创作者的前台资料，适合看账号当下状态而不是离线沉淀值。这次返回里能直接看到账号昵称、简介、粉丝规模、获赞量以及橱窗入口等前台资料，它是一个创作者实时主页快照。\n\n**接口用途推荐**\n- 适合做达人背调\n- 合作前快速尽调\n- 核对账号基础信息、给达人库补充实时前台状态\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "达人",
+      "source": "https://opendocs.echotik.live/realtime/influencer/detail",
+      "parameters": [
+        {
+          "name": "unique_id",
+          "required": true,
+          "description": "",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/influencer/follower/list",
+      "method": "GET",
+      "title": "达人粉丝列表 - 实时接口",
+      "description": "**接口整体描述**\n这是实时达人粉丝列表样本接口，当前按 `user_id` 和起始 `offset=0` 拉第一页粉丝集合，更偏社交关系样本而不是经营指标。返回本质上是粉丝账号样本，不是粉丝统计总表，所以它适合观察受众账号长什么样，而不是拿来做精准粉丝数分析。\n\n**接口用途推荐**\n- 适合做受众样本研究\n- 竞品达人粉丝观察\n- 从粉丝侧扩展相似账号、研究达人受众账号层级\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "达人",
+      "source": "https://opendocs.echotik.live/realtime/influencer/follower/list",
+      "parameters": [
+        {
+          "name": "user_id",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "offset",
+          "required": true,
+          "description": "min_time作为下一次的offset进行分页",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/influencer/following/list",
+      "method": "GET",
+      "title": "达人关注列表 - 实时接口",
+      "description": "**接口整体描述**\n这是实时达人关注列表样本接口，当前按 `user_id` 拉该达人关注了哪些账号，适合看其社交关系和兴趣圈层。结果呈现的是该达人主动关注的一批账号，更适合拿来理解她的内容圈层、社交关系和潜在同类账号。\n\n**接口用途推荐**\n- 适合做关系网络研究\n- 摸同圈层账号\n- 找竞品达人经常关注的对象、扩展达人池\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "达人",
+      "source": "https://opendocs.echotik.live/realtime/influencer/following/list",
+      "parameters": [
+        {
+          "name": "user_id",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "offset",
+          "required": false,
+          "description": "min_time作为下一次的offset进行分页",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/influencer/generate/qr-code",
+      "method": "GET",
+      "title": "达人主页二维码生成",
+      "description": "通过达人user_id生成该主页二维码",
+      "group": "达人",
+      "source": "https://opendocs.echotik.live/realtime/influencer/generate/qrcode",
+      "parameters": [
+        {
+          "name": "user_id",
+          "required": true,
+          "description": "达人id",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/influencer/milestones_insight",
+      "method": "GET",
+      "title": "创作者里程碑 - 实时接口",
+      "description": "**接口整体描述**\n这是达人里程碑洞察接口，当前按 `user_id` 返回该账号成长过程中的关键节点，重点是看阶段性突破，而不是当前静态资料。把创作者成长节点、每个里程碑对应的内容总结，以及代表性爆款视频都串起来了，它非常适合用来理解这个达人是怎么一步步长起来的。\n\n**接口用途推荐**\n- 适合做达人成长复盘\n- 筛上升期达人\n- 分析账号关键爆发节点、给商务团队判断达人是否仍在成长曲线上\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "社交媒体分析",
+      "source": "https://opendocs.echotik.live/realtime/influencer/milestones_insight",
+      "parameters": [
+        {
+          "name": "user_id",
+          "required": true,
+          "description": "",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/influencer/region",
+      "method": "GET",
+      "title": "达人地区获取 - 实时接口",
+      "description": "通过达人unique_id实时获取达人地区\n\n注：实时接口随时可能会遇到风控检测，如返回code=500请进行重试",
+      "group": "达人",
+      "source": "https://opendocs.echotik.live/realtime/influencer/region",
+      "parameters": [
+        {
+          "name": "unique_id",
+          "required": true,
+          "description": "",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/influencer/search",
+      "method": "GET",
+      "title": "达人搜索 - 实时接口",
+      "description": "**接口整体描述**\n这是实时达人搜索接口，通过 `keyword` 和`region`找相关账号，主要用于从关键词切入找创作者。返回给的是一批和关键词相关的创作者候选，不是深度资料，更适合先找人，再用详情或视频列表继续筛。\n\n**接口用途推荐**\n- 适合达人发现\n- 竞品账号搜索\n- 关键词找人、搭建某个赛道的创作者候选池\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "搜索",
+      "source": "https://opendocs.echotik.live/realtime/influencer/search",
+      "parameters": [
+        {
+          "name": "keyword",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "offset",
+          "required": false,
+          "description": "",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/influencer/video/list",
+      "method": "GET",
+      "title": "达人视频列表 - 实时接口",
+      "description": "**接口整体描述**\n这是实时达人视频列表接口，当前通过 `unique_id` 拉该达人最近的视频样本，重点是看这个账号现在在发什么、视频表现如何。这次结果以达人最近视频为核心，能直接看到账号近期在发什么内容、内容密度和表现节奏，因此非常适合看创作者最近状态。\n\n**接口用途推荐**\n- 适合做达人内容风格分析\n- 监控达人近期更新\n- 看合作达人最近内容质量、找近期视频素材\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）\n",
+      "group": "达人",
+      "source": "https://opendocs.echotik.live/realtime/influencer/video/list",
+      "parameters": [
+        {
+          "name": "unique_id",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "offset",
+          "required": true,
+          "description": "下一次分页使用max_cursor",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": false,
+          "description": "国家地区 / Region，可选参数，如果不传则默认\n使用美国地区数据",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/inspiration/keyword",
+      "method": "GET",
+      "title": "关键词灵感洞察 - 实时接口",
+      "description": "**接口整体描述**\n这是关键词灵感接口，按 `keyword` 和`region`样本去找相关创意内容，重点偏灵感扩展和内容启发，而不是严格的实体搜索。它给的是围绕关键词延展出来的一组灵感内容，而不是非常严格的一对一搜索结果，更适合做创意启发而不是精确匹配。\n\n**接口用途推荐**\n- 适合做创意灵感扩写\n- 视频脚本方向延展\n- 找相关审美风格样本、给内容策划和广告素材团队做 brainstorming\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "数据洞察",
+      "source": "https://opendocs.echotik.live/realtime/inspiration/keyword",
+      "parameters": [
+        {
+          "name": "keyword",
+          "required": true,
+          "description": "关键词",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "offset",
+          "required": false,
+          "description": "若返回结果中参数 has_more 的值为 1，则同时会提供游标值用于获取下一组数据",
+          "type": "integer"
+        },
+        {
+          "name": "count",
+          "required": false,
+          "description": "",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/live/detail",
+      "method": "GET",
+      "title": "直播详情 - 实时接口",
+      "description": "通过直播间room_id + 达人user_id 实时获取直播详情数据 （该接口需要直播间正在直播，如果关播则获取不到数据）\n\n注：实时接口随时可能会遇到风控检测，如返回code=500请进行重试",
+      "group": "直播",
+      "source": "https://opendocs.echotik.live/realtime/live/detail",
+      "parameters": [
+        {
+          "name": "room_id",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "user_id",
+          "required": true,
+          "description": "",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/live/search",
+      "method": "GET",
+      "title": "直播搜索 - 实时接口",
+      "description": "**接口整体描述**\n这是实时直播搜索接口，当前按关键词和美国市场找相关直播间，适合抓某个主题下正在开或近期匹配的 live 样本。结果不只是直播标题和主播昵称，还带了直播间状态、房间信息甚至播放流相关数据，它更像一个可直接落地排查直播样本的搜索入口。\n\n**接口用途推荐**\n- 适合做直播巡检\n- 主题直播搜索\n- 竞品直播场次查找、直播样本收集\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "搜索",
+      "source": "https://opendocs.echotik.live/realtime/live/search",
+      "parameters": [
+        {
+          "name": "keyword",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "offset",
+          "required": false,
+          "description": "当has_more=1时，使用cursor进行下一次分页",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/music/detail",
+      "method": "GET",
+      "title": "音乐详情 - 实时接口",
+      "description": "**接口整体描述**\n这是单首音乐的实时详情接口，按 `music_id` 和`region`拉音乐实体本身，适合查看该音频的基础信息和使用热度。返回展示的是音频本体的资料、作者和使用背景，更适合先判断这首声音本身有没有传播潜力，而不是马上看内容案例。\n\n**接口用途推荐**\n- 适合做 BGM 追踪\n- 热门音频研究\n- 做配乐库、判断某个音频是否值得跟用\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "音乐",
+      "source": "https://opendocs.echotik.live/realtime/music/detail",
+      "parameters": [
+        {
+          "name": "music_id",
+          "required": true,
+          "description": "音乐ID",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/music/ranking",
+      "method": "GET",
+      "title": "音乐榜单 - 实时接口",
+      "description": "**接口整体描述**\n这是实时音乐榜单接口，按 `chart_type` 和`region`拉热门音乐榜，适合直接看当前站点流行的声音资产。这次结果不是简单歌曲名列表，而是带着音乐实体和作者信息的一组热门声音样本，因此既能看榜单，也能顺手判断声音来源和传播属性。\n\n**接口用途推荐**\n- 适合做音乐榜监控\n- 内容配乐选择\n- 趋势声音预警、给内容团队准备热门 BGM 清单\n\n**注意事项**\n- 榜单和趋势类返回波动很快，更适合连续轮询或定时快照，不建议把单次结果视为长期稳定结论\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "音乐",
+      "source": "https://opendocs.echotik.live/realtime/music/ranking",
+      "parameters": [
+        {
+          "name": "chart_type",
+          "required": true,
+          "description": "可选取值：0 - 前 50 榜单，1 - 热门爆款 50 榜单。你可从歌曲详情信息中的 music_chart_rank.chart_music_info 字段获取全部可用取值",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/music/search",
+      "method": "GET",
+      "title": "音乐搜索 - 实时接口",
+      "description": "**接口整体描述**\n这是音乐搜索接口，当前按关键词、筛选方式和排序方式查找相关音频，适合在实时库里定位具体 BGM 或一类声音资产。结果里可以看到音频名称、归属作者、封面和使用规模，说明它更适合做“找声音”这件事，而不是做内容趋势分析。\n\n**接口用途推荐**\n- 适合找音乐\n- 找热门声音\n- 建立音频素材库、做关键词对应的声音样本收集\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）\n",
+      "group": "搜索",
+      "source": "https://opendocs.echotik.live/realtime/music/search",
+      "parameters": [
+        {
+          "name": "keyword",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "filter_by",
+          "required": false,
+          "description": "搜索词过滤类型， 0=不过滤 1=音乐标题过滤 2=创作者名称过滤",
+          "type": "string"
+        },
+        {
+          "name": "sort_type",
+          "required": false,
+          "description": "排序类型， 0=相关性 1=最多使用 2=最近使用 3=最短时长 4=最长时长",
+          "type": "string"
+        },
+        {
+          "name": "offset",
+          "required": false,
+          "description": "分页字段，当has_more=1时 使用cursor进行下一次分页",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/music/video/list",
+      "method": "GET",
+      "title": "音乐关联的视频列表 - 实时接口",
+      "description": "**接口整体描述**\n音乐关联视频列表接口，当前按指定 `music_id` 和`region`获取使用该音频的视频，适合从内容侧看这段 BGM 被怎样演绎。它能直接把音乐和视频样本连起来，所以特别适合研究同一段声音被怎样包装成不同内容。\n\n**接口用途推荐**\n- 适合收集音乐爆款案例\n- 研究某个 BGM 带出来的视频风格\n- 找模仿样本、做热门声音拆解\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "音乐",
+      "source": "https://opendocs.echotik.live/realtime/music/video/list",
+      "parameters": [
+        {
+          "name": "music_id",
+          "required": true,
+          "description": "音乐ID",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "offset",
+          "required": false,
+          "description": "若返回结果中参数 has_more 的值为 1，则同时会提供游标值，用于获取下一组数据",
+          "type": "integer"
+        },
+        {
+          "name": "count",
+          "required": false,
+          "description": "",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/product/comment",
+      "method": "GET",
+      "title": "商品评论列表 - 实时接口",
+      "description": "**接口整体描述**\n这是实时商品评论接口，当前按 `product_id`、`region` 和 `offset` 获取评论页，重点是查看商品前台用户反馈，而不是经营汇总数据。返回不只是评论文本，还能看到购买身份、评分、图文晒单和 SKU 规格，所以它非常适合拿来理解用户到底买了什么、为什么满意或不满意。\n\n**接口用途推荐**\n- 适合做商品口碑分析\n- 痛点和卖点提炼\n- 差评好评研究、客服和详情页优化\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "商品",
+      "source": "https://opendocs.echotik.live/realtime/product/comment",
+      "parameters": [
+        {
+          "name": "product_id",
+          "required": true,
+          "description": "商品ID",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "可选地区有：\"US\", \"GB\", \"DE\", \"FR\", \"IT\", \"ID\", \"MY\", \"MX\", \"PH\", \"SG\", \"ES\", \"TH\", \"VN\", \"BR\", \"JP\", \"IE\"",
+          "type": "string"
+        },
+        {
+          "name": "offset",
+          "required": true,
+          "description": "offset从1开始，当接口返回的has_more=true时，下一次的offset参考接口返回中的next_cursor值",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/product/photo-search/page",
+      "method": "GET",
+      "title": "图片搜索商品分页数据 - 实时接口",
+      "description": "该接口关联“图片搜索商品 - 实时接口”一起使用，“图片搜索商品 - 实时接口”接口photo_search返回的image_uri和box_detection传入该接口中去进行分页获取更多数据",
+      "group": "搜索",
+      "source": "https://opendocs.echotik.live/realtime/product/photo-search/page",
+      "parameters": [
+        {
+          "name": "region",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "photo_search_image_uri",
+          "required": true,
+          "description": "填入“图片搜索商品”结果photo_search中的image_uri字段",
+          "type": "string"
+        },
+        {
+          "name": "photo_search_box_detection",
+          "required": true,
+          "description": "填入“图片搜索商品”结果photo_search中的box_detection字段",
+          "type": "string"
+        },
+        {
+          "name": "offset",
+          "required": false,
+          "description": "分页偏移量，默认0",
+          "type": "string"
+        },
+        {
+          "name": "count",
+          "required": false,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "sk",
+          "required": false,
+          "description": "关键词，会影响返回结果，该sk会跟商品名称进行匹配",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/product/search",
+      "method": "GET",
+      "title": "商品搜索 - 实时接口",
+      "description": "**接口整体描述**\n这是实时商品搜索接口，当前按关键词 `sk`、`region`、价格带 `price_range`、是否直播和 COD 条件筛选商品，说明它既能关键词搜品，也能结合商业过滤条件做精细搜索。返回看起来更像完整商城搜索页数据，除了商品结果本身，还带有筛选、翻页和搜索状态信息，它很适合做实时商品供给扫描和搜索结果研究。\n\n**接口用途推荐**\n- 适合做实时选品\n- 价格带扫描\n- 商品供给调研、找某市场某关键词下的在售商品样本\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）\n- 商品数据在data.body.sections[0].items中进行获取， 搜索接口不会返回商品的全部数据，可以在本次获取product_id后再进行商品详情检索",
+      "group": "搜索",
+      "source": "https://opendocs.echotik.live/realtime/product/search",
+      "parameters": [
+        {
+          "name": "sk",
+          "required": true,
+          "description": "搜索关键词",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "地区代码，目前只支持：GB, ID, IE, US, DE, JP, IT, FR, MY, MX, ES, BR, SG, TH, PH, VN",
+          "type": "string"
+        },
+        {
+          "name": "sort_type",
+          "required": false,
+          "description": "排序类型。 1=PRICE_ASC、2=PRICE_DESC、3=BEST_SELLERS、4=RELEVANCE",
+          "type": "string"
+        },
+        {
+          "name": "price_range",
+          "required": false,
+          "description": "价格范围筛选，例如输入：0,100",
+          "type": "string"
+        },
+        {
+          "name": "live",
+          "required": false,
+          "description": "展示直播商品， 0=否，1=是",
+          "type": "string"
+        },
+        {
+          "name": "cod",
+          "required": false,
+          "description": "展示支持货到付款的商品， 0=否，1=是",
+          "type": "string"
+        },
+        {
+          "name": "count",
+          "required": false,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "offset",
+          "required": false,
+          "description": "",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/seller/product/list",
+      "method": "GET",
+      "title": "店铺商品列表 - 实时接口",
+      "description": "**接口整体描述**\n这是实时卖家商品列表接口，当前按 `seller_id` 和`region`抓店铺货盘，结果更接近店铺前台货架，能看到商品标题、价格、折扣、封面和购买动作信息，它特别适合做实时盘货，而不是做深度经营分析。\n\n**接口用途推荐**\n- 适合做实时盘货\n- 看店铺当前在卖什么\n- 店铺商品结构研究、给招商和代运营前期摸底使用\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "店铺",
+      "source": "https://opendocs.echotik.live/realtime/seller/product/list",
+      "parameters": [
+        {
+          "name": "seller_id",
+          "required": true,
+          "description": "店铺ID",
+          "type": "string"
+        },
+        {
+          "name": "offset",
+          "required": false,
+          "description": "分页参数，第一次可不传填空， 当返回的has_more=true时，下一次分页使用next_scroll_param",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "可支持地区：\"US\", \"GB\", \"DE\", \"FR\", \"IT\", \"ID\", \"MY\", \"MX\", \"PH\", \"SG\", \"ES\", \"TH\", \"VN\", \"BR\", \"JP\", \"IE\"",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/sticker/detail",
+      "method": "GET",
+      "title": "特效详情 - 实时接口",
+      "description": "**接口整体描述**\n这是单个贴纸/特效的实时详情接口，通过明确的 `sticker_id` 拉一个具体贴纸实体，目标是查看它本身的元数据和热度表现。返回聚焦在贴纸本身的资料与使用状态，一个特效实体页，所以适合先确认这个贴纸是什么、是否活跃，再决定要不要继续追它的视频样本。\n\n**接口用途推荐**\n- 适合做特效素材管理\n- 跟踪某个贴纸是否在起量\n- 判断某个贴纸值不值得跟拍、给创意团队找特效方向\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "音乐",
+      "source": "https://opendocs.echotik.live/realtime/sticker/detail",
+      "parameters": [
+        {
+          "name": "sticker_id",
+          "required": true,
+          "description": "特效ID",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/sticker/video/list",
+      "method": "GET",
+      "title": "特效关联的视频列表 - 实时接口",
+      "description": "**接口整体描述**\n这是贴纸关联视频列表接口，按 `sticker_id` 和 `region` 获取使用该特效的视频样本，可直接看到这个贴纸在内容里的实际应用。这次结果里可以直接看到使用该贴纸的视频样本，这个接口更像“特效案例库”，适合看这个贴纸被谁用、怎么用、用在什么内容上。\n\n**接口用途推荐**\n- 适合做贴纸使用案例收集\n- 研究某个特效主要被什么类型账号和视频使用、判断特效内容风格和潜在热点\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "音乐",
+      "source": "https://opendocs.echotik.live/realtime/sticker/video/list",
+      "parameters": [
+        {
+          "name": "sticker_id",
+          "required": true,
+          "description": "特效ID",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "offset",
+          "required": false,
+          "description": "如果返回结果中参数 has_more 的值为 1，则同时会提供游标值，用于获取下一组数据",
+          "type": "integer"
+        },
+        {
+          "name": "count",
+          "required": false,
+          "description": "",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/suggested/users",
+      "method": "GET",
+      "title": "关键词获取建议用户 - 实时接口",
+      "description": "**接口整体描述**\n这是按关键词获取建议用户的接口，当前通过 `keyword`、`region`、`count` 找平台建议的相关账号，偏账号推荐而不是严格搜索排名。结果是平台根据关键词推荐的一组账号样本，返回风格偏“建议关注对象”，很适合快速摸出某类内容常见的账号池。\n\n**接口用途推荐**\n- 适合做达人发现\n- 关键词相关账号池扩充\n- 找某种内容风格的账号样本、给商务团队做达人初筛\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "数据洞察",
+      "source": "https://opendocs.echotik.live/realtime/suggested/users",
+      "parameters": [
+        {
+          "name": "keyword",
+          "required": true,
+          "description": "达人username或nickname",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "count",
+          "required": false,
+          "description": "",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/top/search",
+      "method": "GET",
+      "title": "顶部搜索结果 - 实时接口",
+      "description": "**接口整体描述**\n这是实时顶部搜索结果接口，通过 `keyword`、`region`、`sort_type`、`publish_time` 获取搜索场景里的头部结果，带有明确的关键词检索意图和排序设定。结果是搜索页头部内容集合，能看到被关键词命中的核心视频或实体，适合用来理解一个词在 TikTok 搜索里会把用户带向什么方向。\n\n**接口用途推荐**\n- 适合做 TikTok 搜索位调研\n- 看一个关键词在搜索场景下最容易出现什么内容、分析搜索竞争格局，以及给 SEO/内容团队做关键词研究\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "搜索",
+      "source": "https://opendocs.echotik.live/realtime/top/search",
+      "parameters": [
+        {
+          "name": "keyword",
+          "required": true,
+          "description": "搜索关键词",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "sort_type",
+          "required": false,
+          "description": "可为空或取值如下：1 - 点赞最多，0 - 相关度优先",
+          "type": "integer"
+        },
+        {
+          "name": "publish_time",
+          "required": false,
+          "description": "发布日期筛选条件，可为空，或取以下数值之一：0 - 全部时间，1 - 昨日，7 - 本周，30 - 本月，90 - 近三个月，180 - 近六个月",
+          "type": "integer"
+        },
+        {
+          "name": "offset",
+          "required": false,
+          "description": "如果返回结果中参数 has_more 的值为 1，那么同时会附带游标值，用于获取下一组数据",
+          "type": "integer"
+        },
+        {
+          "name": "count",
+          "required": false,
+          "description": "",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/trending/hashtag",
+      "method": "GET",
+      "title": "热门Hashtag - 实时接口",
+      "description": "**接口整体描述**\n这是实时 hashtag 热榜接口，入参是 `region`、`offset`、`count`，说明它面向指定市场拉取当前榜单页，而不是做模糊搜索。它给的不是单独一行 hashtag 名单，而是“热门标签 + 每个标签下代表视频样本”的组合结果，你不仅能知道什么标签在热，还能顺手看到这个标签下正在跑出来的内容长什么样。\n\n**接口用途推荐**\n- 适合做热点标签监控\n- 内容选题\n- 做美国站当下热门标签池、看平台当前话题流量集中在哪里，也适合给内容团队做追热点参考\n\n**注意事项**\n- 榜单和趋势类返回波动很快，更适合连续轮询或定时快照，不建议把单次结果视为长期稳定结论\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "视频",
+      "source": "https://opendocs.echotik.live/realtime/trending/hashtag",
+      "parameters": [
+        {
+          "name": "region",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "offset",
+          "required": false,
+          "description": "分页参数，不填默认是0，若返回结果中参数 has_more 的值为 1，则同时会提供游标 cursor，用于获取下一组数据",
+          "type": "integer"
+        },
+        {
+          "name": "count",
+          "required": false,
+          "description": "一次获取的数量",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/trending/keyword/ranking",
+      "method": "GET",
+      "title": "趋势搜索词榜单 - 实时接口",
+      "description": "**接口整体描述**\n这是实时搜索关键词榜单接口，按 `tab` 和 `region` 拉榜单，重点反映的是用户正在搜索什么，而不是推荐流里在放什么。返回呈现的是搜索热词榜单本身，重点在“用户最近在搜什么”，适合拿来判断需求和兴趣入口，而不是内容消费结果。\n\n**接口用途推荐**\n- 适合做搜索趋势监控\n- 选题词库建设\n- 命名和 SEO 方向判断、看用户当前主动搜索的热点词\n\n**注意事项**\n- 榜单和趋势类返回波动很快，更适合连续轮询或定时快照，不建议把单次结果视为长期稳定结论\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "数据洞察",
+      "source": "https://opendocs.echotik.live/realtime/trending/keyword/ranking",
+      "parameters": [
+        {
+          "name": "tab",
+          "required": true,
+          "description": "筛选分类，可选值：all, Fashion, Food, Sports, Tourism, Gaming, Science",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "offset",
+          "required": false,
+          "description": "若返回结果中参数 has_more 的值为 1，则同时会携带游标值，用于获取下一组数据",
+          "type": "integer"
+        },
+        {
+          "name": "count",
+          "required": false,
+          "description": "",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/video/captions",
+      "method": "GET",
+      "title": "视频文案提取 - 实时数据",
+      "description": "**接口整体描述**\n这是视频字幕提取接口，当前按 `video_id` 提取字幕/口播文本，重点不是视频经营数据，而是把视频内容转成文字。返回就是一段完整的字幕文本，已经接近可以直接拿去读或二次处理的内容形式，因此它的核心价值是把视频内容转写成可分析文字。\n\n**接口用途推荐**\n- 适合做脚本拆解\n- 字幕归档\n- 语言分析\n- 卖点提炼、AIGC 二次创作参考\n\n**注意事项**\n- 字幕提取结果受视频是否自带字幕、音质和语音识别质量影响，并不是每条视频都能返回完整文本\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "视频",
+      "source": "https://opendocs.echotik.live/realtime/video/captions",
+      "parameters": [
+        {
+          "name": "video_id",
+          "required": true,
+          "description": "",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/video/comment_keywords_insight",
+      "method": "GET",
+      "title": "视频评论词分析 - 实时接口",
+      "description": "**接口整体描述**\n这是视频评论关键词洞察接口，当前按 `video_id` 聚合评论区高频词和话题点，重点不是原始评论流，而是评论摘要洞察。结果不是简单给高频词，而是按关键词把代表性评论一起归在下面，它能帮助你快速读懂评论区围绕哪些具体问题或卖点在讨论。\n\n**接口用途推荐**\n- 适合做评论词云\n- 用户需求和情绪提炼\n- 爆款视频评论总结、给内容团队做反馈汇总\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "社交媒体分析",
+      "source": "https://opendocs.echotik.live/realtime/video/comment_keywords_insight",
+      "parameters": [
+        {
+          "name": "video_id",
+          "required": true,
+          "description": "视频ID",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/video/comments",
+      "method": "GET",
+      "title": "视频评论列表 - 实时接口",
+      "description": "**接口整体描述**\n这是实时视频评论列表接口，当前按 `video_id` 获取第一页评论，重点是看观众对单条视频的即时反馈。返回能看到具体评论内容、评论热度、作者互动和楼中楼数量，所以它很适合做视频反馈研究，而不是只看评论数这种粗指标。\n\n**接口用途推荐**\n- 适合做评论区选题\n- 受众情绪分析\n- 爆款视频反馈研究、提炼用户需求和讨论点\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "视频",
+      "source": "https://opendocs.echotik.live/realtime/video/comments",
+      "parameters": [
+        {
+          "name": "video_id",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "offset",
+          "required": false,
+          "description": "当has_more=1时，使用cursor进行下一次分页",
+          "type": "string"
+        },
+        {
+          "name": "count",
+          "required": false,
+          "description": "",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/video/comments/replies",
+      "method": "GET",
+      "title": "视频评论回复列表 - 实时接口",
+      "description": "**接口整体描述**\n这是视频评论回复列表接口，当前需要同时提供 `video_id` 与主评论 `comment_id`，目的是补完整个评论楼层下的二级讨论。结果集中在单条主评论下面的回复链，适合看某个具体讨论点是如何被继续展开的，特别适合做线程级舆情观察。\n\n**接口用途推荐**\n- 适合做深层评论语义分析\n- 争议线程观察\n- 评论链路还原、做更细的社区反馈研究\n\n**注意事项**\n- 该接口依赖准确的 `comment_id`，如果主评论被删除或分页变化，二级回复结果会跟着变化\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "视频",
+      "source": "https://opendocs.echotik.live/realtime/video/comments/replies",
+      "parameters": [
+        {
+          "name": "video_id",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "comment_id",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "offset",
+          "required": false,
+          "description": "当has_more=1时，使用cursor进行下一次分页",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/video/detail",
+      "method": "GET",
+      "title": "视频详情 - 实时接口",
+      "description": "**接口整体描述**\n这是实时单视频详情接口，当前通过 `video_id` 直接抓一条公开视频当前前台状态，适合看内容、互动和挂链上下文。这次返回本质上是一条视频的完整前台详情页，除了视频本身，还带作者、音乐、挂链锚点和权限状态，所以很适合做单视频深拆。\n\n**接口用途推荐**\n- 适合做单视频拆解\n- 爆款监控\n- 挂车视频研究、内容复盘，以及给视频案例库补实时数据\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "视频",
+      "source": "https://opendocs.echotik.live/realtime/video/detail",
+      "parameters": [
+        {
+          "name": "video_id",
+          "required": true,
+          "description": "",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/video/download-url",
+      "method": "GET",
+      "title": "获取视频下载地址 - 实时接口",
+      "description": "**接口整体描述**\n这是一个实时视频链接解析接口，入参只需要传 TikTok 视频 URL，支持 web 端视频地址和 app 端分享短链两种格式。它返回的重点不是视频互动数据，而是把一个公开视频链接直接解析成可用的资源结果，包括视频封面、播放地址、普通下载地址、无水印下载地址、动态封面地址，以及对应的 `video_id`，所以本质上是一个“视频资源提取接口”。\n\n**接口用途推荐**\n- 适合把 TikTok 视频链接快速转换成可用的下载地址\n- 获取视频无水印素材\n- 抽取封面图和动态封面\n- 从分享链接反查标准 `video_id`\n- 给素材下载、内容归档、视频搬运分析、投放素材收集这类流程做前置解析\n这个接口的价值在于输入非常轻，只要拿到公开视频链接，就能快速拿到后续处理最常用的资源地址\n\n**注意事项**\n- 需要传入标准的 TikTok web 视频链接或 app 分享短链 或者直接传入`video_id`\n- 返回的播放地址、下载地址这类资源链接通常具有时效性，不适合长期缓存后反复使用\n- 该接口更适合做资源解析，不适合拿来分析视频表现、互动或趋势\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "视频",
+      "source": "https://opendocs.echotik.live/realtime/video/downloadurl",
+      "parameters": [
+        {
+          "name": "url",
+          "required": true,
+          "description": "可支持 https://vt.tiktok.com/ZShA8F5de/ 或https://www.tiktok.com/@soraryx_/video/7377855725290179873 或者直接传入video_id",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/video/recommended",
+      "method": "GET",
+      "title": "推荐视频流 - 实时接口",
+      "description": "**接口整体描述**\n这是实时推荐流视频抽样接口，当前用 `pull_type` 和 `region` 拉取推荐流样本，重点不是关键词检索，而是观察平台此刻正在推荐什么内容。返回里能直接看到推荐流视频本体、作者资料、文案、封面和互动上下文，它非常接近真实推荐页抽样，更适合观察平台当前在推什么，而不是做精确检索。\n\n**接口用途推荐**\n- 适合做推荐流监控\n- 爆款内容抽样\n- 看美国站当下平台偏好的内容形式、给素材团队做最近推荐流参考\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "视频",
+      "source": "https://opendocs.echotik.live/realtime/video/recommended",
+      "parameters": [
+        {
+          "name": "pull_type",
+          "required": false,
+          "description": "加载数据的类型，0=初始加载，2=加载更多，8=重新加载， 默认是0",
+          "type": "integer"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/video/search",
+      "method": "GET",
+      "title": "视频搜索 - 实时接口",
+      "description": "**接口整体描述**\n这是实时视频搜索接口，当前通过关键词、地区、发布时间过滤和排序方式去找内容样本，重点在关键词命中的视频集合。返回是关键词命中的视频样本集合，更适合快速找到某个主题下正在流通的内容，而不是观察推荐逻辑。\n\n**接口用途推荐**\n- 适合做关键词内容调研\n- 竞品视频搜索\n- 赛道素材采样、找某个主题下的内容案例\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）",
+      "group": "搜索",
+      "source": "https://opendocs.echotik.live/realtime/video/search",
+      "parameters": [
+        {
+          "name": "keyword",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "required": true,
+          "description": "",
+          "type": "string"
+        },
+        {
+          "name": "publish_time",
+          "required": false,
+          "description": "发布时间过滤， 0=全部，1=昨日，7=最近7天，30=最近30日，90=最近3个月，180=最近6个月",
+          "type": "string"
+        },
+        {
+          "name": "sort_type",
+          "required": false,
+          "description": "排序类型，0=搜索相关性排序，1=最多点赞",
+          "type": "string"
+        },
+        {
+          "name": "offset",
+          "required": false,
+          "description": "分页字段，当has_more=1时，使用cursor进行下一次分页",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "path": "/realtime/video/trend_insight",
+      "method": "GET",
+      "title": "视频近14日互动趋势 - 实时接口",
+      "description": "**接口整体描述**\n这是视频趋势洞察接口，当前按单条 `video_id` 获取趋势分析结果，重点是解释这条视频近期的起量节奏和表现变化。返回已经帮你把视频当前表现、14 天互动曲线和一句总结性洞察放在一起，它是一个轻量版视频复盘报告。\n\n**接口用途推荐**\n- 适合做视频生命周期分析\n- 爆款判定\n- 复盘视频什么时候开始放量、给投放或内容团队看趋势\n\n**注意事项**\n- 实时接口可能遇到风控，如果接口返回code=500，请继续重试（code=500不消耗当前调用额度）\n",
+      "group": "社交媒体分析",
+      "source": "https://opendocs.echotik.live/realtime/video/trend_insight",
+      "parameters": [
+        {
+          "name": "video_id",
+          "required": true,
+          "description": "视频ID",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "failures": []
+}

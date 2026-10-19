@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.env
+.env.local
+.local/
+coverage/
+*.log
+.DS_Store
+research/**/*.mhtml
+research/**/*.zip
+research/**/*.gz
+research/clipcat-rea-*/capture-*.json
+research/clipcat-rea-*/process-*.json

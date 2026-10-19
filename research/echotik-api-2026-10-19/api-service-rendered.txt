@@ -1,0 +1,306 @@
+- banner:
+  - navigation:
+    - link "logo":
+      - /url: /en
+      - img "logo"
+    - navigation "Main":
+      - list:
+        - link "Home":
+          - /url: /en
+        - button "Product":
+          - text: Product
+        - link "Pricing":
+          - /url: https://echotik.live/pricing/annually
+        - button "Resources":
+          - text: Resources
+        - link "Affiliate program":
+          - /url: /en/affiliate-program
+        - link "Data API":
+          - /url: /en/api-service
+    - combobox:
+      - generic: English
+    - link "Go To Dashboard":
+      - /url: /board
+      - button "Go To Dashboard"
+- main:
+  - generic: The Leading TikTok Data API Platform
+  - heading "TikTok Data API" [level=1]
+  - paragraph: Professional API platform built on EchoTik's data infrastructure, covering all platform data and TikTok real-time endpoints
+  - paragraph: E-commerce data, account analytics, content trends, social media analysis, hot rankings, data insights, audience profiles — all accessible via API. Plus direct access to TikTok live data including short videos, user info, and engagement metrics like likes, comments, and shares
+  - link "Free Trial":
+    - /url: https://echotik.live/platform/dashboard
+    - button "Free Trial"
+  - link "Consulting / Custom Plans":
+    - /url: mailto:massif@echotik.live
+    - button "Consulting / Custom Plans"
+  - paragraph: Get free 100 requests for tests.
+  - generic: 10,000+
+  - generic: Total Users
+  - generic: 312ms
+  - generic: Avg Response
+  - generic: 10M+
+  - generic: Daily API Calls
+  - generic: 80+
+  - generic: API Endpoints
+  - heading "Full Data Coverage" [level=2]
+  - paragraph: Every dimension of the TikTok data ecosystem, covered by a single API
+  - heading "Creator Data" [level=3]
+  - paragraph: GMV performance · audience profiles · engagement trends · follower count · video & live lists · rankings · creator milestones
+  - heading "Video Data" [level=3]
+  - paragraph: Likes · views · engagement trends · comment list · top commerce videos · ranking analysis · caption extraction · comment word analysis
+  - heading "Live Stream Data" [level=3]
+  - paragraph: Real-time live details · total viewers · peak viewers · follower growth during live · live GMV
+  - heading "Product Data" [level=3]
+  - paragraph: Product details · price trends · associated creators/videos/lives · comment analysis · ranking analysis · category insights
+  - heading "Shop Data" [level=3]
+  - paragraph: Shop details · sales trends · associated creators/videos/lives · ranking analysis · product list
+  - heading "Market Trends" [level=3]
+  - paragraph: Category trends · viral topics · breakout patterns · ad insights · keyword insights · trending music
+  - heading "Why Everyone Chooses EchoTik API" [level=2]
+  - paragraph: Built for scale, reliability, and developer experience.
+  - heading "Real-time + Historical Data" [level=3]
+  - paragraph: Powered by EchoTik, stream real-time data alongside massive historical archives — track trends up to 1,000 days back for richer analytics, model training, and market intelligence
+  - heading "Full Data Coverage" [level=3]
+  - paragraph: Comprehensive coverage across every dimension of the TikTok e-commerce ecosystem
+  - generic: Creators
+  - generic: Videos
+  - generic: Live Streams
+  - generic: Products
+  - generic: Comments
+  - generic: Shops
+  - generic: Music
+  - generic: Keywords
+  - generic: Ads
+  - generic: Topics
+  - heading "Ready to Use" [level=3]
+  - paragraph: Complete developer docs and code examples included. No complex setup required — follow the guide and make your first API call in minutes
+  - heading "Fast Response" [level=3]
+  - paragraph: High-performance backend with powerful concurrent request handling. Low-latency responses keep your workflows smooth and uninterrupted at any scale
+  - heading "Cost Effective" [level=3]
+  - paragraph: Flexible plans for every scale. Annual billing brings per-request cost as low as ¥0.001 — significantly more affordable than comparable data services on the market
+  - heading "1-on-1 Support" [level=3]
+  - paragraph: Direct developer support. Fast response times. Dedicated assistance when you need to scale
+  - heading "Get Started in 3 Steps" [level=2]
+  - generic: "01"
+  - generic: "1"
+  - heading "Create Account" [level=3]
+  - paragraph: Sign up for free and instantly receive 100 test API calls
+  - generic: "02"
+  - generic: "2"
+  - heading "Get Your API Key" [level=3]
+  - paragraph: Generate an API key in the dashboard and explore our full documentation
+  - generic: "03"
+  - generic: "3"
+  - heading "Start Calling" [level=3]
+  - paragraph: Call the API and get TikTok e-commerce data in real time to power your business
+  - link "Free Trial →":
+    - /url: https://echotik.live/platform/dashboard
+    - text: Free Trial
+    - generic: →
+  - heading "Built for Who?" [level=2]
+  - heading "E-commerce Merchants" [level=3]
+  - paragraph: Optimize your TikTok shop performance with real-time products & shops sales data and competitor insights.
+  - heading "Influencer Agencies" [level=3]
+  - paragraph: Streamline your creator management with comprehensive TikTok analytics and automated outreach tools, enabling data-driven influencer marketing at scale.
+  - heading "Global Brands & Retailers" [level=3]
+  - paragraph: Track your brand performance and monitor competitor activities on TikTok.
+  - heading "Consulting Companies" [level=3]
+  - paragraph: Access granular TikTok e-commerce insights and market intelligence to deliver actionable recommendations backed by real data.
+  - heading "Investment Firms" [level=3]
+  - paragraph: Make data-driven investment decisions with historical TikTok e-commerce metrics based on at least two years of historical data, market trends, and competitive intelligence across brands and categories.
+  - heading "AIGC Startups/Teams" [level=3]
+  - paragraph: Supercharge your AI model training with massive video datasets and rich metadata through our high-performance API infrastructure.
+  - heading "Pricing Plans" [level=2]
+  - heading "Free" [level=3]
+  - paragraph: 3-Day Free Trial with 50 Requests
+  - generic: $0
+  - generic: /Month
+  - paragraph: $0
+  - list:
+    - generic: 50 requests / can only be claimed once
+    - generic: Product Details/Lists/Rankings/Trends/Reviews/Association Data/Real-time Data
+    - generic: Shop Details/Lists/Rankings/Trends/Association Data
+    - generic: Influencer Details/Lists/Rankings/Trends/Association Data/Followers/Followings/Real-time Data
+    - generic: Video Details/Lists/Rankings/Trends/Hashtag/Association Data/Real-time Data
+    - generic: Live Stream Details
+    - generic: Search Influencer/Music/Video/Live/Hashtag/Product Images
+    - generic: Social media analysis
+    - generic: Batch image download
+  - button "Free Trial"
+  - heading "Basic" [level=3]
+  - paragraph: 100,000 Requests per month
+  - generic: $139
+  - generic: /Month
+  - paragraph: $139 /month
+  - list:
+    - generic: 100,000 requests per month
+    - generic: Product Details/Lists/Rankings/Trends/Reviews/Association Data/Real-time Data
+    - generic: Shop Details/Lists/Rankings/Trends/Association Data
+    - generic: Influencer Details/Lists/Rankings/Trends/Association Data/Followers/Followings/Real-time Data
+    - generic: Video Details/Lists/Rankings/Trends/Hashtag/Association Data/Real-time Data
+    - generic: Live Stream Details
+    - generic: Search Influencer/Music/Video/Live/Hashtag/Product Images
+    - generic: Social media analysis
+    - generic: Batch image download
+    - generic: Email Support
+  - button "Take a look"
+  - generic: Most Popular
+  - heading "Pro" [level=3]
+  - paragraph: 500,000 Requests per month
+  - generic: $694
+  - generic: $659
+  - generic: /Month
+  - generic: "-5%"
+  - paragraph: $659 /month
+  - list:
+    - generic: 500,000 requests per month
+    - generic: Product Details/Lists/Rankings/Trends/Reviews/Association Data/Real-time Data
+    - generic: Shop Details/Lists/Rankings/Trends/Association Data
+    - generic: Influencer Details/Lists/Rankings/Trends/Association Data/Followers/Followings/Real-time Data
+    - generic: Video Details/Lists/Rankings/Trends/Hashtag/Association Data/Real-time Data
+    - generic: Live Stream Details
+    - generic: Search Influencer/Music/Video/Live/Hashtag/Product Images
+    - generic: Social media analysis
+    - generic: Batch image download
+    - generic: One-on-One Support
+    - generic: Priority Response
+    - generic: Dedicated Account Manager
+  - button "Take a look"
+  - heading "Custom" [level=3]
+  - paragraph: Annual billing · Starting from 100K requests/year
+  - paragraph: Volume discounts available
+  - paragraph: As low as ¥1 / 1K calls
+  - list:
+    - generic: Starting from 100,000 requests per year
+    - generic: Product Details/Lists/Rankings/Trends/Reviews/Association Data/Real-time Data
+    - generic: Shop Details/Lists/Rankings/Trends/Association Data
+    - generic: Influencer Details/Lists/Rankings/Trends/Association Data/Followers/Followings/Real-time Data
+    - generic: Video Details/Lists/Rankings/Trends/Hashtag/Association Data/Real-time Data
+    - generic: Live Stream Details
+    - generic: Search Influencer/Music/Video/Live/Hashtag/Product Images
+    - generic: Social media analysis
+    - generic: Batch image download
+    - generic: One-on-One Support
+    - generic: Priority Response
+    - generic: Dedicated Account Manager
+  - button "Contact Us"
+  - heading "FAQ" [level=2]
+  - heading "What happens if a request fails?" [level=3]:
+    - button "What happens if a request fails?":
+      - text: What happens if a request fails?
+  - heading "How fresh is your data?" [level=3]:
+    - button "How fresh is your data?":
+      - text: How fresh is your data?
+  - heading "What are the API rate limits?" [level=3]:
+    - button "What are the API rate limits?" [expanded] [active]:
+      - text: What are the API rate limits?
+  - region "What are the API rate limits?":
+    - generic: "Rate limits vary by plan. Free tier: 10 req/s, Pro: 30 req/s, Enterprise: custom limits available."
+  - heading "Do you provide technical support?" [level=3]:
+    - button "Do you provide technical support?":
+      - text: Do you provide technical support?
+  - heading "How do I get started?" [level=3]:
+    - button "How do I get started?":
+      - text: How do I get started?
+  - heading "Do you offer custom solutions?" [level=3]:
+    - button "Do you offer custom solutions?":
+      - text: Do you offer custom solutions?
+  - heading "Do you offer one-time data delivery?" [level=3]:
+    - button "Do you offer one-time data delivery?":
+      - text: Do you offer one-time data delivery?
+  - heading "Ready to get started?" [level=2]
+  - paragraph: Sign up now and get 100 free API calls to test our service.
+  - link "Free Trial":
+    - /url: https://echotik.live/platform/dashboard
+  - link "API Docs":
+    - /url: https://opendocs.echotik.live/en
+- img "logo"
+- generic: About Us
+- img "Enterprise Logo"
+- generic: EchoTik.live is a TikTok analytics tool and data platform. Our mission is "Discover TikTok e-commerce data with EchoTik". We help creators and brands find the best content, track target TikTok creators & videos, and compare them insightfully. We also help sellers explore potential hot products and make decisions on product selection in TikTok. EchoTik.live is built by a Singapore SaaS called The EchoSell Company. Its Data is securely stored in AWS server in the United States.
+- generic: Product matrix
+- link "More":
+  - /url: /en/products
+- link "EchoTik EchoTik Third-party data tool for TikTok, for product selection, influencer discovery, and live streaming viewing.":
+  - /url: https://echotik.live
+  - img "EchoTik"
+  - generic: EchoTik
+  - generic: Third-party data tool for TikTok, for product selection, influencer discovery, and live streaming viewing.
+- link "CreatOk CreatOk AI video analysis, replication, and creation.":
+  - /url: https://creatok.ai
+  - img "CreatOk"
+  - generic: CreatOk
+  - generic: AI video analysis, replication, and creation.
+- link "KeyAPI KeyAPI Social media data API service":
+  - /url: https://keyapi.ai
+  - img "KeyAPI"
+  - generic: KeyAPI
+  - generic: Social media data API service
+- generic: Guides
+- link "Home":
+  - /url: /en
+- link "Pricing":
+  - /url: https://echotik.live/pricing/annually
+- link "Report":
+  - /url: /en/reports
+- link "Alternatives & Guide":
+  - /url: /en/guides
+- link "TikTok E-commerce Analysis":
+  - /url: /en/features/e-commerce
+- link "Live Monitor":
+  - /url: /en/features/live-monitor
+- link "Browser Extension For TikTok":
+  - /url: /en/features/extension
+- link "TikTok Shop Pricing Calculator":
+  - /url: https://echotik.live/tool/calculator
+- link "Upgrade Log":
+  - /url: https://help.echotik.live/en/articles/6870452-echotik-upgrade-log
+- link "Help Center":
+  - /url: https://help.echotik.live/en/
+- link "Promotion Alliance":
+  - /url: /en/affiliate-program
+- link "Blog":
+  - /url: https://echotik.live/blog
+- link "EchoTik - EchoTik.live is a TikTok data tool. | Product Hunt":
+  - /url: https://www.producthunt.com/products/echotik
+  - img "EchoTik - EchoTik.live is a TikTok data tool. | Product Hunt"
+- generic: Contact Us
+- link "More":
+  - /url: /en/social-media
+- img "mailbox"
+- link "Mailbox":
+  - /url: mailto:support@echosell.com
+- img "facebook"
+- link "Facebook":
+  - /url: https://www.facebook.com/echotik
+- img "whatsapp"
+- link "WhatsApp":
+  - /url: https://chat.whatsapp.com/FmfhPcEqKJq40JeCrPlOhx
+- img "twitter"
+- link "Twitter":
+  - /url: https://twitter.com/EchosellM
+- img "discord"
+- link "Discord":
+  - /url: https://discord.gg/j5R55frXj4
+- img "image"
+- generic: WhatsApp
+- img "image"
+- generic: Join Group
+- img "image"
+- generic: Contact EchoTik
+- text: Copyright 2026
+- link "京ICP备2024093724号-1":
+  - /url: http://beian.miit.gov.cn
+- link "京ICP备2023013450号-3":
+  - /url: http://beian.miit.gov.cn
+- link "Privacy Policy":
+  - /url: https://echotik.live/privacy-policy.html
+- link "Best Selling Products":
+  - /url: /en/sitemap/products/best-selling-all-products-in-indonesia-on-tiktok/1
+- link "Hot Influencers":
+  - /url: /en/sitemap/influencers/hot-all-influencers-in-indonesia-on-tiktok/1
+- link "resumemakeroffer":
+  - /url: https://www.resumemakeroffer.com
+- link "EchoTik":
+  - /url: https://echotik.live
+- alert
