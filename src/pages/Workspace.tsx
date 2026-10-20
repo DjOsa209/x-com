@@ -81,6 +81,11 @@ export function Workspace() {
         setSource(s.sourceUrl);
         setMode("replicate");
       }
+      if (s.characterId) setCharacter(s.characterId);
+      if (s.videoAsset) {
+        setVideoAsset(s.videoAsset);
+        setMode("replicate");
+      }
       if (s.mode) setMode(s.mode);
       if (s.asset) setAssets([s.asset]);
       if (s.draft) {

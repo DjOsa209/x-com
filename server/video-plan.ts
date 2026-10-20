@@ -408,6 +408,8 @@ export function pipelineView(provider: Doc) {
       status: s.status,
       asset: s.asset,
       error: s.error,
+      prompt: s.prompt,
+      replaced: !!s.replaced,
     })),
   };
 }

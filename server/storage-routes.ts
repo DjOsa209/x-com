@@ -12,17 +12,14 @@ import {
   objectHead,
   firstBytes,
   objectPromote,
+  materialize,
+  objectDelete,
 } from "./storage.ts";
 import { AppError } from "./errors.ts";
+import { validateAudioPath } from "./audio-validation.ts";
+import { mediaExtensions, validMediaHeader } from "./media-types.ts";
 export const storageRoutes = Router();
-const mimes: Doc = {
-  "image/png": ".png",
-  "image/jpeg": ".jpg",
-  "image/webp": ".webp",
-  "video/mp4": ".mp4",
-  "video/quicktime": ".mov",
-  "video/webm": ".webm",
-};
+const mimes = mediaExtensions;
 storageRoutes.get("/storage", async (_req, res) =>
   res.json(await storageUsage()),
 );
@@ -39,6 +36,11 @@ storageRoutes.post("/storage/presign", async (req, res) => {
         "video/mp4",
         "video/quicktime",
         "video/webm",
+        "audio/mpeg",
+        "audio/wav",
+        "audio/x-wav",
+        "audio/mp4",
+        "audio/x-m4a",
       ]),
       bytes: z
         .number()
@@ -85,19 +87,7 @@ storageRoutes.post("/storage/confirm", async (req, res) => {
     throw new AppError(400, "远端文件大小或类型与申请不一致");
   const b = await firstBytes(pending.key, head.ETag),
     m = pending.mime;
-  const valid =
-    (m === "image/png" &&
-      b
-        .subarray(0, 8)
-        .equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]))) ||
-    (m === "image/jpeg" && b[0] === 255 && b[1] === 216 && b[2] === 255) ||
-    (m === "image/webp" &&
-      b.toString("ascii", 0, 4) === "RIFF" &&
-      b.toString("ascii", 8, 12) === "WEBP") ||
-    (["video/mp4", "video/quicktime"].includes(m) &&
-      b.toString("ascii", 4, 8) === "ftyp") ||
-    (m === "video/webm" &&
-      b.subarray(0, 4).equals(Buffer.from([26, 69, 223, 163])));
+  const valid = validMediaHeader(b, m);
   if (!valid) throw new AppError(400, "上传文件内容与媒体类型不匹配");
   const asset = await withStorageLock(async () => {
     const existing = await get(pending.assetId, "asset");
@@ -108,11 +98,31 @@ storageRoutes.post("/storage/confirm", async (req, res) => {
       pending.filename,
       head.ETag,
     );
+    let audioInfo = {};
+    if (m.startsWith("audio/")) {
+      try {
+        audioInfo = await validateAudioPath(
+          await materialize({
+            filename: pending.filename,
+            storageKey: finalKey,
+            bytes: pending.bytes,
+          }),
+        );
+      } catch (e) {
+        await objectDelete(finalKey).catch(() => {});
+        throw e;
+      }
+    }
     return put(
       "asset",
       {
+        ...audioInfo,
         name: pending.name,
-        type: m.startsWith("image/") ? "image" : "video",
+        type: m.startsWith("image/")
+          ? "image"
+          : m.startsWith("audio/")
+            ? "audio"
+            : "video",
         mime: m,
         bytes: pending.bytes,
         filename: pending.filename,

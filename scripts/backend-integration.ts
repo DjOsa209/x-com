@@ -528,8 +528,13 @@ try {
   );
   await reconcileCredits();
   check(
-    (await owner.req("/api/projects/" + pid + "/retry", "POST", {})).data
-      .status === "processing",
+    (
+      await owner.req("/api/projects/" + pid + "/retry", "POST", {
+        confirm: true,
+        fingerprint: (await owner.req("/api/projects/" + pid + "/retry-quote"))
+          .data.fingerprint,
+      })
+    ).data.status === "processing",
     "cancelled render project resumes through new retry tasks",
   );
   // A partially successful batch retries only failed children.
@@ -544,11 +549,11 @@ try {
     [JSON.stringify(childIds), pid],
   );
   await reconcileProjects();
-  const retried = await owner.req(
-    "/api/projects/" + pid + "/retry",
-    "POST",
-    {},
-  );
+  const retried = await owner.req("/api/projects/" + pid + "/retry", "POST", {
+    confirm: true,
+    fingerprint: (await owner.req("/api/projects/" + pid + "/retry-quote")).data
+      .fingerprint,
+  });
   check(
     retried.data.status === "processing" &&
       retried.data.render_job_ids[0] === childIds[0] &&
@@ -760,6 +765,14 @@ try {
       "p-" + createHash("sha256").update(ws).digest("hex").slice(0, 30);
     await execute("DELETE FROM settings WHERE id=?", [settings]);
     for (const table of [
+      "operation_notifications",
+      "research_requests",
+      "research_budget_buckets",
+      "research_runs",
+      "content_metrics",
+      "publications",
+      "operation_settings",
+      "asset_references",
       "project_confirmations",
       "projects",
       "automations",

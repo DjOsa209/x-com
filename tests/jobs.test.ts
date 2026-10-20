@@ -70,6 +70,16 @@ vi.mock("../server/db.ts", () => ({
     ...body,
   })),
 }));
+vi.mock("../server/asset-references.ts", () => ({
+  replaceAssetReferences: vi.fn(async () => {}),
+}));
+vi.mock("../server/research-budget.ts", () => ({
+  withResearchRun: async (_job: any, run: () => Promise<any>) => run(),
+}));
+vi.mock("../server/research-domain.ts", () => ({
+  ingestCase: vi.fn(async () => ({ id: "case-record" })),
+  ingestOpportunity: vi.fn(async () => ({ id: "opportunity-record" })),
+}));
 vi.mock("../server/config.ts", () => ({
   config: vi.fn(async () => ({
     GEMINI_API_KEY: "test-only",
@@ -82,7 +92,7 @@ vi.mock("../server/providers.ts", () => ({
   aiJson: vi.fn(async () => ({
     title: "Adapted product video",
     shootingPrompt: "Use our actual product in a new scene",
-    scenes: [],
+    scenes: [{ visual: "Show actual product", voiceover: "Product demo" }],
   })),
   falInput: vi.fn(async () => ({
     model: "video-model",

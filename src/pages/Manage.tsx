@@ -1,6 +1,8 @@
+import { RetryAction } from "../RetryConfirmation";
+import { PageNavigation } from "../components";
 import { PipelineProgress, strategyNames } from "../VideoPipeline";
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   FolderOpen,
   Plus,
@@ -266,14 +268,18 @@ export function Assets() {
 function CharacterEditor({
   onClose,
   onSaved,
+  initial,
 }: {
   onClose: () => void;
   onSaved: () => void;
+  initial?: Doc;
 }) {
   const { toast } = useApp();
-  const [name, setName] = useState(""),
-    [description, setDescription] = useState(""),
-    [image, setImage] = useState<Doc | null>(null),
+  const [name, setName] = useState(initial?.name || ""),
+    [description, setDescription] = useState(initial?.description || ""),
+    [image, setImage] = useState<Doc | null>(
+      initial ? { id: initial.assetId, url: initial.imageUrl } : null,
+    ),
     [video, setVideo] = useState<Doc | null>(null),
     [picker, setPicker] = useState(""),
     [duration, setDuration] = useState(0),
@@ -281,7 +287,11 @@ function CharacterEditor({
     [busy, setBusy] = useState(false);
   const ref = useRef<HTMLVideoElement>(null);
   return (
-    <Modal title="创建可复用角色" onClose={onClose} wide>
+    <Modal
+      title={initial ? "编辑角色" : "创建可复用角色"}
+      onClose={onClose}
+      wide
+    >
       <div className="character-editor">
         <div className="character-source">
           {image ? (
@@ -397,14 +407,20 @@ function CharacterEditor({
             onClick={async () => {
               setBusy(true);
               try {
-                await save("character", {
+                const body = {
                   name,
                   description,
                   assetId: image!.id,
                   imageUrl: image!.url,
                   sourceVideoAssetId: video?.id,
                   frameTime: video ? time : undefined,
-                });
+                };
+                if (initial)
+                  await api(`/records/character/${initial.id}`, {
+                    method: "PATCH",
+                    body: JSON.stringify(body),
+                  });
+                else await save("character", body);
                 onSaved();
                 toast("角色已保存");
                 onClose();
@@ -436,7 +452,8 @@ function CharacterEditor({
 }
 export function Characters() {
   const { data, reload, error } = useData("/records/character");
-  const [adding, setAdding] = useState(false);
+  const [adding, setAdding] = useState(false),
+    [editing, setEditing] = useState<Doc | null>(null);
   const { toast } = useApp();
   return (
     <div className="page">
@@ -459,7 +476,8 @@ export function Characters() {
                 <h3>{c.name}</h3>
                 <p>{c.description || "角色参考图"}</p>
                 <div className="inline-actions">
-                  <Link className="button" to="/">
+                  <Button onClick={() => setEditing(c)}>编辑</Button>
+                  <Link className="button" to="/" state={{ characterId: c.id }}>
                     用于创作 <ArrowUpRight size={14} />
                   </Link>
                   <Button
@@ -492,9 +510,13 @@ export function Characters() {
           </Button>
         </Empty>
       )}
-      {adding && (
+      {(adding || editing) && (
         <CharacterEditor
-          onClose={() => setAdding(false)}
+          initial={editing || undefined}
+          onClose={() => {
+            setAdding(false);
+            setEditing(null);
+          }}
           onSaved={() => reload()}
         />
       )}
@@ -503,13 +525,34 @@ export function Characters() {
 }
 
 export function Tasks() {
-  const { data, reload, error } = useData("/jobs", 4000);
+  const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("all"),
     [kind, setKind] = useState(""),
-    [selected, setSelected] = useState<string | null>(null);
+    [selected, setSelected] = useState<string | null>(
+      new URLSearchParams(window.location.search).get("jobId"),
+    );
+  const [reviewNote, setReviewNote] = useState("");
+  const { data: auth } = useData<Doc>("/auth/status");
+  const {
+    data: listing,
+    reload,
+    error,
+  } = useData<Doc>(
+    `/job-history?page=${page}&pageSize=30${filter === "all" ? "" : "&status=" + filter}${kind ? "&kind=" + kind : ""}`,
+    4000,
+  );
+  const data: Doc[] | undefined = listing?.items;
+  const { data: detail } = useData<Doc>(
+    selected ? `/jobs/${selected}` : "/job-history?pageSize=1",
+    4000,
+  );
   const { toast } = useApp();
   const navigate = useNavigate();
-  const current = data?.find((j) => j.id === selected);
+  const current = selected
+    ? detail?.id === selected
+      ? detail
+      : data?.find((j) => j.id === selected)
+    : null;
   const items = data?.filter(
     (j) =>
       (filter === "all" ||
@@ -541,12 +584,18 @@ export function Tasks() {
             { id: "failed", label: "失败" },
           ]}
           value={filter}
-          onChange={setFilter}
+          onChange={(v) => {
+            setFilter(v);
+            setPage(1);
+          }}
         />
         <select
           aria-label="任务类型"
           value={kind}
-          onChange={(e) => setKind(e.target.value)}
+          onChange={(e) => {
+            setKind(e.target.value);
+            setPage(1);
+          }}
         >
           <option value="">所有类型</option>
           {Object.entries(kindNames).map(([v, l]) => (
@@ -603,7 +652,7 @@ export function Tasks() {
         </div>
       ) : (
         <Empty
-          title="还没有{filter==='all'?'':filter==='completed'?'已完成的':'匹配的'}任务"
+          title={filter === "all" ? "还没有任务" : "没有匹配的任务"}
           description="从工作台创建视频、生成图片或分析参考视频，任务会保存在这里。"
           icon={Clapperboard}
         >
@@ -611,6 +660,14 @@ export function Tasks() {
             开始创作 <ArrowRight size={15} />
           </Link>
         </Empty>
+      )}
+      {listing && (
+        <PageNavigation
+          page={page}
+          total={listing.total}
+          pageSize={30}
+          onChange={setPage}
+        />
       )}
       {current && (
         <Modal
@@ -655,22 +712,30 @@ export function Tasks() {
                   查询供应商状态
                 </Button>
               )}
-              {["failed", "cancelled"].includes(current.status) && (
-                <Button
-                  onClick={async () => {
-                    try {
-                      const j = await post(`/jobs/${current.id}/retry`);
+              {["failed", "cancelled"].includes(current.status) &&
+                (current.kind === "publish" ? (
+                  <Link className="button" to="/publish">
+                    前往发布中心审核
+                  </Link>
+                ) : current.input?.projectId ? (
+                  <Link
+                    className="button"
+                    to={`/projects?id=${current.input.projectId}`}
+                  >
+                    前往项目确认重试
+                  </Link>
+                ) : (
+                  <RetryAction
+                    endpoint={`/jobs/${current.id}/retry`}
+                    onRetried={(j) => {
                       setSelected(j.id);
                       void reload();
                       toast("重试任务已创建，成功片段会复用");
-                    } catch (e: any) {
-                      toast(e.message, true);
-                    }
-                  }}
-                >
-                  重试任务
-                </Button>
-              )}
+                    }}
+                  >
+                    重试任务
+                  </RetryAction>
+                ))}
               {current.result?.shootingPrompt && (
                 <Button
                   onClick={() => {
@@ -690,6 +755,53 @@ export function Tasks() {
             </div>
           </div>
           {current.error && <ErrorBox message={current.error} />}
+          {current.status === "review" &&
+            ["owner", "admin"].includes(auth?.role) && (
+              <section className="config-section">
+                <h3>人工核对记录</h3>
+                <p className="muted">
+                  先在供应商后台核对。确认失败只由平台管理员处理；成功必须由供应商状态验证。
+                </p>
+                <label className="field">
+                  核对依据（至少 10 字）
+                  <textarea
+                    rows={3}
+                    value={reviewNote}
+                    onChange={(e) => setReviewNote(e.target.value)}
+                    placeholder="记录供应商任务号、检查结果与核对时间"
+                  />
+                </label>
+                <div className="inline-actions">
+                  {[
+                    "completed",
+                    ...(auth?.platformAdmin ? ["failed"] : []),
+                  ].map((decision) => (
+                    <Button
+                      key={decision}
+                      disabled={reviewNote.trim().length < 10}
+                      onClick={async () => {
+                        try {
+                          await post(`/jobs/${current.id}/resolve`, {
+                            decision,
+                            note: reviewNote,
+                          });
+                          setReviewNote("");
+                          void reload();
+                          toast("核对记录已保存");
+                        } catch (e: any) {
+                          toast(e.message, true);
+                        }
+                      }}
+                    >
+                      {decision === "completed"
+                        ? "查询并验证成功"
+                        : "记录已核实的失败"}
+                    </Button>
+                  ))}
+                </div>
+              </section>
+            )}
+
           <PipelineProgress pipeline={current.pipeline} />
           {current.result ? (
             <ResultView result={current.result} />
@@ -719,6 +831,7 @@ export function Tasks() {
 }
 
 export function Tool({ kind }: { kind: "analysis" | "enhance" }) {
+  const location = useLocation();
   const { toast } = useApp();
   const navigate = useNavigate();
   const [source, setSource] = useState(""),
@@ -737,9 +850,10 @@ export function Tool({ kind }: { kind: "analysis" | "enhance" }) {
     setError("");
     setCurrent("");
     setSource("");
-    setAsset(null);
-    setTab(kind === "enhance" ? "upload" : "link");
-  }, [kind]);
+    const incoming = (location.state as Doc)?.asset;
+    setAsset(incoming || null);
+    setTab(incoming || kind === "enhance" ? "upload" : "link");
+  }, [kind, location.state]);
   const minDim = Math.min(width, height);
   const factor = minDim ? Number(target) / minDim : 2;
   return (
@@ -1072,7 +1186,11 @@ const configGroups = [
     fields: [
       ["ECHOTIK_USERNAME", "API 用户名", true],
       ["ECHOTIK_PASSWORD", "API 密码", true],
-      ["ECHOTIK_MONTHLY_LIMIT", "本平台月度成功请求上限", false],
+      [
+        "ECHOTIK_MONTHLY_LIMIT",
+        "EchoTik 请求保护上限（同时受总预算限制）",
+        false,
+      ],
       ["ECHOTIK_CACHE_SECONDS", "缓存秒数（0–86400）", false],
     ],
   },

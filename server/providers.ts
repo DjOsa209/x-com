@@ -5,6 +5,7 @@ import { config } from "./config.ts";
 import { get, type Doc } from "./db.ts";
 import { videoPolicy, parseModels, type VideoModel } from "./video-plan.ts";
 import { AppError } from "./errors.ts";
+import { withResearchBudgetRequest } from "./research-budget.ts";
 import { readAsset, fetchMedia, resolveVideo } from "./media.ts";
 
 export async function aiJson(
@@ -53,11 +54,13 @@ export async function aiJson(
         parts.push({ fileData: { fileUri: file.uri, mimeType: asset.mime } });
       }
     }
-    const r = await ai.models.generateContent({
-      model: c.GEMINI_MODEL,
-      contents: [{ role: "user", parts }],
-      config: { responseMimeType: "application/json" },
-    });
+    const r = await withResearchBudgetRequest("gemini", c.GEMINI_MODEL, () =>
+      ai.models.generateContent({
+        model: c.GEMINI_MODEL,
+        contents: [{ role: "user", parts }],
+        config: { responseMimeType: "application/json" },
+      }),
+    );
     const text = r.text;
     if (!text) throw new AppError(502, "AI 没有返回可用分析");
     try {

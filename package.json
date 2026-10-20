@@ -1,6 +1,6 @@
 {
   "name": "x-ecommerce",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,7 +15,18 @@
     "worker": "tsx server/worker.ts",
     "test:backend": "tsx scripts/backend-integration.ts",
     "test:storage": "tsx scripts/storage-integration.ts",
-    "test:video": "tsx scripts/video-integration.ts"
+    "test:video": "tsx scripts/video-integration.ts",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "backup": "node scripts/backup.mjs",
+    "restore": "node scripts/restore.mjs",
+    "admin:recovery": "tsx scripts/admin-recovery.ts",
+    "health:worker": "tsx scripts/worker-health.ts",
+    "test:foundation": "tsx scripts/foundation-integration.ts",
+    "test:commerce": "tsx scripts/commerce-integration.ts",
+    "test:operations": "tsx scripts/operations-integration.ts",
+    "test:e2e": "npm run build && tsx scripts/e2e.ts",
+    "test:deployment": "node scripts/backup-restore-check.mjs",
+    "test:docker": "node scripts/docker-smoke.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1152.0",
@@ -37,6 +48,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@types/express": "^5.0.6",
     "@types/multer": "^2.3.0",
     "@types/node": "^26.6.5",

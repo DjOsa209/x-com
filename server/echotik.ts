@@ -4,6 +4,10 @@ import { rows, execute, parse, type Doc } from "./db.ts";
 import { config } from "./config.ts";
 import { AppError } from "./errors.ts";
 import { workspace } from "./context.ts";
+import {
+  withResearchBudgetRequest,
+  recordResearchEvidence,
+} from "./research-budget.ts";
 
 export type Endpoint = {
   path: string;
@@ -81,9 +85,17 @@ export async function echoQuery(
       "SELECT payload FROM cache_entries WHERE cache_key=? AND expires_at>UTC_TIMESTAMP(3)",
       [cacheKey],
     );
-    if (cached) return { ...parse(cached.payload), cached: true };
+    if (cached) {
+      const result = { ...parse(cached.payload), cached: true };
+      await recordResearchEvidence(result);
+      return result;
+    }
   }
-  if (inflight.has(cacheKey)) return inflight.get(cacheKey)!;
+  if (inflight.has(cacheKey)) {
+    const result = await inflight.get(cacheKey)!;
+    await recordResearchEvidence(result);
+    return result;
+  }
   const request = (async () => {
     const [{ used }] = await rows(
       "SELECT COUNT(*) used FROM api_usage WHERE workspace_id=? AND provider='echotik' AND success=1 AND endpoint<>'/echotik/batch/cover/download' AND created_at>=DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-01')",
@@ -110,26 +122,32 @@ export async function echoQuery(
       );
     const url = new URL(base.toString().replace(/\/$/, "") + path);
     url.search = new URLSearchParams(query).toString();
-    let success = false;
+    let success = false,
+      sent = false;
     try {
-      const response = await fetch(url, {
-        headers: {
-          Authorization:
-            "Basic " +
-            Buffer.from(c.ECHOTIK_USERNAME + ":" + c.ECHOTIK_PASSWORD).toString(
-              "base64",
-            ),
-        },
-        signal: AbortSignal.timeout(60000),
+      const raw = await withResearchBudgetRequest("echotik", path, async () => {
+        sent = true;
+        const response = await fetch(url, {
+          headers: {
+            Authorization:
+              "Basic " +
+              Buffer.from(
+                c.ECHOTIK_USERNAME + ":" + c.ECHOTIK_PASSWORD,
+              ).toString("base64"),
+          },
+          signal: AbortSignal.timeout(60000),
+          redirect: "error",
+        });
+        const raw = await response.json();
+        success = response.ok && raw.code === 0;
+        if (!success)
+          throw new AppError(
+            502,
+            `EchoTik 请求失败：${String(raw.message || response.status).slice(0, 300)}`,
+            "UPSTREAM_FAILED",
+          );
+        return raw;
       });
-      const raw = await response.json();
-      success = response.ok && raw.code === 0;
-      if (!success)
-        throw new AppError(
-          502,
-          `EchoTik 请求失败：${String(raw.message || response.status).slice(0, 300)}`,
-          "UPSTREAM_FAILED",
-        );
       const payload = {
         data: raw.data,
         source: "EchoTik",
@@ -158,15 +176,18 @@ export async function echoQuery(
         );
       return payload;
     } finally {
-      await execute(
-        "INSERT INTO api_usage(provider,endpoint,success,workspace_id) VALUES(?,?,?,?)",
-        ["echotik", path, success, workspace()],
-      );
+      if (sent)
+        await execute(
+          "INSERT INTO api_usage(provider,endpoint,success,workspace_id) VALUES(?,?,?,?)",
+          ["echotik", path, success, workspace()],
+        );
     }
   })();
   inflight.set(cacheKey, request);
   try {
-    return await request;
+    const result = await request;
+    await recordResearchEvidence(result);
+    return result;
   } finally {
     inflight.delete(cacheKey);
   }

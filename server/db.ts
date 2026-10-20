@@ -80,6 +80,7 @@ export async function migrate() {
   await execute(
     "INSERT IGNORE INTO workspaces(id,name) VALUES('local','我的工作空间')",
   );
+  await (await import("./migrations.ts")).migrateTeamEdition();
 }
 export function record(r: Doc): Doc {
   return {

@@ -79,6 +79,7 @@ export const date = (v: any) =>
       })
     : "—";
 export const stateNames: Doc = {
+  partially_completed: "部分完成",
   queued: "排队中",
   scheduled: "已定时",
   running: "执行中",
@@ -90,6 +91,10 @@ export const stateNames: Doc = {
   inbox: "已送达草稿箱",
 };
 export const kindNames: Doc = {
+  video_edit: "视频后期",
+  watch_sync: "竞品监控",
+  case_collect: "案例采集",
+  metrics_sync: "效果同步",
   raw: "高级模型生成",
   collect: "数据采集",
   opportunity_scan: "选品机会扫描",

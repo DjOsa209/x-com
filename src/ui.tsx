@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { api, upload, number, type Doc } from "./api";
 export const AppContext = createContext<{
+  auth?: Doc | null;
   status: Doc | null;
   refresh: () => void;
   toast: (message: string, error?: boolean) => void;
@@ -32,15 +33,18 @@ export function useData<T = Doc[]>(path: string, interval = 0) {
   const [data, setData] = useState<T | null>(null),
     [error, setError] = useState(""),
     [loading, setLoading] = useState(true);
+  const request = useRef(0);
   const load = useCallback(async () => {
+    const id = ++request.current;
     try {
       const r = await api<T>(path);
+      if (id !== request.current) return;
       setData(r);
       setError("");
     } catch (e: any) {
-      setError(e.message);
+      if (id === request.current) setError(e.message);
     } finally {
-      setLoading(false);
+      if (id === request.current) setLoading(false);
     }
   }, [path]);
   useEffect(() => {
@@ -65,10 +69,15 @@ export function Button({
   busy?: boolean;
   variant?: string;
 }) {
+  const { auth } = useApp();
   return (
     <button
       {...props}
-      disabled={props.disabled || busy}
+      disabled={
+        props.disabled ||
+        busy ||
+        (variant === "primary" && auth?.role === "viewer")
+      }
       className={`button ${variant} ${className}`}
     >
       {busy ? <Loader2 size={16} className="spin" /> : null}
@@ -314,38 +323,70 @@ export function AssetPicker({
   onPick: (a: Doc) => void;
   onClose: () => void;
 }) {
-  const { data, error } = useData("/records/asset");
+  const [q, setQ] = useState(""),
+    [page, setPage] = useState(1);
+  const { data, error, loading } = useData<Doc>(
+    `/library/asset?page=${page}&pageSize=24&q=${encodeURIComponent(q)}${type ? "&type=" + type : ""}`,
+  );
   return (
     <Modal title="选择素材" onClose={onClose} wide>
-      {error && <ErrorBox message={error} />}
+      <input
+        aria-label="搜索可选素材"
+        placeholder="搜索名称或标签"
+        value={q}
+        onChange={(e) => {
+          setQ(e.target.value);
+          setPage(1);
+        }}
+      />
+      {error && <ErrorBox message={error} />}{" "}
+      {loading && <p role="status">正在读取素材…</p>}
       <div className="asset-picker-grid">
-        {data
-          ?.filter((a) => !type || a.type === type)
-          .map((a) => (
-            <button
-              key={a.id}
-              onClick={() => {
-                onPick(a);
-                onClose();
-              }}
-              className="asset-pick"
-            >
-              {a.type === "image" ? (
-                <img src={a.url} alt={a.name} />
-              ) : (
-                <video src={a.url} preload="metadata" />
-              )}
-              <span>{a.name}</span>
-            </button>
-          ))}
+        {data?.items?.map((a: Doc) => (
+          <button
+            key={a.id}
+            onClick={() => {
+              onPick(a);
+              onClose();
+            }}
+            className="asset-pick"
+          >
+            {a.type === "image" ? (
+              <img src={a.url} alt={a.name} />
+            ) : a.type === "video" ? (
+              <video src={a.url} preload="metadata" />
+            ) : (
+              <span>音频素材</span>
+            )}
+            <span>{a.name}</span>
+          </button>
+        ))}
       </div>
-      {data && !data.some((a) => !type || a.type === type) && (
-        <Empty title="还没有可用素材" description="先上传商品图片或视频素材。">
+      {!!data?.total && (
+        <div className="page-navigation">
+          <Button disabled={page === 1} onClick={() => setPage((p) => p - 1)}>
+            上一页
+          </Button>
+          <span>
+            第 {page} 页 · 共 {data.total} 条
+          </span>
+          <Button
+            disabled={page * 24 >= data.total}
+            onClick={() => setPage((p) => p + 1)}
+          >
+            下一页
+          </Button>
+        </div>
+      )}
+      {!loading && !data?.items?.length && (
+        <Empty title="没有可用素材" description="上传素材后即可在这里选择。">
           <FilePicker
             accept={
               type === "video"
                 ? "video/mp4,video/quicktime,video/webm"
-                : undefined
+                : type === "audio"
+                  ? "audio/mpeg,audio/wav,audio/mp4,.m4a"
+                  : undefined
             }
             onPick={(a) => {
               onPick(a);
@@ -357,6 +398,7 @@ export function AssetPicker({
     </Modal>
   );
 }
+
 export async function copyText(
   value: string,
   toast: (s: string, e?: boolean) => void,
@@ -370,9 +412,86 @@ export async function copyText(
 }
 export function ResultView({ result }: { result: Doc }) {
   const { toast } = useApp();
+  const player = useRef<HTMLVideoElement>(null);
+  const [savingCase, setSavingCase] = useState(false);
+  const [sourceAsset, setSourceAsset] = useState<Doc | null>(null);
+  useEffect(() => {
+    setSourceAsset(null);
+    if (result?.videoAssetId)
+      void api<Doc>(`/records/asset/${result.videoAssetId}`)
+        .then(setSourceAsset)
+        .catch(() => {});
+  }, [result?.videoAssetId]);
+  const seek = (scene: Doc) => {
+    const start =
+      scene.start ??
+      Number(
+        String(scene.time || scene.timestamp || "0").match(/[\d.]+/)?.[0] || 0,
+      );
+    if (player.current) {
+      player.current.currentTime = start;
+      player.current.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
+  };
   if (!result) return null;
   return (
     <div className="result-content">
+      {sourceAsset && (
+        <section>
+          <h4>参考视频 · 点击分镜时间定位</h4>
+          <video
+            ref={player}
+            className="result-media"
+            src={sourceAsset.url}
+            controls
+            playsInline
+          />
+        </section>
+      )}
+      {result.videoAssetId && result.scenes?.length > 0 && (
+        <div className="inline-actions">
+          <Button
+            busy={savingCase}
+            onClick={async () => {
+              setSavingCase(true);
+              try {
+                await api("/commerce/cases", {
+                  method: "POST",
+                  body: JSON.stringify({
+                    title: result.title || "视频分析案例",
+                    prompt:
+                      result.shootingPrompt ||
+                      result.script ||
+                      result.scenes.map((s: Doc) => s.visual).join("\n"),
+                    analysis: result,
+                    sourceUrl: result.sourceUrl || "",
+                    sourceVideoAssetId: result.videoAssetId,
+                    status: "review",
+                    provenance: "视频分析",
+                  }),
+                });
+                toast("已保存到案例库，等待审阅");
+              } catch (e: any) {
+                toast(e.message, true);
+              } finally {
+                setSavingCase(false);
+              }
+            }}
+          >
+            保存到案例库待审阅
+          </Button>
+          <Link className="button" to="/prompts">
+            打开案例库
+          </Link>
+          <Link
+            className="button"
+            to="/"
+            state={{ videoAsset: sourceAsset, mode: "replicate" }}
+          >
+            改编此视频
+          </Link>
+        </div>
+      )}
       {result.asset &&
         (result.asset.type === "image" ? (
           <img
@@ -393,6 +512,24 @@ export function ResultView({ result }: { result: Doc }) {
           <Download size={16} />
           下载文件
         </a>
+      )}
+      {result.asset?.type === "video" && (
+        <div className="inline-actions">
+          <Link
+            className="button"
+            to={`/studio/edit?assetId=${result.asset.id}`}
+          >
+            字幕与音频后期
+          </Link>
+          <Link className="button" to={`/publish?assetId=${result.asset.id}`}>
+            审核与发布
+          </Link>
+        </div>
+      )}
+      {result.opportunityId && (
+        <Link className="button" to="/opportunities">
+          查看选品机会
+        </Link>
       )}
       {result.title && <h3>{result.title}</h3>}
       {result.summary && <p>{result.summary}</p>}
@@ -418,7 +555,15 @@ export function ResultView({ result }: { result: Doc }) {
           <div className="scene-list">
             {result.scenes.map((s: Doc, i: number) => (
               <div key={i} className="scene">
-                <span>{s.time || `镜头 ${i + 1}`}</span>
+                <span>
+                  {sourceAsset ? (
+                    <button className="timecode" onClick={() => seek(s)}>
+                      {s.time || s.timestamp || `${s.start ?? 0}s`}
+                    </button>
+                  ) : (
+                    s.time || `镜头 ${i + 1}`
+                  )}
+                </span>
                 <div>
                   <strong>{s.shot}</strong>
                   <p>{s.visual}</p>

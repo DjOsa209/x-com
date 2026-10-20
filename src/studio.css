@@ -1,0 +1,337 @@
+.studio {
+  max-width: 1440px;
+  margin: auto;
+}
+.studio .tabs {
+  margin-bottom: 24px;
+}
+.studio-panel {
+  padding: 24px 0;
+  border-top: 1px solid var(--line);
+}
+.studio-panel h2,
+.studio-editor-layout h2 {
+  font-size: 1.3rem;
+  margin: 0 0 16px;
+}
+.studio-panel > p {
+  max-width: 72ch;
+  line-height: 1.65;
+}
+.studio-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 18px 0;
+}
+.studio-full {
+  grid-column: 1/-1;
+}
+.studio-block {
+  display: block;
+}
+.studio-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  margin: 12px 0;
+}
+.studio .field input,
+.studio .field select,
+.studio .field textarea {
+  width: 100%;
+}
+.studio-assets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 12px 0;
+}
+.studio-assets > div {
+  position: relative;
+  width: 90px;
+  height: 100px;
+}
+.studio-assets img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.studio-assets button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  border: 0;
+  background: white;
+  padding: 5px;
+}
+.studio-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin: 20px 0;
+}
+.studio-editor-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+  gap: 32px;
+  margin-top: 24px;
+}
+.studio-render-options {
+  background: var(--soft);
+  padding: 20px;
+  border-radius: 12px;
+  align-self: start;
+  min-width: 0;
+}
+.studio-render-options fieldset {
+  border: 0;
+  padding: 0;
+  min-width: 0;
+}
+.studio-section-heading,
+.studio-shot-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 24px 0 12px;
+}
+.studio-section-heading h2,
+.studio-section-heading h3 {
+  margin: 0;
+}
+.studio-shot {
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+}
+.studio-shot-heading {
+  margin: 0 0 12px;
+}
+.studio-shot-heading small {
+  color: var(--muted);
+  font-weight: 400;
+  margin-left: 10px;
+}
+.studio-shot .studio-form-grid {
+  margin-bottom: 0;
+}
+.studio-shot .button {
+  min-height: 32px;
+  padding: 6px;
+}
+.studio-brief {
+  margin: 24px 0;
+}
+.studio-quote {
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin: 18px 0;
+  line-height: 1.6;
+}
+.studio-quote p {
+  margin: 6px 0;
+}
+.studio-quote small {
+  color: #586171;
+}
+.studio-render {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line);
+}
+.studio-render > .result-content {
+  max-width: 640px;
+}
+.studio-render .result-media {
+  max-height: 420px;
+  object-fit: contain;
+}
+.studio-segment-video {
+  width: 100%;
+  max-width: 210px;
+  max-height: 210px;
+  background: #151820;
+}
+.studio-segment-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.studio-history-videos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+.studio-history-videos video {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  display: block;
+  margin-bottom: 10px;
+}
+.studio-batch-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 20px 0;
+  border-top: 1px solid var(--line);
+}
+.studio-post-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 32px;
+}
+.studio-post-video {
+  width: 100%;
+  max-height: 450px;
+  object-fit: contain;
+  background: #151820;
+  border-radius: 8px;
+}
+.studio-audio-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+.studio-audio-row span {
+  font-size: 0.9rem;
+  color: #586171;
+  overflow-wrap: anywhere;
+}
+.studio-cue {
+  display: grid;
+  grid-template-columns: 1fr 1fr 32px;
+  gap: 10px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+.studio-cue label {
+  display: grid;
+  gap: 5px;
+  color: #586171;
+}
+.studio-cue input {
+  width: 100%;
+  min-width: 0;
+}
+.studio-cue textarea {
+  grid-column: 1/-1;
+  width: 100%;
+}
+.studio-post-layout .inline-actions {
+  margin: 14px 0;
+}
+.studio-revision {
+  background: var(--soft);
+  padding: 20px;
+  margin-top: 24px;
+  border-radius: 12px;
+  border: 0;
+}
+.video-preset {
+  grid-column: 1/-1;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.video-preset small {
+  color: #586171;
+}
+.studio .studio-panel h3 {
+  margin-top: 24px;
+}
+.studio .result-content {
+  overflow-wrap: anywhere;
+}
+.studio table td {
+  font-variant-numeric: tabular-nums;
+}
+.studio .studio-full textarea {
+  max-width: 100%;
+}
+@media (max-width: 1100px) {
+  .studio-editor-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .studio-render-options {
+    padding: 18px;
+  }
+  .studio-post-layout {
+    gap: 22px;
+  }
+  .studio .page-head {
+    align-items: flex-start;
+  }
+  .studio .head-actions {
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 700px) {
+  .studio-form-grid,
+  .studio-batch-row,
+  .studio-post-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .studio-editor-layout {
+    gap: 22px;
+  }
+  .studio .page-head {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .studio .head-actions {
+    width: 100%;
+  }
+  .studio .page-head h1 {
+    font-size: 1.6rem;
+    overflow-wrap: anywhere;
+  }
+  .studio-shot-heading {
+    align-items: flex-start;
+  }
+  .studio-shot-heading small {
+    display: block;
+    margin: 5px 0 0;
+  }
+  .studio-panel {
+    padding-top: 18px;
+  }
+  .studio-render-options {
+    padding: 14px;
+  }
+  .studio-section-heading {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .studio .video-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .studio-cue {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 28px;
+  }
+  .studio .tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .studio-revision {
+    padding: 14px;
+  }
+  .studio-pagination {
+    justify-content: center;
+  }
+}
+.studio-fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}

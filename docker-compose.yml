@@ -1,0 +1,83 @@
+# Production stack. Always select explicitly with -f docker-compose.yml.
+# compose.yaml remains the existing localhost-only database development setup.
+name: x-ecommerce-production
+x-application: &application
+  build: .
+  image: x-ecommerce:local
+  restart: unless-stopped
+  init: true
+  environment: &application-environment
+    NODE_ENV: production
+    HOST: 0.0.0.0
+    PORT: 4317
+    AUTH_REQUIRED: "true"
+    COOKIE_SECURE: ${COOKIE_SECURE:-false}
+    WORKER_EXTERNAL: "true"
+    MYSQL_HOST: mysql
+    MYSQL_PORT: 3306
+    MYSQL_DATABASE: ${MYSQL_DATABASE:-x_ecommerce}
+    MYSQL_USER: ${MYSQL_USER:-x_ecommerce}
+    MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Set a deployment database password}
+    X_ENCRYPTION_KEY: ${X_ENCRYPTION_KEY:?Set a stable 64-hex encryption key}
+    APP_PUBLIC_URL: ${APP_PUBLIC_URL:-http://localhost:4317}
+    X_ALLOWED_HOSTS: ${X_ALLOWED_HOSTS:-localhost,127.0.0.1}
+    TIKTOK_REDIRECT_URI: ${TIKTOK_REDIRECT_URI:-http://localhost:4317/api/tiktok/callback}
+    FFMPEG_PATH: /usr/bin/ffmpeg
+    FFPROBE_PATH: /usr/bin/ffprobe
+    STORAGE_DRIVER: ${STORAGE_DRIVER:-local}
+    S3_ENDPOINT: ${S3_ENDPOINT:-}
+    S3_REGION: ${S3_REGION:-auto}
+    S3_BUCKET: ${S3_BUCKET:-}
+    S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-}
+    S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-}
+    S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE:-false}
+    STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+    STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+    BILLING_PACKS_JSON: ${BILLING_PACKS_JSON:-[]}
+  volumes:
+    - application_data:/app/.local
+  depends_on:
+    mysql:
+      condition: service_healthy
+services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-x_ecommerce}
+      MYSQL_USER: ${MYSQL_USER:-x_ecommerce}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Set a deployment database password}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set a deployment root password}
+    volumes:
+      - production_mysql:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'MYSQL_PWD="$$MYSQL_ROOT_PASSWORD" mysqladmin ping -h 127.0.0.1 -u root --silent',
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+  app:
+    <<: *application
+    ports:
+      - "127.0.0.1:${APP_PORT:-4317}:4317"
+  worker:
+    <<: *application
+    command: ["node_modules/.bin/tsx", "server/worker.ts"]
+    depends_on:
+      mysql:
+        condition: service_healthy
+      app:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node_modules/.bin/tsx", "scripts/worker-health.ts"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 5
+volumes:
+  production_mysql:
+  application_data:

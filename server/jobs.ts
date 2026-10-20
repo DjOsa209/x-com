@@ -1,3 +1,4 @@
+import { retryQuote } from "./quotes.ts";
 import { randomUUID, createHash } from "node:crypto";
 import { workspace, inWorkspace } from "./context.ts";
 import { reserveCredits, finalizeCredits } from "./credits.ts";
@@ -32,6 +33,13 @@ import {
   retryPipelineState,
 } from "./video-pipeline.ts";
 
+import { checkVideoEdit, runVideoEdit } from "./video-edit.ts";
+import { runOperationsJob } from "./operations.ts";
+import { withResearchRun, researchKinds } from "./research-budget.ts";
+import { ingestCase, ingestOpportunity } from "./research-domain.ts";
+import { replaceAssetReferences } from "./asset-references.ts";
+import { validateAiResult } from "./ai-results.ts";
+
 export const kinds = [
   "script",
   "analysis",
@@ -47,23 +55,36 @@ export const kinds = [
   "raw",
   "collect",
   "opportunity_scan",
+  "watch_sync",
+  "case_collect",
+  "metrics_sync",
+  "video_edit",
 ] as const;
 const falKinds = ["video", "image", "enhance", "raw"];
 export async function checkProviders(kind: string, input: Doc) {
+  if (kind === "video_edit") {
+    await checkVideoEdit(input);
+    return;
+  }
   const c = await config();
-  const need =
-    kind === "publish"
-      ? "TIKTOK_CLIENT_KEY"
-      : ["download", "research", "collect", "opportunity_scan"].includes(kind)
-        ? "ECHOTIK_USERNAME"
-        : ["video", "replicate"].includes(kind)
-          ? (input._videoPolicy || videoPolicy(c, input)).model.provider ===
-            "kie"
-            ? "KIE_API_KEY"
-            : "FAL_KEY"
-          : falKinds.includes(kind)
-            ? "FAL_KEY"
-            : "GEMINI_API_KEY";
+  const need = ["publish", "metrics_sync"].includes(kind)
+    ? "TIKTOK_CLIENT_KEY"
+    : [
+          "download",
+          "research",
+          "collect",
+          "opportunity_scan",
+          "watch_sync",
+          "case_collect",
+        ].includes(kind)
+      ? "ECHOTIK_USERNAME"
+      : ["video", "replicate"].includes(kind)
+        ? (input._videoPolicy || videoPolicy(c, input)).model.provider === "kie"
+          ? "KIE_API_KEY"
+          : "FAL_KEY"
+        : falKinds.includes(kind)
+          ? "FAL_KEY"
+          : "GEMINI_API_KEY";
   const directDownload =
     kind === "download" &&
     input.sourceUrl &&
@@ -195,6 +216,7 @@ export async function createJob(
       );
     throw e;
   }
+  await replaceAssetReferences("job", id, input);
   return job((await jobGet(id))!);
 }
 async function videoAsset(input: Doc): Promise<string> {
@@ -207,6 +229,9 @@ async function videoAsset(input: Doc): Promise<string> {
   return asset!.id;
 }
 async function runLocal(id: string, kind: string, input: Doc) {
+  if (kind === "video_edit") return runVideoEdit(input, id);
+  if (["watch_sync", "case_collect", "metrics_sync"].includes(kind))
+    return runOperationsJob(id, kind, input);
   if (kind === "collect" || kind === "opportunity_scan") {
     const yesterday = new Date(Date.now() - 86400000)
         .toISOString()
@@ -306,6 +331,11 @@ async function runLocal(id: string, kind: string, input: Doc) {
     const analysis = await aiJson(
       `根据提供的真实商品与评论样本，输出选品机会 JSON {title,summary,painPoints:[{problem,evidence,commentIds,frequencyInSample}],opportunities:[],risks:[],nextSteps:[],limitations:[]}。区分预估GMV、缺失数据与零值。不得编造成本、利润或需求规模。证据：${JSON.stringify(enriched).slice(0, 90000)}`,
     );
+    validateAiResult("opportunity_scan", analysis);
+    const savedOpportunity = await ingestOpportunity(
+      { ...analysis, evidence: enriched },
+      { jobId: id, region },
+    );
     const opportunity = await put("opportunity", {
       ...analysis,
       evidence: enriched,
@@ -313,7 +343,12 @@ async function runLocal(id: string, kind: string, input: Doc) {
       source: "EchoTik + Gemini",
       collectedAt: new Date().toISOString(),
     });
-    return { ...analysis, opportunityId: opportunity!.id, evidence: enriched };
+    return {
+      ...analysis,
+      opportunityId: savedOpportunity.id,
+      legacyOpportunityId: opportunity!.id,
+      evidence: enriched,
+    };
   }
   if (kind === "download") {
     const resolved = await resolveVideo(input.sourceUrl);
@@ -347,7 +382,16 @@ async function runLocal(id: string, kind: string, input: Doc) {
       input.assetIds || [],
       vid,
     );
-    if (kind === "prompt")
+    validateAiResult(kind, result);
+    if (kind === "prompt") {
+      await ingestCase(result, {
+        sourceUrl: input.sourceUrl,
+        sourceVideoAssetId: vid,
+        sourceMetrics: input.sourceMetrics,
+        region: input.region,
+        category: input.category,
+        jobId: id,
+      });
       await put("prompt", {
         title: result.title,
         prompt: result.shootingPrompt,
@@ -360,6 +404,7 @@ async function runLocal(id: string, kind: string, input: Doc) {
         provenance: "AI 从参考视频提取",
         verifiedGmv: false,
       });
+    }
     return { ...result, videoAssetId: vid, sourceUrl: input.sourceUrl || null };
   }
   if (kind === "insights")
@@ -434,8 +479,10 @@ async function startJob(r: Doc) {
     });
     return;
   }
-  const result = await runLocal(r.id, r.kind, input);
+  const result = await withResearchRun(r, () => runLocal(r.id, r.kind, input));
+  if (["script", "insights"].includes(r.kind)) validateAiResult(r.kind, result);
   await updateJob(r.id, { status: "completed", result });
+  await replaceAssetReferences("job", r.id, { input, result });
 }
 async function pollJob(r: Doc) {
   return withJobLock(r.id, async () => {
@@ -517,28 +564,36 @@ async function pollJobUnlocked(r: Doc) {
   }
 }
 let busy = false;
-export async function tick() {
+export async function tick(onlyWorkspace?: string) {
   if (busy) return;
   busy = true;
   try {
     const processing = await rows(
-      "SELECT * FROM jobs WHERE status='processing' ORDER BY updated_at LIMIT 6",
+      `SELECT * FROM jobs WHERE status='processing'${onlyWorkspace ? " AND workspace_id=?" : ""} ORDER BY updated_at LIMIT 6`,
+      onlyWorkspace ? [onlyWorkspace] : [],
     );
-    for (const r of processing) {
-      await inWorkspace(r.workspace_id, async () => {
-        try {
-          await pollJob(r);
-        } catch (e: any) {
-          if (e.code === "JOB_BUSY") return;
-          await updateJob(r.id, {
-            status: "review",
-            error: e.message || "查询任务失败，请核对供应商状态",
+    // Each poll holds a job lock and may also acquire a storage lock. Keep
+    // room in the eight-connection pool for the worker lock and nested queries.
+    for (let offset = 0; offset < processing.length; offset += 2) {
+      await Promise.all(
+        processing.slice(offset, offset + 2).map(async (r) => {
+          await inWorkspace(r.workspace_id, async () => {
+            try {
+              await pollJob(r);
+            } catch (e: any) {
+              if (e.code === "JOB_BUSY") return;
+              await updateJob(r.id, {
+                status: "review",
+                error: e.message || "查询任务失败，请核对供应商状态",
+              });
+            }
           });
-        }
-      });
+        }),
+      );
     }
     const [next] = await rows(
-      "SELECT * FROM jobs WHERE status IN ('queued','scheduled') AND (run_at IS NULL OR run_at<=UTC_TIMESTAMP(3)) ORDER BY created_at LIMIT 1",
+      `SELECT * FROM jobs WHERE status IN ('queued','scheduled') AND (run_at IS NULL OR run_at<=UTC_TIMESTAMP(3))${onlyWorkspace ? " AND workspace_id=?" : ""} ORDER BY created_at LIMIT 1`,
+      onlyWorkspace ? [onlyWorkspace] : [],
     );
     if (next) {
       await inWorkspace(next.workspace_id, async () => {
@@ -618,10 +673,18 @@ export async function retryJob(
   id: string,
   dedupe: string = "retry:" + id,
   hold = false,
+  quoteFingerprint?: string,
 ) {
-  return withJobLock(id, () => retryJobUnlocked(id, dedupe, hold));
+  return withJobLock(id, () =>
+    retryJobUnlocked(id, dedupe, hold, quoteFingerprint),
+  );
 }
-async function retryJobUnlocked(id: string, dedupe: string, hold: boolean) {
+async function retryJobUnlocked(
+  id: string,
+  dedupe: string,
+  hold: boolean,
+  quoteFingerprint?: string,
+) {
   const r = await jobGet(id);
   if (!r) throw new AppError(404, "任务不存在");
   if (!["failed", "cancelled"].includes(r.status))
@@ -629,6 +692,9 @@ async function retryJobUnlocked(id: string, dedupe: string, hold: boolean) {
       409,
       "只有明确失败或未提交已取消的任务可以重试；待核对任务需先核对供应商",
     );
+  const quote = quoteFingerprint ? await retryQuote(r) : null;
+  if (quote && quote.fingerprint !== quoteFingerprint)
+    throw new AppError(409, "重试状态或报价已变化，请重新核对费用");
   const provider = parse(r.provider);
   const state =
     provider?.name === "video-pipeline" ? retryPipelineState(provider) : null;
@@ -637,6 +703,7 @@ async function retryJobUnlocked(id: string, dedupe: string, hold: boolean) {
     {
       ...parse(r.input),
       retryOf: id,
+      ...(quote ? { _retryQuoteSnapshot: quote } : {}),
       ...(state
         ? {
             storyboard: parse(r.result)?.storyboard,

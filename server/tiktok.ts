@@ -1,7 +1,13 @@
 import { randomBytes, createHash } from "node:crypto";
 import { config, seal, unseal } from "./config.ts";
 import { get, put, type Doc } from "./db.ts";
-import { readAsset } from "./media.ts";
+import { readAsset, assetFile, validatePublicUrl } from "./media.ts";
+import { probe } from "./video-compose.ts";
+import {
+  operationSettings,
+  currentResearchRun,
+  withResearchBudgetRequest,
+} from "./research-budget.ts";
 import { AppError } from "./errors.ts";
 import { rows, execute } from "./db.ts";
 import { workspace, scope } from "./context.ts";
@@ -149,46 +155,183 @@ export async function tikCall(
   method = "POST",
 ) {
   const token = await accountToken(id);
-  const response = await fetch("https://open.tiktokapis.com" + path, {
-    method,
-    headers: {
-      Authorization: "Bearer " + token,
-      "Content-Type": "application/json; charset=UTF-8",
-    },
-    ...(method === "POST" ? { body: JSON.stringify(body || {}) } : {}),
-    signal: AbortSignal.timeout(30000),
-  });
-  const result = await response.json();
-  if (!response.ok || (result.error?.code && result.error.code !== "ok"))
-    throw new AppError(
-      502,
-      `TikTok：${String(result.error?.message || result.error?.code || response.status).slice(0, 300)}`,
-      "TIKTOK_API_FAILED",
-    );
-  return result.data;
+  const send = async () => {
+    const response = await fetch("https://open.tiktokapis.com" + path, {
+      method,
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+      ...(method === "POST" ? { body: JSON.stringify(body || {}) } : {}),
+      signal: AbortSignal.timeout(30000),
+    });
+    const result = await response.json();
+    if (!response.ok || (result.error?.code && result.error.code !== "ok"))
+      throw new AppError(
+        502,
+        `TikTok：${String(result.error?.message || result.error?.code || response.status).slice(0, 300)}`,
+        "TIKTOK_API_FAILED",
+      );
+    return result.data;
+  };
+  return currentResearchRun()
+    ? withResearchBudgetRequest("tiktok", path, send)
+    : send();
 }
 export const creatorInfo = (id: string) =>
   tikCall(id, "/v2/post/publish/creator_info/query/");
-export async function initializePost(input: Doc) {
-  const { asset, bytes } = await readAsset(input.assetId);
-  if (asset.type !== "video") throw new AppError(400, "发布素材必须是视频");
-  if (!input.consent) throw new AppError(400, "请确认发布授权");
-  if (String(input.caption || "").length > 2200)
-    throw new AppError(400, "文案不能超过 2200 字符");
-  const info = await creatorInfo(input.accountId);
+export function verifiedVideoUrl(value: string, prefix: string) {
+  let url: URL, allowed: URL;
+  try {
+    url = new URL(value);
+    allowed = new URL(prefix);
+  } catch {
+    throw new AppError(400, "请设置已在 TikTok 验证的媒体 URL 前缀");
+  }
+  const path = allowed.pathname.endsWith("/")
+    ? allowed.pathname
+    : allowed.pathname + "/";
+  if (
+    url.protocol !== "https:" ||
+    allowed.protocol !== "https:" ||
+    url.origin !== allowed.origin ||
+    !url.pathname.startsWith(path) ||
+    url.username ||
+    url.password ||
+    url.hash ||
+    allowed.search ||
+    allowed.hash
+  )
+    throw new AppError(400, "视频 URL 不在管理员配置的已验证 HTTPS 前缀下");
+  return url.toString();
+}
+export function validateCreatorVideo(input: Doc, info: Doc, media: Doc) {
+  const duration = Number(media.format?.duration),
+    v = media.streams?.find((x: Doc) => x.codec_type === "video");
+  if (!v || !Number.isFinite(duration) || duration <= 0)
+    throw new AppError(400, "视频媒体信息无效");
+  const maximum =
+    input.mode === "inbox" ? 600 : Number(info.max_video_post_duration_sec);
+  if (!Number.isFinite(maximum) || maximum <= 0)
+    throw new AppError(409, "TikTok 未返回此账号可发布的最长时长，请稍后重试");
+  if (duration > maximum + 0.05)
+    throw new AppError(
+      400,
+      `视频 ${duration.toFixed(1)} 秒，超过当前账号 ${maximum} 秒上限`,
+    );
+  if (v.width < 360 || v.height < 360 || v.width > 4096 || v.height > 4096)
+    throw new AppError(400, "TikTok 视频宽高需在 360–4096 像素之间");
+  const fps = String(v.avg_frame_rate || "0/1")
+    .split("/")
+    .map(Number);
+  const frameRate = fps[0] / (fps[1] || 1);
+  if (frameRate < 23 || frameRate > 60)
+    throw new AppError(400, "TikTok 视频帧率需在 23–60 FPS 之间");
   if (
     input.mode !== "inbox" &&
     !info.privacy_level_options?.includes(input.privacy)
   )
-    throw new AppError(400, "请选择该账号允许的可见范围");
+    throw new AppError(400, "请明确选择该账号允许的可见范围");
+  if (input.brandContent && input.privacy === "SELF_ONLY")
+    throw new AppError(400, "品牌合作内容不能设为仅自己可见");
+  return {
+    duration,
+    width: v.width,
+    height: v.height,
+    frameRate,
+    maxDuration: maximum,
+  };
+}
+export async function publicationPreflight(input: Doc) {
+  const { asset, path } = await assetFile(input.assetId);
+  if (asset.type !== "video") throw new AppError(400, "发布素材必须是视频");
+  const media = await probe(path),
+    settings = await operationSettings();
+  if (input.mode === "export")
+    return {
+      mode: "export",
+      ready: true,
+      duration: Number(media.format?.duration),
+      note: "导出包无需 TikTok 应用资格；上传后登记真实作品链接。",
+    };
+  const enabled =
+    input.mode === "inbox"
+      ? settings.tiktokInboxEnabled
+      : settings.tiktokDirectEnabled;
+  if (!enabled)
+    throw new AppError(
+      409,
+      "当前工作空间使用导出发布；管理员确认应用具备相应资格后才可启用官方接口",
+      "TIKTOK_MODE_DISABLED",
+    );
+  const account = await get(input.accountId, "account");
+  if (!account) throw new AppError(409, "请连接 TikTok 账号");
+  const required = input.mode === "inbox" ? "video.upload" : "video.publish";
+  if (
+    !String(account.scopes || "")
+      .split(/[, ]+/)
+      .includes(required)
+  )
+    throw new AppError(409, "此账号尚未授权 " + required + "，请重新授权");
+  const info =
+    input.mode === "inbox"
+      ? { max_video_post_duration_sec: 600, creator_nickname: account.name }
+      : await creatorInfo(input.accountId);
+  const dimensions = validateCreatorVideo(input, info, media);
+  if (input.verifiedVideoUrl) {
+    const value = verifiedVideoUrl(
+      input.verifiedVideoUrl,
+      settings.verifiedMediaPrefix,
+    );
+    await validatePublicUrl(value);
+    const response = await fetch(value, {
+      method: "HEAD",
+      redirect: "error",
+      signal: AbortSignal.timeout(15000),
+    });
+    if (
+      !response.ok ||
+      !response.headers.get("content-type")?.startsWith("video/")
+    )
+      throw new AppError(
+        400,
+        "托管视频地址未直接返回可访问的视频，请检查 URL 和有效期",
+      );
+    if (Number(response.headers.get("content-length")) !== Number(asset.bytes))
+      throw new AppError(
+        400,
+        "托管视频大小与已审核素材不一致，请使用当前素材的原始文件 URL",
+      );
+  }
+  return {
+    mode: input.mode,
+    ready: true,
+    account: { id: account.id, name: info.creator_nickname || account.name },
+    creator: info,
+    media: dimensions,
+    transfer: input.verifiedVideoUrl ? "PULL_FROM_URL" : "FILE_UPLOAD",
+    note: input.verifiedVideoUrl
+      ? "媒体 URL 需在后续至少 1 小时保持可访问。"
+      : "将上传已审核的本地素材。",
+  };
+}
+export async function initializePost(input: Doc) {
+  if (!input.consent) throw new AppError(400, "请确认发布授权");
+  if (String(input.caption || "").length > 2200)
+    throw new AppError(400, "文案不能超过 2200 字符");
+  const preflight = await publicationPreflight(input),
+    info = preflight.creator || {};
+  const { asset, bytes } = await readAsset(input.assetId);
   const chunkSize = Math.min(bytes.length, 50 * 1024 * 1024);
   const count = Math.max(1, Math.floor(bytes.length / chunkSize));
-  const source_info = {
-    source: "FILE_UPLOAD",
-    video_size: bytes.length,
-    chunk_size: chunkSize,
-    total_chunk_count: count,
-  };
+  const source_info = input.verifiedVideoUrl
+    ? { source: "PULL_FROM_URL", video_url: input.verifiedVideoUrl }
+    : {
+        source: "FILE_UPLOAD",
+        video_size: bytes.length,
+        chunk_size: chunkSize,
+        total_chunk_count: count,
+      };
   const endpoint =
     input.mode === "inbox"
       ? "/v2/post/publish/inbox/video/init/"
@@ -212,14 +355,22 @@ export async function initializePost(input: Doc) {
           },
         },
   );
-  if (!init.upload_url || !init.publish_id)
+  if ((!input.verifiedVideoUrl && !init.upload_url) || !init.publish_id)
     throw new AppError(502, "TikTok 未返回上传任务");
-  return { init, bytes, asset, chunkSize, count };
+  return {
+    init,
+    bytes,
+    asset,
+    chunkSize,
+    count,
+    pullFromUrl: !!input.verifiedVideoUrl,
+  };
 }
 export async function transferPost(
   job: Awaited<ReturnType<typeof initializePost>>,
 ) {
   const { init, bytes, asset, chunkSize, count } = job;
+  if (job.pullFromUrl) return;
   const url = new URL(init.upload_url);
   if (url.protocol !== "https:" || !/(^|\.)tiktokapis\.com$/.test(url.hostname))
     throw new AppError(502, "TikTok 上传地址异常");

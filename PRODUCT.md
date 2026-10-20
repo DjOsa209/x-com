@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-用户指定 MySQL。前后端采用本轮提议的 React + TypeScript / Node.js；本轮先交付本机可运行版本，尚未指定生产部署环境。
+用户指定 MySQL。前后端采用本轮提议的 React + TypeScript / Node.js；交付团队自用的本机版本及 app、worker、MySQL Docker 部署包。
 
 ## Users
 
@@ -20,7 +20,7 @@ web
 
 ## Capabilities and Constraints
 
-EchoTik 提供公开市场与历史商业数据；部分 GMV 为预估，未收录不等于零。凭证只在后端使用。用户暂未购买生成服务或申请 TikTok 应用，要求先实现可配置接入。不能将未调用供应商的任务标为成功，不能伪造高 GMV 案例库。首版为本机单工作区，生产多用户与计费未获具体需求。
+EchoTik 提供公开市场与历史商业数据；部分 GMV 为预估，未收录不等于零。凭证只在后端使用。用户暂未购买生成服务或申请 TikTok 应用，要求先实现可配置接入。不能将未调用供应商的任务标为成功，不能伪造高 GMV 案例库。面向团队的多工作空间与权限隔离；计量默认关闭，不扩展订单、库存、采购 ERP 或对外收费 SaaS。研究允许自动运行；生成、超分与发布需要人工确认。
 
 ## Brand Commitments
 

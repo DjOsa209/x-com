@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { post, type Doc } from "./api";
-import { useData, ErrorBox } from "./ui";
+import { useData, ErrorBox, Button } from "./ui";
 export const strategyNames: Doc = {
   balanced: "优先保留完整镜头",
   shots: "按镜头分段",
@@ -32,6 +32,25 @@ export function VideoControls({
   return (
     <div className="config-fields video-controls">
       {error && <ErrorBox message={error} />}
+      {data?.models.some((m: Doc) => m.id === "kie-seedance-mini") && (
+        <div className="video-preset">
+          <Button
+            onClick={() =>
+              onChange({
+                ...value,
+                videoModelId: "kie-seedance-mini",
+                resolution: "480p",
+                frameSource: "product",
+                segmentStrategy: "balanced",
+                segmentSeconds: 12,
+              })
+            }
+          >
+            应用经济预设
+          </Button>
+          <small>Seedance Mini · 480p · 商品图首帧；费用以报价规则为准。</small>
+        </div>
+      )}
       <label className="field">
         视频生成渠道
         <select
@@ -279,9 +298,13 @@ export function PipelineProgress({ pipeline }: { pipeline?: Doc }) {
             <strong>{segmentNames[s.status] || s.status}</strong>
             {s.error && <p className="error-text">{s.error}</p>}
             {s.asset?.url && (
-              <a href={s.asset.url} target="_blank" rel="noreferrer">
-                查看片段
-              </a>
+              <video
+                src={s.asset.url}
+                controls
+                playsInline
+                preload="metadata"
+                className="studio-segment-video"
+              />
             )}
           </li>
         ))}

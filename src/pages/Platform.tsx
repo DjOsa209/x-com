@@ -1,3 +1,4 @@
+import { Sessions, ResetPassword } from "./Administration";
 import { VideoControls, PlanPreview, PipelineProgress } from "../VideoPipeline";
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
@@ -77,7 +78,7 @@ function AuthForm({ state }: { state: Doc }) {
             window.location.assign(
               invite && !register
                 ? "/account?invite=" + encodeURIComponent(invite)
-                : "/",
+                : window.location.pathname + window.location.search,
             );
           } catch (e: any) {
             setError(e.message);
@@ -145,6 +146,8 @@ function AuthForm({ state }: { state: Doc }) {
 }
 export function AuthGate({ children }: { children: ReactNode }) {
   const { data, error, loading } = useData<Doc>("/auth/status");
+  if (new URLSearchParams(window.location.search).has("reset"))
+    return <ResetPassword />;
   if (loading)
     return (
       <div className="auth-screen">
@@ -233,6 +236,7 @@ export function Account() {
           token={new URLSearchParams(window.location.search).get("invite")!}
         />
       )}
+      <Sessions />
       <section className="config-section">
         <h2>修改密码</h2>
         <form
@@ -1407,7 +1411,7 @@ export function Models() {
           <select value={model} onChange={(e) => setModel(e.target.value)}>
             <option value="">请选择</option>
             {data
-              ?.filter((m) => m.provider !== "kie")
+              ?.filter((m) => ["image", "image-edit"].includes(m.type))
               .map((m) => (
                 <option key={m.id} value={m.id}>
                   {m.id}
@@ -1416,8 +1420,7 @@ export function Models() {
           </select>
         </label>
         <p className="muted">
-          此原始输入入口使用 fal.ai；Kie
-          视频请在创作工作台或项目分镜中选择渠道与模型。
+          此原始输入入口仅支持图片模型。视频请在项目中审阅分镜与报价后确认生成，超分请使用视频超分页。
         </p>
         <label className="field">
           输入 JSON

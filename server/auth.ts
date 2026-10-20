@@ -97,6 +97,7 @@ export async function access(req: Request, res: Response, next: NextFunction) {
       "/api/auth/bootstrap",
       "/api/auth/register",
       "/api/auth/invite-preview",
+      "/api/auth/reset-password",
       "/api/billing/webhook",
     ].includes(req.path);
     if (
@@ -132,6 +133,8 @@ export async function access(req: Request, res: Response, next: NextFunction) {
         "/api/workspaces/select",
         "/api/workspaces",
         "/api/workspaces/invites/accept",
+        "/api/assets/archive-download",
+        "/api/research/export",
       ].includes(req.path)
     )
       throw new AppError(403, "当前角色为只读，不能执行此操作", "FORBIDDEN");
@@ -149,7 +152,10 @@ async function session(res: Response, userId: string, workspaceId: string) {
   const options = {
     httpOnly: true,
     sameSite: "lax" as const,
-    secure: process.env.NODE_ENV === "production",
+    secure:
+      process.env.COOKIE_SECURE === "true" ||
+      (process.env.COOKIE_SECURE !== "false" &&
+        process.env.NODE_ENV === "production"),
     path: "/",
     maxAge: 7 * 86400000,
   };
@@ -164,11 +170,92 @@ const signup = z.object({
   name: z.string().min(1).max(100),
   password: z.string().min(12).max(200),
 });
-const attempts = new Map<string, { count: number; until: number }>();
+
 export const authRoutes = Router();
+authRoutes.get("/auth/sessions", async (req, res) => {
+  if (scope().userId === "local") return res.json([]);
+  const current = hashToken(cookie(req, "x_session"));
+  res.json(
+    (
+      await rows(
+        "SELECT token_hash,created_at,expires_at FROM sessions WHERE user_id=? AND expires_at>UTC_TIMESTAMP() ORDER BY created_at DESC",
+        [scope().userId],
+      )
+    ).map((r) => ({
+      id: r.token_hash,
+      createdAt: r.created_at,
+      expiresAt: r.expires_at,
+      current: r.token_hash === current,
+    })),
+  );
+});
+authRoutes.delete("/auth/sessions/:id", async (req, res) => {
+  await execute("DELETE FROM sessions WHERE user_id=? AND token_hash=?", [
+    scope().userId,
+    req.params.id,
+  ]);
+  await audit("session.revoked");
+  res.json({ ok: true });
+});
+authRoutes.post("/admin/users/:id/recovery", async (req, res) => {
+  requirePlatformAdmin();
+  const [user] = await rows("SELECT id FROM users WHERE id=? AND disabled=0", [
+    req.params.id,
+  ]);
+  if (!user) throw new AppError(404, "账号不存在或已停用");
+  const token = randomBytes(32).toString("hex");
+  await execute(
+    "INSERT INTO password_resets(token_hash,user_id,expires_at) VALUES(?,?,DATE_ADD(UTC_TIMESTAMP(3),INTERVAL 1 HOUR))",
+    [hashToken(token), user.id],
+  );
+  await audit("user.recovery_issued", { userId: user.id });
+  res.json({ path: "/account?reset=" + token, expiresIn: 3600 });
+});
+authRoutes.post("/auth/reset-password", async (req, res) => {
+  const b = z
+    .object({
+      token: z.string().regex(/^[a-f0-9]{64}$/),
+      password: z.string().min(12).max(200),
+    })
+    .parse(req.body);
+  const c = await pool.getConnection();
+  try {
+    await c.beginTransaction();
+    const [rs]: any = await c.execute(
+      "SELECT r.* FROM password_resets r JOIN users u ON u.id=r.user_id WHERE r.token_hash=? AND r.used_at IS NULL AND r.expires_at>UTC_TIMESTAMP(3) AND u.disabled=0 FOR UPDATE",
+      [hashToken(b.token)],
+    );
+    if (!rs.length)
+      throw new AppError(
+        410,
+        "恢复链接无效、已使用或已过期，请联系管理员重新生成",
+      );
+    await c.execute("UPDATE users SET password_hash=? WHERE id=?", [
+      await passwordHash(b.password),
+      rs[0].user_id,
+    ]);
+    await c.execute(
+      "UPDATE password_resets SET used_at=UTC_TIMESTAMP(3) WHERE user_id=? AND used_at IS NULL",
+      [rs[0].user_id],
+    );
+    await c.execute("DELETE FROM sessions WHERE user_id=?", [rs[0].user_id]);
+    await c.commit();
+    res.json({ ok: true });
+  } catch (e) {
+    await c.rollback();
+    throw e;
+  } finally {
+    c.release();
+  }
+});
 authRoutes.get("/auth/status", async (_req, res) => {
   const [{ count }] = await rows("SELECT COUNT(*) count FROM users");
+  const [currentWorkspace] = await rows(
+    "SELECT name FROM workspaces WHERE id=?",
+    [scope().workspaceId],
+  );
   res.json({
+    workspaceName: currentWorkspace?.name || "未选择工作空间",
     required: authRequired(),
     bootstrapNeeded: Number(count) === 0,
     user: res.locals.user || null,
@@ -230,21 +317,23 @@ authRoutes.post("/auth/login", async (req, res) => {
       password: z.string().max(200),
     })
     .parse(req.body);
-  const key = (req.ip || "local") + ":" + input.email;
-  const entry = attempts.get(key);
-  if (entry && entry.until > Date.now() && entry.count >= 5)
+  const key = hashToken((req.ip || "local") + ":" + input.email);
+  await execute(
+    "INSERT INTO auth_attempts(attempt_key,attempts,window_start) VALUES(?,1,UTC_TIMESTAMP(3)) ON DUPLICATE KEY UPDATE attempts=IF(window_start<DATE_SUB(UTC_TIMESTAMP(3),INTERVAL 15 MINUTE),1,attempts+1),window_start=IF(window_start<DATE_SUB(UTC_TIMESTAMP(3),INTERVAL 15 MINUTE),UTC_TIMESTAMP(3),window_start)",
+    [key],
+  );
+  const [entry] = await rows(
+    "SELECT attempts FROM auth_attempts WHERE attempt_key=?",
+    [key],
+  );
+  if (Number(entry.attempts) > 5)
     throw new AppError(429, "登录尝试过多，请 15 分钟后再试");
   const [u] = await rows("SELECT * FROM users WHERE email=? AND disabled=0", [
     input.email,
   ]);
-  if (!u || !(await passwordMatches(input.password, u.password_hash))) {
-    attempts.set(key, {
-      count: (entry && entry.until > Date.now() ? entry.count : 0) + 1,
-      until: Date.now() + 900000,
-    });
+  if (!u || !(await passwordMatches(input.password, u.password_hash)))
     throw new AppError(401, "邮箱或密码不正确");
-  }
-  attempts.delete(key);
+  await execute("DELETE FROM auth_attempts WHERE attempt_key=?", [key]);
   const [m] = await rows(
     "SELECT workspace_id FROM memberships WHERE user_id=? ORDER BY workspace_id LIMIT 1",
     [u.id],
@@ -326,7 +415,10 @@ authRoutes.post("/workspaces/select", async (req, res) => {
   res.cookie("x_workspace", id, {
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure:
+      process.env.COOKIE_SECURE === "true" ||
+      (process.env.COOKIE_SECURE !== "false" &&
+        process.env.NODE_ENV === "production"),
     path: "/",
     maxAge: 7 * 86400000,
   });

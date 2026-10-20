@@ -5,6 +5,8 @@ import { basename, resolve, extname } from "node:path";
 import { randomUUID } from "node:crypto";
 import { get, put, type Doc } from "./db.ts";
 import { AppError } from "./errors.ts";
+import { validateAudioBytes } from "./audio-validation.ts";
+import { mediaExtensions } from "./media-types.ts";
 import { echoQuery } from "./echotik.ts";
 import { config } from "./config.ts";
 import {
@@ -117,18 +119,12 @@ export async function saveMedia(
   name: string,
   extra: Doc = {},
 ) {
+  const audioInfo = mime.startsWith("audio/")
+    ? await validateAudioBytes(bytes)
+    : {};
   return withStorageLock(async () => {
     await assertStorage(bytes.length);
-    const ext = (
-      {
-        "image/png": ".png",
-        "image/jpeg": ".jpg",
-        "image/webp": ".webp",
-        "video/mp4": ".mp4",
-        "video/webm": ".webm",
-        "video/quicktime": ".mov",
-      } as Doc
-    )[mime];
+    const ext = mediaExtensions[mime];
     if (!ext) throw new AppError(400, "不支持的媒体类型", "INVALID_MEDIA");
     const filename = randomUUID() + ext;
     const storageKey = await objectPut(filename, bytes, mime);
@@ -137,7 +133,11 @@ export async function saveMedia(
     try {
       return await put("asset", {
         name: name.slice(0, 200),
-        type: mime.startsWith("image/") ? "image" : "video",
+        type: mime.startsWith("image/")
+          ? "image"
+          : mime.startsWith("audio/")
+            ? "audio"
+            : "video",
         mime,
         bytes: bytes.length,
         filename,
@@ -145,6 +145,7 @@ export async function saveMedia(
         url: "/media/" + filename,
         tags: [],
         ...extra,
+        ...audioInfo,
       });
     } catch (e) {
       const { unlink } = await import("node:fs/promises");

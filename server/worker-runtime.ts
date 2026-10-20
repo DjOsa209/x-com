@@ -3,6 +3,7 @@ import { cleanExpiredUploads } from "./storage.ts";
 import { reconcileCredits } from "./credits.ts";
 import { tick, recoverJobs } from "./jobs.ts";
 import { scheduleAutomations } from "./automations.ts";
+import { reconcileOperations } from "./operations.ts";
 import { reconcileProjects } from "./projects.ts";
 let recovered = false,
   active = false;
@@ -25,6 +26,7 @@ export async function workerCycle() {
     await scheduleAutomations();
     await tick();
     await reconcileProjects();
+    await reconcileOperations();
     await reconcileCredits();
     await cleanExpiredUploads();
     await execute(

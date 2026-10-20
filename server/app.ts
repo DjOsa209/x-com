@@ -1,3 +1,4 @@
+import { retryQuote } from "./quotes.ts";
 import { withJobLock } from "./locks.ts";
 import { acknowledgePipelineFailure } from "./video-pipeline.ts";
 import {
@@ -48,6 +49,18 @@ import { objectDelete } from "./storage.ts";
 import { automationRoutes } from "./automations.ts";
 import { retryJob } from "./jobs.ts";
 import { finalizeCredits } from "./credits.ts";
+import { validMediaHeader } from "./media-types.ts";
+import {
+  assertAssetUnused,
+  replaceAssetReferences,
+  clearAssetReferences,
+} from "./asset-references.ts";
+
+import { foundationRoutes } from "./foundation-routes.ts";
+import { commerceRoutes } from "./commerce.ts";
+import { operationsRoutes } from "./operations.ts";
+import { videoEditRoutes } from "./video-edit.ts";
+import { quoteRoutes } from "./quotes.ts";
 
 export const app = express();
 app.disable("x-powered-by");
@@ -78,7 +91,15 @@ app.use((req, res, next) => {
 app.use(stripeWebhook);
 app.use(express.json({ limit: "2mb" }));
 app.use(access);
-app.use("/api", authRoutes);
+app.use(
+  "/api",
+  authRoutes,
+  foundationRoutes,
+  commerceRoutes,
+  operationsRoutes,
+  videoEditRoutes,
+  quoteRoutes,
+);
 app.use("/api", projectRoutes, billingRoutes, storageRoutes, automationRoutes);
 const object = z.record(z.string(), z.any());
 const collections = [
@@ -99,7 +120,7 @@ const checkKind = (kind: string) => {
 app.get("/api/health", async (_req, res) => {
   try {
     await rows("SELECT 1");
-    res.json({ ok: true, database: "mysql", version: "0.2.0" });
+    res.json({ ok: true, database: "mysql", version: "0.3.0" });
   } catch {
     res.status(503).json({
       ok: false,
@@ -191,9 +212,33 @@ app.get("/api/worker", async (_req, res) => {
   );
   res.json(w || { status: "not_started" });
 });
-app.post("/api/jobs/:id/retry", async (req, res) =>
-  res.json(await retryJob(String(req.params.id))),
-);
+app.get("/api/jobs/:id/retry-quote", async (req, res) => {
+  const r = await jobGet(String(req.params.id));
+  if (!r) throw new AppError(404, "任务不存在");
+  if (!["failed", "cancelled"].includes(r.status))
+    throw new AppError(409, "任务尚未明确失败或取消");
+  if (r.kind === "publish")
+    throw new AppError(409, "发布重试请在发布中心重新审核");
+  if (parse(r.input)?.projectId)
+    throw new AppError(
+      409,
+      "项目任务请在项目页确认重试，确保结果继续归属同一项目",
+    );
+  res.json({ jobs: [await retryQuote(r)] });
+});
+app.post("/api/jobs/:id/retry", async (req, res) => {
+  const b = z
+    .object({ confirm: z.literal(true), fingerprint: z.string().length(64) })
+    .parse(req.body);
+  const r = await jobGet(String(req.params.id));
+  if (r?.kind === "publish")
+    throw new AppError(409, "发布重试请在发布中心重新审核");
+  if (r && parse(r.input)?.projectId)
+    throw new AppError(409, "项目任务请在项目页确认重试");
+  res.json(
+    await retryJob(String(req.params.id), undefined, false, b.fingerprint),
+  );
+});
 app.post("/api/jobs/:id/resolve", async (req, res) => {
   requireOwner();
   const decision = z.enum(["failed", "completed"]).parse(req.body.decision);
@@ -298,6 +343,12 @@ app.post("/api/prompts/search", async (req, res) => {
       .filter(Boolean),
   );
 });
+app.get("/api/records/:kind/:id", async (req, res) => {
+  const kind = checkKind(String(req.params.kind));
+  const value = await get(String(req.params.id), kind);
+  if (!value) throw new AppError(404, "记录不存在");
+  res.json(value);
+});
 app.get("/api/records/:kind", async (req, res) =>
   res.json(await list(checkKind(String(req.params.kind)))),
 );
@@ -310,6 +361,7 @@ app.post("/api/records/:kind", async (req, res) => {
     const a = await get(required(body.assetId, "角色图片"), "asset");
     if (a?.type !== "image") throw new AppError(400, "角色需要图片素材");
     required(body.name, "角色名称");
+    body.imageUrl = a.url;
   }
   if (kind === "competitor") {
     required(body.name, "名称");
@@ -317,7 +369,9 @@ app.post("/api/records/:kind", async (req, res) => {
     if (!["creator", "shop"].includes(body.entity))
       throw new AppError(400, "请选择达人或店铺");
   }
-  res.status(201).json(await put(kind, body));
+  const saved = await put(kind, body);
+  await replaceAssetReferences(kind, saved!.id, body);
+  res.status(201).json(saved);
 });
 app.patch("/api/records/:kind/:id", async (req, res) => {
   const kind = checkKind(String(req.params.kind)),
@@ -330,19 +384,53 @@ app.patch("/api/records/:kind/:id", async (req, res) => {
     kind === "asset"
       ? Object.fromEntries(
           Object.entries(body).filter(([k]) =>
-            ["name", "tags", "width", "height", "duration"].includes(k),
+            ["name", "tags", "archived", "productId", "projectId"].includes(k),
           ),
         )
       : body;
-  res.json(await put(kind, { ...previous, ...allowed }, id));
+  if (kind === "character" && body.assetId) {
+    const image = await get(body.assetId, "asset");
+    if (image?.type !== "image")
+      throw new AppError(400, "角色需要当前工作空间的图片素材");
+    allowed.imageUrl = image.url;
+  }
+  if (kind === "asset") {
+    z.object({
+      name: z.string().trim().min(1).max(200).optional(),
+      tags: z.array(z.string().trim().min(1).max(100)).max(40).optional(),
+      archived: z.boolean().optional(),
+      productId: z.string().max(64).optional(),
+      projectId: z.string().max(64).optional(),
+    }).parse(allowed);
+    if (allowed.productId) {
+      const { getCommerce } = await import("./research-domain.ts");
+      await getCommerce("products", allowed.productId);
+    }
+    if (
+      allowed.projectId &&
+      !(
+        await rows("SELECT id FROM projects WHERE id=? AND workspace_id=?", [
+          allowed.projectId,
+          workspace(),
+        ])
+      ).length
+    )
+      throw new AppError(400, "项目不属于当前工作空间");
+  }
+  if (kind === "character")
+    z.object({
+      name: z.string().trim().min(1).max(200),
+      description: z.string().max(10000).optional(),
+    }).parse({ ...previous, ...allowed });
+  const saved = await put(kind, { ...previous, ...allowed }, id);
+  await replaceAssetReferences(kind, id, saved);
+  res.json(saved);
 });
 app.delete("/api/records/:kind/:id", async (req, res) => {
   const kind = checkKind(String(req.params.kind)),
     id = String(req.params.id);
   if (kind === "asset") {
-    const characters = await list("character");
-    if (characters.some((c) => c.assetId === id))
-      throw new AppError(409, "素材正在被角色引用，请先删除对应角色");
+    await assertAssetUnused(id);
     const a = await get(id, "asset");
     if (a?.storageKey) {
       await objectDelete(a.storageKey);
@@ -357,6 +445,7 @@ app.delete("/api/records/:kind/:id", async (req, res) => {
   }
   if (kind === "account") await remove(id + "-token", "token");
   await remove(id, kind);
+  await clearAssetReferences(kind, id);
   res.json({ ok: true });
 });
 const upload = multer({
@@ -366,29 +455,17 @@ const upload = multer({
 app.post("/api/uploads", upload.single("file"), async (req, res) => {
   if (!req.file) throw new AppError(400, "请选择文件");
   const { buffer: b, mimetype: m, originalname: name } = req.file;
-  const valid =
-    (m === "image/png" &&
-      b
-        .subarray(0, 8)
-        .equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]))) ||
-    (m === "image/jpeg" && b[0] === 255 && b[1] === 216 && b[2] === 255) ||
-    (m === "image/webp" &&
-      b.toString("ascii", 0, 4) === "RIFF" &&
-      b.toString("ascii", 8, 12) === "WEBP") ||
-    (["video/mp4", "video/quicktime"].includes(m) &&
-      b.toString("ascii", 4, 8) === "ftyp") ||
-    (m === "video/webm" &&
-      b.subarray(0, 4).equals(Buffer.from([26, 69, 223, 163])));
+  const valid = validMediaHeader(b, m);
   if (!valid)
     throw new AppError(
       400,
-      "文件内容与类型不匹配，支持 PNG、JPG、WebP、MP4、MOV、WebM",
+      "文件内容与类型不匹配，支持 PNG、JPG、WebP、MP4、MOV、WebM、MP3、WAV、M4A",
     );
   res.status(201).json(await saveMedia(b, m, name));
 });
 app.get("/media/:filename", async (req, res, next) => {
   const name = String(req.params.filename);
-  if (!/^[a-f0-9-]+\.(png|jpg|webp|mp4|mov|webm)$/.test(name))
+  if (!/^[a-f0-9-]+\.(png|jpg|webp|mp4|mov|webm|mp3|wav|m4a)$/.test(name))
     return next(new AppError(404, "文件不存在"));
   const [a] = await rows(
     "SELECT id FROM records WHERE kind='asset' AND workspace_id=? AND JSON_UNQUOTE(JSON_EXTRACT(body,'$.filename'))=?",
@@ -414,6 +491,21 @@ app.post("/api/jobs", async (req, res) => {
       runAt: z.string().optional(),
     })
     .parse(req.body);
+  if (["video", "replicate", "publish"].includes(b.kind))
+    throw new AppError(
+      409,
+      "视频请通过项目报价确认生成，发布请通过已审核的发布记录提交",
+      "CONFIRMATION_REQUIRED",
+    );
+  if (b.kind === "raw") {
+    const c = await config();
+    if (![c.FAL_IMAGE_MODEL, c.FAL_IMAGE_EDIT_MODEL].includes(b.input.modelId))
+      throw new AppError(
+        409,
+        "高级原始输入仅支持图片；视频与超分请使用对应确认入口",
+        "CONFIRMATION_REQUIRED",
+      );
+  }
   res.status(201).json(await createJob(b.kind, b.input, b.dedupeKey, b.runAt));
 });
 app.post("/api/jobs/:id/cancel", async (req, res) => {
@@ -456,7 +548,10 @@ app.post("/api/tiktok/connect", async (_req, res) => {
     httpOnly: true,
     sameSite: "lax",
     maxAge: 600000,
-    secure: process.env.NODE_ENV === "production",
+    secure:
+      process.env.COOKIE_SECURE === "true" ||
+      (process.env.COOKIE_SECURE !== "false" &&
+        process.env.NODE_ENV === "production"),
     path: "/api/tiktok/callback",
   });
   res.json({ url: auth.url, state: auth.state });

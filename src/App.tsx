@@ -34,6 +34,16 @@ import {
 import { api, type Doc } from "./api";
 import { AppContext, useData } from "./ui";
 import { Workspace } from "./pages/Workspace";
+import { Products, Opportunities } from "./pages/Commerce";
+import { Studio } from "./pages/Studio";
+import {
+  Overview,
+  PublishingCenter,
+  ContentAnalytics,
+  AutomationCenter,
+} from "./pages/Operations";
+import { Library } from "./pages/Library";
+import { ControlCenter } from "./pages/Administration";
 import {
   Inspiration,
   Explorer,
@@ -65,7 +75,10 @@ const navigation = [
   {
     group: "创作",
     items: [
-      ["/", "创作工作台", LayoutDashboard],
+      ["/overview", "工作总览", LayoutDashboard],
+      ["/", "创作工作台", Clapperboard],
+      ["/products", "自有商品", FolderOpen],
+      ["/opportunities", "选品机会", Compass],
       ["/inspiration", "灵感与选品", Compass],
       ["/prompts", "爆款提示词库", Sparkles],
       ["/analysis", "视频分析", ScanLine],
@@ -104,7 +117,8 @@ const navigation = [
     items: [
       ["/team", "工作空间与团队", Users],
       ["/billing", "额度与订单", ChartNoAxesCombined],
-      ["/admin", "后台管理", Settings2],
+      ["/control", "运行与审计", Settings2],
+      ["/admin", "账号管理", Users],
       ["/account", "我的账号", Users],
     ],
   },
@@ -118,6 +132,16 @@ function Shell() {
     [open, setOpen] = useState(false),
     [collapsed, setCollapsed] = useState(false);
   const { data: jobs } = useData<Doc[]>("/jobs", 10000);
+  const { data: auth } = useData<Doc>("/auth/status", 30000);
+  const { data: billing } = useData<Doc>("/billing");
+  const canSee = (href: string) =>
+    href === "/admin"
+      ? !!auth?.platformAdmin
+      : ["/settings", "/control"].includes(href)
+        ? ["owner", "admin"].includes(auth?.role)
+        : href === "/billing"
+          ? !!billing?.wallet?.enabled
+          : true;
   const refresh = useCallback(() => {
     void api("/status")
       .then(setStatus)
@@ -147,7 +171,7 @@ function Shell() {
       .flatMap((n) => n.items)
       .find((n) => n[0] === location.pathname)?.[1] || "使用指南";
   return (
-    <AppContext.Provider value={{ status, refresh, toast: notify }}>
+    <AppContext.Provider value={{ status, refresh, toast: notify, auth }}>
       <div className={`app-shell ${collapsed ? "collapsed" : ""}`}>
         {open && (
           <button
@@ -183,23 +207,25 @@ function Shell() {
             {navigation.map((group) => (
               <div className="nav-group" key={group.group}>
                 <p>{group.group}</p>
-                {group.items.map(([href, label, Icon]: any) => (
-                  <NavLink
-                    title={label}
-                    end={href === "/"}
-                    key={href}
-                    to={href}
-                    className={({ isActive }) =>
-                      isActive ? "nav-link active" : "nav-link"
-                    }
-                  >
-                    <Icon size={18} strokeWidth={1.7} />
-                    <span>{label}</span>
-                    {href === "/inspiration" && (
-                      <span className="new-badge">NEW</span>
-                    )}
-                  </NavLink>
-                ))}
+                {group.items
+                  .filter(([href]) => canSee(String(href)))
+                  .map(([href, label, Icon]: any) => (
+                    <NavLink
+                      title={label}
+                      end={href === "/"}
+                      key={href}
+                      to={href}
+                      className={({ isActive }) =>
+                        isActive ? "nav-link active" : "nav-link"
+                      }
+                    >
+                      <Icon size={18} strokeWidth={1.7} />
+                      <span>{label}</span>
+                      {href === "/inspiration" && (
+                        <span className="new-badge">NEW</span>
+                      )}
+                    </NavLink>
+                  ))}
               </div>
             ))}
           </nav>
@@ -208,8 +234,15 @@ function Shell() {
               <div className="workspace-label">
                 <span className="workspace-avatar">X</span>
                 <div>
-                  <strong>我的工作空间</strong>
-                  <small>本地 · MySQL</small>
+                  <strong>{auth?.workspaceName || "工作空间"}</strong>
+                  <small>
+                    {{
+                      owner: "所有者",
+                      admin: "管理员",
+                      operator: "运营成员",
+                      viewer: "只读成员",
+                    }[auth?.role as string] || ""}
+                  </small>
                 </div>
               </div>
               <button
@@ -271,8 +304,13 @@ function Shell() {
             <Routes>
               <Route path="/account" element={<Account />} />
               <Route path="/team" element={<Team />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/automations" element={<Automations />} />
+              <Route path="/projects" element={<Studio />} />
+              <Route path="/studio/edit" element={<Studio />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/opportunities" element={<Opportunities />} />
+              <Route path="/overview" element={<Overview />} />
+              <Route path="/control" element={<ControlCenter />} />
+              <Route path="/automations" element={<AutomationCenter />} />
               <Route path="/billing" element={<Billing />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/models" element={<Models />} />
@@ -281,14 +319,14 @@ function Shell() {
               <Route path="/explorer" element={<Explorer />} />
               <Route path="/prompts" element={<PromptLibrary />} />
               <Route path="/competitors" element={<Competitors />} />
-              <Route path="/assets" element={<Assets />} />
+              <Route path="/assets" element={<Library />} />
               <Route path="/characters" element={<Characters />} />
               <Route path="/tasks" element={<Tasks />} />
               <Route path="/analysis" element={<Tool kind="analysis" />} />
               <Route path="/enhance" element={<Tool kind="enhance" />} />
               <Route path="/download" element={<Downloads />} />
-              <Route path="/publish" element={<Publish />} />
-              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/publish" element={<PublishingCenter />} />
+              <Route path="/analytics" element={<ContentAnalytics />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/help" element={<Help />} />
               <Route

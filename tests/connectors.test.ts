@@ -9,6 +9,14 @@ vi.mock("../server/db.ts", () => ({
   get: vi.fn(),
   put: vi.fn(),
 }));
+vi.mock("../server/research-budget.ts", () => ({
+  withResearchBudgetRequest: async (
+    _provider: string,
+    _endpoint: string,
+    send: () => Promise<any>,
+  ) => send(),
+  recordResearchEvidence: vi.fn(async () => {}),
+}));
 vi.mock("../server/config.ts", () => ({
   config: vi.fn(async () => ({
     ECHOTIK_USERNAME: "test-user",
